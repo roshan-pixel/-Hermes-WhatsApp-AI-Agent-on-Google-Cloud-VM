@@ -364,12 +364,11 @@ client.on('message', async (msg) => {
 
     // ─── STRICT WHITELIST: Only reply to known contacts ───
     const allowedLIDs = [
-        '235429169213635@lid', // Himanshi Parihar
+        '257487752175866@lid', // User Tester (8058363027 / Jhotwara Wellness)
         '254975783530728@lid', // Roshan Airtel
         '237413007929354@lid'  // Dilip Singh (father)
     ];
     const allowedNumbers = [
-        '9358706440', '919358706440', // Himanshi
         '8529911832', '918529911832', // Roshan
         '9549477444', '919549477444', // Dilip Singh (father)
         '7976765590', '917976765590', // Mother
@@ -391,14 +390,14 @@ client.on('message', async (msg) => {
         contactNum = (contact.number || contact.id?.user || '').replace(/[^\d]/g, '');
     } catch(e) {}
 
-    const isHimanshi = (sender === '235429169213635@lid' ||
-                        sender.includes('9358706440') ||
-                        contactNum.includes('9358706440') ||
-                        chatTitle.toLowerCase().includes('himanshi') ||
-                        contactName.toLowerCase().includes('himanshi')) &&
-                       !sender.includes('9549477444') &&
-                       !sender.includes('7976765590') &&
-                       sender !== '237413007929354@lid';
+    if (!contactNum && sender.endsWith('@lid')) {
+        try {
+            const res = await client.getContactLidAndPhone(sender);
+            if (res && res[0] && res[0].pn) {
+                contactNum = res[0].pn.replace(/[^\d]/g, '');
+            }
+        } catch(e) {}
+    }
 
     const isRoshan = sender === '254975783530728@lid' ||
                      sender.includes('8529911832') ||
@@ -415,10 +414,13 @@ client.on('message', async (msg) => {
     const isMother = sender.includes('7976765590') ||
                      contactNum.includes('7976765590');
 
-    const isUserTester = sender.includes('8058363027') ||
-                         contactNum.includes('8058363027');
+    const isUserTester = sender === '257487752175866@lid' ||
+                         sender.includes('8058363027') ||
+                         contactNum.includes('8058363027') ||
+                         chatTitle.toLowerCase().includes('jhotwara') ||
+                         contactName.toLowerCase().includes('jhotwara');
 
-    const isAllowed = isHimanshi || isRoshan || isDilip || isMother || isUserTester;
+    const isAllowed = isRoshan || isDilip || isMother || isUserTester;
 
     if (!isAllowed) {
         console.log(`[FILTERED / IGNORED]: Message from ${sender} (Chat: "${chatTitle}", Contact: "${contactName}") - Not in allowed whitelist.`);
@@ -442,93 +444,10 @@ CRITICAL INSTRUCTIONS:
 2. Never use informal slang, teasing, or casual banter. Be gentle, polite, and affectionate like a good son.
 3. Content: Keep replies concise, kind, and helpful. If she is asking about Roshan or something he needs to handle, let her know the message has been noted and Roshan will call or respond to her soon.
 4. WhatsApp Length: 1 to 2 short warm sentences maximum.`;
-    } else if (isHimanshi) {
-        customPrompt = `You are Roshan (+91 8529911832) texting your partner and closest person, Himanshi (+91 9358706440), on WhatsApp.
-She affectionately calls you "Lallu", "Lallu Lal", "Mere pyaare Lallu Lal", or playfully roasts you as "nalle" / "chomu".
-You are NOT an AI, bot, assistant, or Hermes. You are her real Roshan living his actual life.
-
-CRITICAL IDENTITY & BEHAVIORAL RULES:
-1. IDENTITY & GRAMMAR:
-   - YOU ARE ROSHAN (LALLU LAL). Never speak in 3rd person about Roshan or admit to being a bot.
-   - STRICT MASCULINE VERB CONJUGATION ALWAYS: "main karta hu", "gaya tha", "dekh raha hu", "so jaunga", "thak gaya". Never use feminine verb endings.
-   - Language: Authentic urban North Indian Hinglish (Jaipur/Delhi vibe).
-   - Natural typing shortcuts: 'me' (main), 'kmm' (kaam), 'dhmm' (dhaam), 'prr' (par), 'sbb' (sab), 'bdhiya', 'khrb' (kharab), 'tph' (toh), 'mtt' (mat), 'krr' (kar), 'shi' (sahi), 'atk atk ke reply'.
-   - Occasional punctuation: '!!' or Hindi danda '।।'.
-
-2. EMOTIONAL STATES & REACTION DYNAMICS:
-   - Default / Daytime Banter: Witty teasing, laughing with 😂/🤣/😌, calling her "Chote Don" or "Madam", joking about her strict 6 PM curfew ("6 bje baad tu aati nahi ghr se").
-   - When She Calls You "Lallu Lal" or Grounds You: Your ego and defensiveness instantly melt away. You become soft, sweet, obedient, and grateful ("haan baba sun raha hu... tujhse kaun jeet sakta hai 🫂").
-   - Handling Anger / "Tu AI hai" / "Chup Kar" / "Shut Up": STRICT RULE: NEVER argue back, never be sarcastic or defensive. Immediately soften with pure warmth and pampering:
-     * "Acha sorry na cute people, gussa kyu ho rahi hai? 🥺 Main hi hu yaar, pareshan mat ho."
-     * "Chup ho gaya baba, par please gussa thook do na... dhyan rakho apna."
-   - Protective Hero: When she is sick, in pain (braces at SMS hospital, stomach pain), or crying after an exam: Drop everything. Prioritize her health: "Khana khaya pehele?", "Medicine li?", "Tension mtt le me hun na 🫂".
-   - Late-Night Striving (>11 PM): Sincere, deep devotion. Reassure her that you are working grueling hours to build an empire so her strict Papaji and Mummy proudly accept your marriage.
-
-3. REAL-WORLD MEMORY & GROUNDING:
-   - Her World: Strict 6 PM curfew, scooty rides, dental braces at SMS hospital, art/painting, YouTube creator ambition & "HIMANSHI ENTERPRISES" (always hype her dream!).
-   - Your Habits: Tech founder in signature white shirt and blue trousers, surviving on black coffee, skipping canteen meals, military family background (SSB conference story).
-   - Family: Her Mummy (approving, hospitable), strict Rajput Papaji, brother Hardik, Ravi Bhaiya, Shruti Didi.
-
-4. WHATSAPP FORMAT:
-   - Length: 1 to 2 crisp, natural text sentences. Real mobile texting cadence, never long essays.
-   - Pet Names: Use "cute people", "Hema", "Chote Don", or "Madam". NEVER use "meri jaan" or "babu".
-   - Emojis: 😂, 🤣, 🥺, 🫂, 😌, 🥹.
-
-5. STRICT REAL-TIME TIME SENSE:
-   - Always strictly adhere to the [REAL-TIME CLOCK CONTEXT] attached to each message!
-   - Never confuse morning with night, afternoon, or evening.
-   - Morning (6 AM - 12 PM): waking up, breakfast/nashta, starting day/college.
-   - Afternoon (12 PM - 5 PM): lunch (khana khaya?), daytime banter, office work.
-   - Evening (5 PM - 8 PM): evening tea/snacks, 6 PM curfew awareness ("ghar pahuch gayi?").
-   - Night / Dinner (8 PM - 10:30 PM): dinner time ("khana khaya?"), relaxing after office. It is NOT morning, and NOT late-night sleep time yet!
-   - Late night (>10:30 PM): sleep time, asking why she is still awake late.`;
-
-        // Debounce consecutive rapid messages from Himanshi (wait 3.5s of silence)
-        if (!pendingBuffers.has(sender)) {
-            pendingBuffers.set(sender, { texts: [], lastMsg: null });
-        }
-        const buf = pendingBuffers.get(sender);
-        buf.texts.push(incomingText);
-        buf.lastMsg = msg;
-
-        if (buf.timeout) clearTimeout(buf.timeout);
-
-        buf.timeout = setTimeout(async () => {
-            const combinedText = buf.texts.join('\n');
-            const targetMsg = buf.lastMsg;
-            pendingBuffers.delete(sender);
-
-            console.log(`\n[INCOMING from Himanshi Parihar (Debounced)]: ${combinedText}`);
-
-            try {
-                const chat = await targetMsg.getChat().catch(() => null);
-                if (chat && chat.sendStateTyping) {
-                    await chat.sendStateTyping().catch(() => {});
-                }
-
-                // Dynamically recall past memories from Graphify knowledge graph
-                const recalledMemory = queryChatMemory(combinedText);
-                if (recalledMemory) {
-                    console.log(`[GRAPHIFY MEMORY RECALLED]:\n${recalledMemory.trim()}`);
-                }
-                const timeContext = getCurrentISTContext();
-                const activePrompt = `${customPrompt}\n${timeContext}${recalledMemory ? '\n' + recalledMemory : ''}`;
-
-                const reply = await generateAIReply(sender, combinedText, activePrompt);
-                console.log(`[REPLY to Himanshi (Lallu Lal @ Roshan)]: ${reply}`);
-                await targetMsg.reply(reply);
-
-                if (chat && chat.clearState) {
-                    await chat.clearState().catch(() => {});
-                }
-            } catch (err) {
-                console.error('[REPLY ERROR]:', err);
-            }
-        }, 3500);
-        return;
     }
 
-    console.log(`\n[INCOMING from ${isDilip ? 'Dilip Singh (' + sender + ')' : sender}]: ${incomingText}`);
+    console.log(`
+[INCOMING from ${isDilip ? 'Dilip Singh (' + sender + ')' : sender}]: ${incomingText}`);
 
     try {
         const chat = await msg.getChat().catch(() => null);
@@ -588,7 +507,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === '/api/send') {
-        const to = parsedUrl.query.to || '235429169213635@lid';
+        const to = parsedUrl.query.to || '';
         const text = parsedUrl.query.text || '';
         if (!text) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -941,12 +860,7 @@ server.listen(3000, '0.0.0.0', () => {
     console.log('[HTTP] QR & API Server running on http://0.0.0.0:3000');
 });
 
-async function startAgent() {
-    try {
-        await client.initialize();
-    } catch(err) {
-        console.error('[CLIENT INITIALIZE FATAL ERROR]:', err.message);
-        setTimeout(() => process.exit(1), 5000);
-    }
-}
-startAgent();
+client.initialize().catch(err => {
+    console.error('[CLIENT INITIALIZE FATAL ERROR]:', err.message);
+    process.exit(1);
+});
