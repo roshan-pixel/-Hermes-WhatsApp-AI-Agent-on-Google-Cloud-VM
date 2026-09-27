@@ -4,7 +4,10 @@
   "description": "Hermes Autonomous WhatsApp Assistant on Google Cloud VM",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "pm2": "pm2 start index.js --name whatsapp-agent",
+    "logs": "pm2 logs whatsapp-agent",
+    "postinstall": "node scripts/patch-wwebjs.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -1,7 +1,9 @@
 require('dotenv').config();
+delete process.env.DBUS_SESSION_BUS_ADDRESS;
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
+const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
@@ -231,24 +233,40 @@ const CHROME_PATH = process.env.PUPPETEER_EXECUTABLE_PATH ||
     (fs.existsSync('/usr/local/bin/google-chrome-stable') ? '/usr/local/bin/google-chrome-stable' :
     (fs.existsSync('/home/sgarm/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome') ? '/home/sgarm/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome' : undefined));
 
+// Clean up any stale Chromium locks left from previous restarts/crashes
+const sessionDir = path.join(__dirname, '.wwebjs_auth', 'session');
+['SingletonLock', 'SingletonSocket', 'SingletonCookie'].forEach(f => {
+    try {
+        const p = path.join(sessionDir, f);
+        if (fs.existsSync(p) || fs.lstatSync(p).isSymbolicLink()) {
+            fs.unlinkSync(p);
+            console.log(`[CLEANUP] Removed stale ${f}`);
+        }
+    } catch(e) {}
+});
+
 const client = new Client({
     authStrategy: new LocalAuth({ dataPath: './.wwebjs_auth' }),
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
     puppeteer: {
         headless: true,
+        dumpio: true,
         protocolTimeout: 180000,
         executablePath: CHROME_PATH,
         args: [
+            '--disable-breakpad',
+            '--disable-crash-reporter',
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
-            '--no-zygote',
             '--disable-gpu',
             '--disable-background-timer-throttling',
             '--disable-backgrounding-occluded-windows',
-            '--disable-renderer-backgrounding'
+            '--disable-renderer-backgrounding',
+            '--password-store=basic',
+            '--use-mock-keychain'
         ]
     }
 });
@@ -280,11 +298,9 @@ client.on('ready', async () => {
     } catch(e) {}
 });
 
-// Health check watchdog: detects genuine WhatsApp session loss and restarts PM2.
-// Uses a 3-strike grace counter so transient Chromium LID/out-of-sandbox frame
-// detaches (normal lifecycle noise) do NOT trigger unnecessary restarts.
+// Health check watchdog: detects genuine browser disconnects.
 let watchdogFailCount = 0;
-const WATCHDOG_MAX_FAILURES = 3;
+const WATCHDOG_MAX_FAILURES = 10;
 
 setInterval(async () => {
     if (clientStatus !== 'CONNECTED') {
@@ -292,34 +308,27 @@ setInterval(async () => {
         return;
     }
     try {
-        const pages = client.pupBrowser ? await client.pupBrowser.pages() : [];
+        if (!client.pupBrowser || !client.pupBrowser.isConnected()) {
+            throw new Error('Chromium browser disconnected');
+        }
+        const pages = await client.pupBrowser.pages().catch(() => []);
         const activePage = pages.find(p => !p.isClosed() && p.url().includes('whatsapp.com'));
-        if (!activePage || activePage.isClosed()) {
+        if (!activePage) {
             throw new Error('No active WhatsApp page found');
         }
         if (client.pupPage !== activePage) {
             client.pupPage = activePage;
         }
-        await activePage.evaluate(() => document.title);
-
         if (watchdogFailCount > 0) {
-            console.log(`[WATCHDOG] Health restored after ${watchdogFailCount} transient error(s). Counter reset.`);
+            console.log(`[WATCHDOG] Connection verified. Counter reset.`);
             watchdogFailCount = 0;
         }
     } catch(err) {
         watchdogFailCount++;
-        const isTransient = err.message.includes('detached') ||
-                            err.message.includes('out of sandbox') ||
-                            err.message.includes('Target closed') ||
-                            err.message.includes('Session closed');
-
-        console.warn(`[WATCHDOG] Failure #${watchdogFailCount}/${WATCHDOG_MAX_FAILURES}: ${err.message}`);
-
+        console.warn(`[WATCHDOG] Warning #${watchdogFailCount}/${WATCHDOG_MAX_FAILURES}: ${err.message}`);
         if (watchdogFailCount >= WATCHDOG_MAX_FAILURES) {
-            console.error('[WATCHDOG] 3 consecutive failures — confirmed session loss. Triggering clean restart...');
+            console.error('[WATCHDOG] Confirmed connection loss. Triggering clean restart...');
             process.exit(1);
-        } else if (isTransient) {
-            console.log('[WATCHDOG] Transient frame/sandbox error — tolerating, will retry next cycle.');
         }
     }
 }, 30000);
@@ -363,7 +372,8 @@ client.on('message', async (msg) => {
         '9358706440', '919358706440', // Himanshi
         '8529911832', '918529911832', // Roshan
         '9549477444', '919549477444', // Dilip Singh (father)
-        '7976765590', '917976765590'  // Mother
+        '7976765590', '917976765590', // Mother
+        '8058363027', '918058363027'  // Whitelisted user
     ];
 
     let contactNum = '';
@@ -378,7 +388,7 @@ client.on('message', async (msg) => {
     try {
         const contact = await msg.getContact();
         contactName = contact.name || contact.pushname || '';
-        contactNum = (contact.number || '').replace(/[^\d]/g, '');
+        contactNum = (contact.number || contact.id?.user || '').replace(/[^\d]/g, '');
     } catch(e) {}
 
     const isHimanshi = (sender === '235429169213635@lid' ||
@@ -405,7 +415,10 @@ client.on('message', async (msg) => {
     const isMother = sender.includes('7976765590') ||
                      contactNum.includes('7976765590');
 
-    const isAllowed = isHimanshi || isRoshan || isDilip || isMother;
+    const isUserTester = sender.includes('8058363027') ||
+                         contactNum.includes('8058363027');
+
+    const isAllowed = isHimanshi || isRoshan || isDilip || isMother || isUserTester;
 
     if (!isAllowed) {
         console.log(`[FILTERED / IGNORED]: Message from ${sender} (Chat: "${chatTitle}", Contact: "${contactName}") - Not in allowed whitelist.`);
@@ -928,7 +941,12 @@ server.listen(3000, '0.0.0.0', () => {
     console.log('[HTTP] QR & API Server running on http://0.0.0.0:3000');
 });
 
-client.initialize().catch(err => {
-    console.error('[CLIENT INITIALIZE FATAL ERROR]:', err.message);
-    process.exit(1);
-});
+async function startAgent() {
+    try {
+        await client.initialize();
+    } catch(err) {
+        console.error('[CLIENT INITIALIZE FATAL ERROR]:', err.message);
+        setTimeout(() => process.exit(1), 5000);
+    }
+}
+startAgent();
