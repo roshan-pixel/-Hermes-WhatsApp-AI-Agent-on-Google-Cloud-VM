@@ -3,3 +3,5 @@ node_modules/
 .wwebjs_auth/
 .wwebjs_cache/
 *.log
+graphify-out/.graphify_python
+graphify-out/cost.json

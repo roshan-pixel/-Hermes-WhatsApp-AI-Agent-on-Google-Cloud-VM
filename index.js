@@ -25,6 +25,159 @@ const HERMES_API_KEY = process.env.HERMES_API_KEY || '';
 const HERMES_BASE_URL = process.env.HERMES_BASE_URL || 'https://openrouter.ai/api/v1';
 const HERMES_MODEL = process.env.HERMES_MODEL || 'nousresearch/hermes-3-llama-3.1-8b';
 
+// Google Cloud Vision Settings (Vision layer for DeepSeek / Hermes)
+const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || process.env.GEMINI_API_KEY || '';
+
+/**
+ * Attempts to retrieve Google Cloud OAuth token from GCE metadata server if running on GCP VM
+ */
+async function getGCPAccessToken() {
+    try {
+        const res = await fetch('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token', {
+            headers: { 'Metadata-Flavor': 'Google' },
+            signal: AbortSignal.timeout(1500)
+        });
+        if (res.ok) {
+            const data = await res.json();
+            return data.access_token;
+        }
+    } catch (e) {
+        // Not running on GCE or metadata server unreachable
+    }
+    return null;
+}
+
+/**
+ * Calls Google Cloud Vision API to extract labels, full text OCR, objects, and web context.
+ */
+async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
+    try {
+        let apiUrl = 'https://vision.googleapis.com/v1/images:annotate';
+        const headers = { 'Content-Type': 'application/json' };
+
+        const accessToken = await getGCPAccessToken();
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        } else if (GOOGLE_VISION_API_KEY) {
+            apiUrl += `?key=${GOOGLE_VISION_API_KEY}`;
+        } else {
+            console.warn('[Vision API] No Google Cloud Vision API key or GCE metadata token available.');
+            return null;
+        }
+
+        const requestBody = {
+            requests: [
+                {
+                    image: { content: base64Data },
+                    features: [
+                        { type: 'LABEL_DETECTION', maxResults: 10 },
+                        { type: 'TEXT_DETECTION' },
+                        { type: 'OBJECT_LOCALIZATION', maxResults: 10 },
+                        { type: 'SAFE_SEARCH_DETECTION' },
+                        { type: 'WEB_DETECTION', maxResults: 5 }
+                    ]
+                }
+            ]
+        };
+
+        const resp = await fetch(apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestBody),
+            signal: AbortSignal.timeout(15000)
+        });
+
+        if (!resp.ok) {
+            const errText = await resp.text();
+            console.error(`[Vision API Error ${resp.status}]:`, errText);
+            return null;
+        }
+
+        const data = await resp.json();
+        const annotation = data.responses?.[0];
+        if (!annotation) return null;
+
+        const labels = (annotation.labelAnnotations || []).map(l => l.description).join(', ');
+        const text = annotation.fullTextAnnotation?.text?.trim() || '';
+        const objects = (annotation.localizedObjectAnnotations || []).map(o => o.name).join(', ');
+        const webBestGuess = (annotation.webDetection?.bestGuessLabels || []).map(b => b.label).join(', ');
+        const webEntities = (annotation.webDetection?.webEntities || []).filter(e => e.description).slice(0, 5).map(e => e.description).join(', ');
+
+        const parts = [];
+        if (text) {
+            parts.push(`- Detected Text (OCR): "${text}"`);
+        }
+        if (labels) {
+            parts.push(`- Labels / Scene: ${labels}`);
+        }
+        if (objects) {
+            parts.push(`- Identified Objects: ${objects}`);
+        }
+        if (webBestGuess) {
+            parts.push(`- Best Web Guess / Entity: ${webBestGuess}`);
+        } else if (webEntities) {
+            parts.push(`- Relevant Web Topics: ${webEntities}`);
+        }
+
+        if (parts.length === 0) {
+            return `[IMAGE RECEIVED]: An image was received, but no specific text or known objects were recognized.`;
+        }
+
+        return `[IMAGE RECEIVED - ANALYZED BY GOOGLE CLOUD VISION API]:\n${parts.join('\n')}`;
+    } catch (err) {
+        console.error('[Vision API Exception]:', err.message);
+        return null;
+    }
+}
+
+/**
+ * Fallback image analysis using Gemini Multimodal if Google Cloud Vision is unavailable
+ */
+async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
+    if (!GEMINI_API_KEY) return null;
+    try {
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [
+                        { text: "Describe what is in this image concisely in 2-3 sentences. If there is text or handwriting, transcribe it accurately. Be specific about key objects, people, scenes, or actions." },
+                        { inline_data: { mime_type: mimeType, data: base64Data } }
+                    ]
+                }],
+                generationConfig: { maxOutputTokens: 250 }
+            }),
+            signal: AbortSignal.timeout(15000)
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            const desc = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            if (desc) {
+                return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${desc}`;
+            }
+        }
+    } catch (e) {
+        console.error('[Gemini Vision Fallback Error]:', e.message);
+    }
+    return null;
+}
+
+/**
+ * Multi-layer Vision Engine: Prioritizes Google Cloud Vision API, falls back to Gemini Multimodal
+ */
+async function getImageVisionDescription(base64Data, mimeType = 'image/jpeg') {
+    console.log('[Vision Engine] Processing image with Google Cloud Vision API...');
+    const visionResult = await analyzeImageWithVision(base64Data, mimeType);
+    if (visionResult) return visionResult;
+
+    console.log('[Vision Engine] Cloud Vision API unavailable or returned empty. Falling back to Gemini Multimodal Vision...');
+    const geminiResult = await analyzeImageWithGemini(base64Data, mimeType);
+    if (geminiResult) return geminiResult;
+
+    return '[IMAGE RECEIVED]: An image file was received, but automated vision analysis was unavailable.';
+}
+
 const OWNER_NAME = process.env.OWNER_NAME || 'My Owner';
 const BOT_NAME = process.env.BOT_NAME || 'Hermes AI';
 const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || 
@@ -357,10 +510,13 @@ const pendingBuffers = new Map(); // sender -> { timeout, texts: [], lastMsg }
 client.on('message', async (msg) => {
     if (msg.from === 'status@broadcast') return;
     if (msg.from.endsWith('@g.us')) return;
-    if (msg.fromMe || !msg.body || msg.body.trim().length === 0) return;
+    if (msg.fromMe) return;
+
+    const hasMedia = Boolean(msg.hasMedia);
+    const incomingText = (msg.body || '').trim();
+    if (!hasMedia && incomingText.length === 0) return;
 
     const sender = msg.from;
-    const incomingText = msg.body.trim();
 
     // ─── STRICT WHITELIST: Only reply to known contacts ───
     const allowedLIDs = [
@@ -446,8 +602,38 @@ CRITICAL INSTRUCTIONS:
 4. WhatsApp Length: 1 to 2 short warm sentences maximum.`;
     }
 
+    // ─── VISION ENGINE: Process image media attachments ───
+    let visionContext = '';
+    if (hasMedia) {
+        try {
+            console.log(`[MEDIA] Downloading media attachment from ${sender}...`);
+            const media = await msg.downloadMedia();
+            if (media && media.data && media.mimetype && media.mimetype.startsWith('image/')) {
+                console.log(`[VISION] Analyzing image (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Vision Engine...`);
+                visionContext = await getImageVisionDescription(media.data, media.mimetype);
+                console.log(`[VISION RESULT]:\n${visionContext}`);
+            }
+        } catch (mediaErr) {
+            console.error('[MEDIA/VISION ERROR]:', mediaErr.message);
+        }
+    }
+
+    let finalPrompt = incomingText;
+    if (visionContext) {
+        if (incomingText) {
+            finalPrompt = `${visionContext}\n\nUser text accompanying the photo: "${incomingText}"`;
+        } else {
+            finalPrompt = `${visionContext}\n\n(Note: User sent this image without any text. Acknowledge and react to what is in the photo naturally in character.)`;
+        }
+    }
+
     console.log(`
-[INCOMING from ${isDilip ? 'Dilip Singh (' + sender + ')' : sender}]: ${incomingText}`);
+[INCOMING from ${isDilip ? 'Dilip Singh (' + sender + ')' : sender}]: ${finalPrompt}`);
+
+    // Context enrichment: IST Clock + Past Memory Graph
+    const timeContext = getCurrentISTContext();
+    const memoryContext = queryChatMemory(incomingText || finalPrompt);
+    const fullPrompt = (customPrompt || SYSTEM_PROMPT) + timeContext + (memoryContext ? memoryContext : '');
 
     try {
         const chat = await msg.getChat().catch(() => null);
@@ -455,7 +641,7 @@ CRITICAL INSTRUCTIONS:
             await chat.sendStateTyping().catch(() => {});
         }
 
-        const reply = await generateAIReply(sender, incomingText, customPrompt);
+        const reply = await generateAIReply(sender, finalPrompt, fullPrompt);
         console.log(`[REPLY to ${isDilip ? 'Dilip Singh (Formal)' : sender}]: ${reply}`);
         await msg.reply(reply);
 

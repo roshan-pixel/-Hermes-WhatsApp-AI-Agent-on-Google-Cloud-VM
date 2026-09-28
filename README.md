@@ -26,7 +26,8 @@ The agent operates with **zero phone dependency** (runs 24/7 without the physica
 | **`23f0ce4`** | **Debouncing & Typing** | Implemented a **3.5s sliding-window message debouncer** to aggregate rapid multi-line bursts into single coherent prompts, accompanied by native `sendStateTyping()` simulation. |
 | **`d012145`** | **Presence Engine** | Activated continuous **12-second presence keep-alive heartbeat** with synthetic browser focus/visibility events via `WAWebPresenceChatAction` to sustain 24/7 online status. |
 | **`v1.1.0`** | **Production Resilience** | Engineered automatic D-Bus isolation, Chromium stale singleton lock auto-cleaning, subframe framenavigated crash guards, 10-strike connection watchdog, phone pairing code API, and 24/7 long-term multi-device persistence (`pm2 save` + systemd). |
-| **`HEAD`** | **Graphify Integration** | Full knowledge graph compilation (69 nodes, 69 edges across 7 functional communities) with interactive visualization, callflow diagrams, and agent wiki. |
+| **`HEAD`** | **Graphify Integration** | Full knowledge graph compilation (75 nodes, 76 edges across 12 functional communities) with interactive visualization, callflow diagrams, and agent wiki. |
+| **`v1.2.0`** | **Vision Engine (GCP Vision API)** | Added Google Cloud Vision API integration (OCR, label detection, object localization, web entities) with automatic fallback to Gemini Multimodal. Empowers the text-based DeepSeek brain with native vision understanding on incoming WhatsApp media. |
 
 ---
 
