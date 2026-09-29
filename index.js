@@ -1046,6 +1046,7 @@ client.on('disconnected', (reason) => {
 // The bot now operates strictly in reactive mode: it ONLY replies when messages are received.
 
 const pendingBuffers = new Map(); // sender -> { timeout, texts: [], lastMsg }
+const lastMediaStore = new Map();  // sender -> { storageInfo, timestamp } — remembers last upload for 10 minutes
 
 client.on('message', async (msg) => {
     if (msg.from === 'status@broadcast') return;
@@ -1183,6 +1184,13 @@ CRITICAL INSTRUCTIONS:
                 } else if (storageInfo && storageInfo.gcsUrl) {
                     mediaContext += `\n[CLOUD STORAGE LINK]: ${storageInfo.gcsUrl}`;
                 }
+
+                // Remember this upload for this sender for 10 minutes
+                // so "save to drive" sent as a separate follow-up message works
+                if (storageInfo) {
+                    lastMediaStore.set(sender, { storageInfo, timestamp: Date.now() });
+                    console.log(`[LAST MEDIA STORE] Cached storageInfo for ${sender} (driveUrl: ${storageInfo.driveUrl || 'none'})`);
+                }
             } else {
                 console.warn('[MEDIA WARNING]: downloadMedia() returned empty or undefined media.');
             }
@@ -1207,22 +1215,33 @@ CRITICAL INSTRUCTIONS:
     }
 
     // ─── SAVE-TO-DRIVE INTENT: Short-circuit reply ───
-    // If user explicitly asked to save/store/upload to Drive and we have a result, reply directly.
-    const saveToDriveIntent = /\b(save|store|upload|add|put|backup|keep)\b.{0,30}\b(drive|google drive|gdrive|vault|cloud)\b/i.test(incomingText) ||
-                              /\b(drive|google drive|gdrive|vault|cloud)\b.{0,20}\b(save|store|upload|backup)\b/i.test(incomingText);
+    // Triggers whether user sent image+caption together OR image first then "save to drive" as separate text.
+    const saveToDriveIntent = /\b(save|store|upload|add|put|backup|keep)\b.{0,40}\b(drive|google drive|gdrive|vault|cloud)\b/i.test(incomingText) ||
+                              /\b(drive|google drive|gdrive|vault|cloud)\b.{0,30}\b(save|store|upload|backup)\b/i.test(incomingText) ||
+                              /^(save|drive|store|vault)\s*(it|this|that|screenshot|ss|image|photo|pic)?\s*(to\s*(drive|vault|cloud))?$/i.test(incomingText.trim());
 
-    if (saveToDriveIntent && hasMedia) {
-        let directReply = '';
-        if (storageInfo && storageInfo.driveUrl) {
-            directReply = `✅ Done! Saved to your Google Drive vault.\n\n🔗 ${storageInfo.driveUrl}`;
-        } else if (storageInfo && storageInfo.gcsUrl) {
-            directReply = `✅ Saved to Cloud Storage vault (Google Drive upload is setting up — will be available shortly).\n\n🔗 ${storageInfo.gcsUrl}`;
-        } else if (storageInfo && storageInfo.saved) {
-            directReply = `✅ Archived locally on the server. (Google Drive upload had a hiccup — will retry on next send.)`;
-        } else {
-            directReply = `⚠️ Couldn't save to Drive right now — the media download may have failed. Try sending the file again?`;
+    // Resolve which storageInfo to use: current message's media OR last cached media (within 10 min)
+    let effectiveStorageInfo = storageInfo;
+    if (!effectiveStorageInfo && saveToDriveIntent && !hasMedia) {
+        const cached = lastMediaStore.get(sender);
+        if (cached && (Date.now() - cached.timestamp) < 10 * 60 * 1000) {
+            effectiveStorageInfo = cached.storageInfo;
+            console.log(`[SAVE-TO-DRIVE] Using cached storageInfo for ${sender} from ${Math.round((Date.now() - cached.timestamp)/1000)}s ago`);
         }
-        console.log(`[SAVE-TO-DRIVE SHORTCUT] Sending direct reply: ${directReply}`);
+    }
+
+    if (saveToDriveIntent && (hasMedia || effectiveStorageInfo)) {
+        let directReply = '';
+        if (effectiveStorageInfo && effectiveStorageInfo.driveUrl) {
+            directReply = `✅ Saved to your Google Drive vault!\n\n🔗 ${effectiveStorageInfo.driveUrl}`;
+        } else if (effectiveStorageInfo && effectiveStorageInfo.gcsUrl) {
+            directReply = `✅ Saved to Cloud Storage vault (Drive backup also running).\n\n🔗 ${effectiveStorageInfo.gcsUrl}`;
+        } else if (effectiveStorageInfo && effectiveStorageInfo.saved) {
+            directReply = `✅ Archived on the server. (Google Drive had a hiccup — try resending the file and I'll retry.)`;
+        } else {
+            directReply = `⚠️ Couldn't save to Drive — media download may have failed. Try sending the screenshot again?`;
+        }
+        console.log(`[SAVE-TO-DRIVE SHORTCUT] ${directReply.substring(0, 80)}`);
         try {
             const chat = await msg.getChat().catch(() => null);
             if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
