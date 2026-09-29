@@ -1,16 +1,16 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-09-29)
 
 ## Corpus Check
-- 32 files · ~23,463 words
+- 32 files · ~24,350 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 344 nodes · 399 edges · 39 communities (37 shown, 2 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
+- 348 nodes · 405 edges · 40 communities (37 shown, 3 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6588461d`
+- Built from commit: `6652fbaf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -54,9 +54,10 @@
 - [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 37|Community 37]]
 - [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `handleIncomingMessage()` - 14 edges
+1. `handleIncomingMessage()` - 15 edges
 2. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
 3. `sendEmail()` - 6 edges
 4. `saveMediaToCloudStorage()` - 6 edges
@@ -84,11 +85,11 @@
 - **Chromium Runtime Crash Defense System** — index_watchdog, patch_wwebjs_script, patch_framenavigated_guard, patch_evaluate_loop_guards, patch_inject_retry_loop [INFERRED 0.95]
 - **Multi-Factor Whitelist & Persona Isolation Framework** — index_message_handler, readme_whitelist_isolation_matrix, readme_reactive_architecture [INFERRED 0.95]
 
-## Communities (39 total, 2 thin omitted)
+## Communities (40 total, 3 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
-Nodes (58): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, cached, chatHistory, cleanJson, client (+50 more)
+Nodes (59): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, burst, cached, chatHistory, cleanJson (+51 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.12
@@ -120,19 +121,19 @@ Nodes (4): analyzeImageWithGemini(), analyzeImageWithVision(), getGCPAccessToken
 
 ### Community 10 - "Community 10"
 Cohesion: 0.06
-Nodes (31): 1. Provision the Google Cloud Compute Engine VM, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 4. Clone Repository & Setup Environment, code:block1 (+───────────────────────────────────────────────────────────), code:bash (sudo apt update && sudo apt upgrade -y), code:bash (git clone https://github.com/roshan-pixel/Hermes-WhatsApp-Ag), code:env (# Primary AI Provider: 'deepseek', 'gemini', or 'hermes') (+23 more)
+Nodes (35): 1. 100% Purely Reactive Architecture, 2. High-Resilience 3-Strike Grace Watchdog, 3. Rapid Debouncer & Real-Time Typing Simulation, 4. 24/7 Presence Engine & Synthetic Focus Simulation, 5. Multi-Device Phone Pairing Code API, code:block1 (+───────────────────────────────────────────────────────────), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" -L 3000), code:block14 (http://localhost:3000/pair-code?phone=918058363027) (+27 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.29
-Nodes (7): code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" -L 3000), code:block14 (http://localhost:3000/pair-code?phone=918058363027), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" sgarm@1), Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning), Option B: Terminal ASCII QR Code, Option C: Browser Visual QR, 📲 WhatsApp Multi-Device Linking Protocol
+Cohesion: 0.18
+Nodes (11): 1. Provision the Google Cloud Compute Engine VM, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 4. Clone Repository & Setup Environment, code:bash (sudo apt update && sudo apt upgrade -y), code:bash (git clone https://github.com/roshan-pixel/Hermes-WhatsApp-Ag), code:env (# Primary AI Provider: 'deepseek', 'gemini', or 'hermes'), code:bash (gcloud compute instances create hermes-whatsapp-agent \) (+3 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.15
-Nodes (19): analyzeImageWithGemini(), analyzeImageWithVision(), buildEmailConfirmation(), buildEmailPreviewCard(), cleanOcrText(), getAudioTranscription(), getCurrentISTContext(), getGCPAccessToken() (+11 more)
+Cohesion: 0.20
+Nodes (11): buildEmailConfirmation(), buildEmailPreviewCard(), formatUptime(), getAudioTranscription(), getCurrentISTContext(), handleIncomingMessage(), processBurstItem(), robustDownloadMedia() (+3 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.25
-Nodes (8): 1. 100% Purely Reactive Architecture, 2. High-Resilience 3-Strike Grace Watchdog, 3. Rapid Debouncer & Real-Time Typing Simulation, 4. 24/7 Presence Engine & Synthetic Focus Simulation, 5. Multi-Device Phone Pairing Code API, code:javascript (// Health check watchdog: evaluates active page DOM title ev), code:block3 (Himanshi: Sun), 🛠️ Core Engineering Highlights
+Cohesion: 0.31
+Nodes (9): analyzeImageWithGemini(), analyzeImageWithVision(), cleanOcrText(), getGCPAccessToken(), getGoogleDriveAccessToken(), getImageVisionDescription(), saveMediaToCloudStorage(), transcribeAudioWithSpeech() (+1 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.42
@@ -235,24 +236,24 @@ Cohesion: 0.50
 Nodes (3): Core System Architecture & God Nodes, Critical Guidelines, Hermes WhatsApp AI Agent - Architecture & System Guide
 
 ## Knowledge Gaps
-- **191 isolated node(s):** `fs`, `path`, `posts`, `fs`, `path` (+186 more)
+- **192 isolated node(s):** `fs`, `path`, `posts`, `fs`, `path` (+187 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` connect `Community 10` to `Community 11`, `Community 13`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` connect `Community 10` to `Community 11`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Why does `client` connect `Community 2` to `Community 0`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Why does `generateAIReply()` connect `Community 3` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **What connects `fs`, `path`, `posts` to the rest of the system?**
-  _199 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _200 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.03278688524590164 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.03225806451612903 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._

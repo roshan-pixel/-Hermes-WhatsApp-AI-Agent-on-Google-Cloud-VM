@@ -1199,6 +1199,14 @@ client.on('message', (msg) => {
         bufferMediaBurst(msg);
         return;
     }
+    // Follow-up text while photos are still buffering: attach it to the burst as the guiding question
+    // (instant commands like reset/help still run immediately).
+    if (!msg.fromMe && !msg.hasMedia && msg.body && mediaBursts.has(msg.from) && !isInstantCommand(msg.body)) {
+        const burst = mediaBursts.get(msg.from);
+        burst.query = burst.query ? `${burst.query} ${msg.body}` : msg.body;
+        scheduleBurstFlush(msg.from, burst);
+        return;
+    }
     enqueueChatTask(msg.from, () => handleIncomingMessage(msg)).catch(err => {
         console.error('[QUEUE] Message handler failed:', err && (err.stack || err.message || err));
     });
@@ -1208,31 +1216,53 @@ client.on('message', (msg) => {
 const MEDIA_BURST_DEBOUNCE_MS = 2500;
 const mediaBursts = new Map();
 
-function bufferMediaBurst(msg) {
-    const sender = msg.from;
-    let burst = mediaBursts.get(sender);
-    if (!burst) {
-        burst = { msgs: [], timer: null };
-        mediaBursts.set(sender, burst);
-    }
-    burst.msgs.push(msg);
+const RESET_RE = /^\s*(\/?reset|clear(\s+all)?|restart|clean|forget|new\s*chat|nayi\s*shuruat|bhool\s*jao)[.!?,]*\s*$/i;
+const DRIVE_RE = /^\s*(\/?drive|\/?vault|gdrive|cloud\s*vault)[.!?,]*\s*$/i;
+const HELP_RE = /^\s*(\/?help|\/?commands?|\/?menu)[.!?,]*\s*$/i;
+const STATUS_RE = /^\s*(\/?status|\/?ping|\/?health)[.!?,]*\s*$/i;
+const DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1g_P5pR04n6VDqO1iZQGYfJf-Pvj8T05r';
+
+function isInstantCommand(text) {
+    return [RESET_RE, DRIVE_RE, HELP_RE, STATUS_RE].some(re => re.test(text || ''));
+}
+
+function formatUptime(totalSeconds) {
+    const s = Math.floor(totalSeconds);
+    const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
+    return `${d ? d + 'd ' : ''}${h}h ${m}m`;
+}
+
+function scheduleBurstFlush(sender, burst) {
     clearTimeout(burst.timer);
     burst.timer = setTimeout(() => {
         mediaBursts.delete(sender);
         const msgs = burst.msgs;
+        const query = burst.query || '';
         const task = msgs.length === 1
-            ? () => handleIncomingMessage(msgs[0])
-            : () => handleIncomingMessage(msgs[msgs.length - 1], { burst: msgs });
+            ? () => handleIncomingMessage(msgs[0], { query })
+            : () => handleIncomingMessage(msgs[msgs.length - 1], { burst: msgs, query });
         enqueueChatTask(sender, task).catch(err => {
             console.error('[QUEUE] Media burst handler failed:', err && (err.stack || err.message || err));
         });
     }, MEDIA_BURST_DEBOUNCE_MS);
 }
 
+function bufferMediaBurst(msg) {
+    const sender = msg.from;
+    let burst = mediaBursts.get(sender);
+    if (!burst) {
+        burst = { msgs: [], timer: null, query: '' };
+        mediaBursts.set(sender, burst);
+    }
+    burst.msgs.push(msg);
+    scheduleBurstFlush(sender, burst);
+}
+
 // Downloads, vaults and analyzes one burst item; never throws so Promise.all can't fail the whole burst.
 async function processBurstItem(m, sender) {
     try {
         const media = await withTimeout(robustDownloadMedia(client, m), 45000, 'Media download', null);
+        const caption = (m.body || '').trim();
         if (!media || !media.data) return { desc: '[media could not be downloaded]', storageInfo: null };
         const storageInfo = await withTimeout(saveMediaToCloudStorage(media.data, media.mimetype, sender, media.filename), 30000, 'Cloud vault save', null);
         let desc;
@@ -1242,6 +1272,7 @@ async function processBurstItem(m, sender) {
         } else {
             desc = `[DOCUMENT]: "${media.filename || 'Document'}" (${media.mimetype}) received and archived.`;
         }
+        if (caption) desc += `\n[USER CAPTION ON THIS ITEM]: "${caption}"`;
         return { desc, storageInfo };
     } catch (err) {
         console.error('[BURST ITEM ERROR]:', err && (err.message || err));
@@ -1255,7 +1286,8 @@ async function handleIncomingMessage(msg, opts = {}) {
     if (msg.fromMe) return;
 
     const hasMedia = Boolean(msg.hasMedia);
-    const incomingText = (msg.body || '').trim();
+    // opts.query = follow-up text typed while the media burst was still buffering
+    const incomingText = [(msg.body || '').trim(), (opts.query || '').trim()].filter(Boolean).join(' ');
     if (!hasMedia && incomingText.length === 0) return;
 
     const sender = msg.from;
@@ -1326,11 +1358,49 @@ async function handleIncomingMessage(msg, opts = {}) {
     }
 
     // ─── INSTANT RESET: zero LLM, zero media processing ───
-    if (/^\s*(\/reset|reset|clear|clear chat|restart|clean|forget|new chat|nayi shuruat|bhool jao)\s*$/i.test(incomingText)) {
+    if (!hasMedia && RESET_RE.test(incomingText)) {
         chatHistory.delete(sender);
         pendingEmailDrafts.delete(sender);
         lastMediaStore.delete(sender);
         await msg.reply('🧹');
+        return;
+    }
+    if (!hasMedia && DRIVE_RE.test(incomingText)) {
+        await msg.reply(`📁 *Your Cloud Vault*\n${DRIVE_FOLDER_URL}`);
+        return;
+    }
+    if (!hasMedia && HELP_RE.test(incomingText)) {
+        await msg.reply(
+            `🤖 *Hermes Command Cheat Sheet*\n\n` +
+            `⚡ *Instant commands*\n` +
+            `• *reset* / clear / new chat — wipe chat memory\n` +
+            `• *drive* / vault — open your Google Drive vault\n` +
+            `• *status* / ping — uptime & services\n` +
+            `• *help* / menu — this list\n\n` +
+            `📸 *Photos & documents*\n` +
+            `• Send one or many — I reply with one summary card\n` +
+            `• Add a question right after (e.g. "total kitna hai?") and I'll answer it\n` +
+            `• Say *save to drive* to get the vault links\n\n` +
+            `✉️ *Email*\n` +
+            `• "Email <name> about ..." — I draft it and ask you to confirm before sending`);
+        return;
+    }
+    if (!hasMedia && STATUS_RE.test(incomingText)) {
+        const primary = AI_PROVIDER === 'gemini' ? `Gemini (${GEMINI_MODEL})`
+            : AI_PROVIDER === 'hermes' ? `Hermes (${HERMES_MODEL})`
+            : `DeepSeek (${DEEPSEEK_MODEL})`;
+        const yn = ok => ok ? '✅' : '❌';
+        await msg.reply(
+            `🟢 *Hermes is online*\n\n` +
+            `⏱ Uptime: ${formatUptime(process.uptime())}\n` +
+            `🧠 AI: ${primary}${GEMINI_API_KEY && AI_PROVIDER !== 'gemini' ? ` → backup Gemini (${GEMINI_MODEL})` : ''}\n\n` +
+            `*Services*\n` +
+            `${yn(true)} WhatsApp\n` +
+            `${yn(DEEPSEEK_API_KEY)} DeepSeek\n` +
+            `${yn(GEMINI_API_KEY)} Gemini\n` +
+            `${yn(GOOGLE_VISION_API_KEY)} Cloud Vision\n` +
+            `${yn(googleDriveKey)} Google Drive vault\n` +
+            `${yn(GCS_BUCKET_NAME)} Cloud Storage`);
         return;
     }
 
@@ -1362,10 +1432,14 @@ CRITICAL INSTRUCTIONS:
         const results = await Promise.all(burst.map(m => processBurstItem(m, sender)));
 
         const lastStored = [...results].reverse().find(r => r.storageInfo);
-        if (lastStored) lastMediaStore.set(sender, { storageInfo: lastStored.storageInfo, timestamp: Date.now() });
+        const urls = results.map(r => r.storageInfo && (r.storageInfo.driveUrl || r.storageInfo.gcsUrl)).filter(Boolean);
+        if (lastStored) lastMediaStore.set(sender, { storageInfo: lastStored.storageInfo, urls, timestamp: Date.now() });
 
+        const userQuestion = incomingText
+            ? `\nThe user also asked: "${incomingText}" — answer it directly about these items in the Combined Takeaway.\n`
+            : '';
         const itemsText = results.map((r, i) => `--- ITEM ${i + 1} ---\n${r.desc}`).join('\n\n');
-        const burstPrompt = `[MEDIA BURST: ${burst.length} photos/documents received at once]\n${itemsText}\n\n` +
+        const burstPrompt = `[MEDIA BURST: ${burst.length} photos/documents received at once]\n${itemsText}\n${userQuestion}\n` +
             `Reply with ONE combined WhatsApp card covering all ${burst.length} items (max ~200 words, never paste raw OCR, *single asterisks* only):\n` +
             `📸 *Received ${burst.length} Photos / Documents*\n` +
             `• *Item 1:* <key details/figures>\n` +
@@ -1379,7 +1453,11 @@ CRITICAL INSTRUCTIONS:
             const timeContext = getCurrentISTContext();
             const reply = sanitizeWhatsAppReply(await generateAIReply(sender, burstPrompt, (customPrompt || SYSTEM_PROMPT) + timeContext, 500));
             console.log(`[BURST REPLY to ${sender}]: ${reply}`);
-            await msg.reply(reply);
+            let finalReply = reply;
+            if (urls.length && /\b(save|store|upload|backup|daal|rakh)\b.{0,40}\b(drive|gdrive|vault|cloud)\b/i.test(opts.query || '')) {
+                finalReply += `\n\n✅ Saved ${urls.length} files to your Cloud Vault:\n` + urls.map((u, i) => `${i + 1}. ${u}`).join('\n');
+            }
+            await msg.reply(finalReply);
             if (chat && chat.clearState) await chat.clearState().catch(() => {});
         } catch (err) {
             console.error('[BURST REPLY ERROR]:', err);
@@ -1434,7 +1512,7 @@ CRITICAL INSTRUCTIONS:
                 // Remember this upload for this sender for 10 minutes
                 // so "save to drive" sent as a separate follow-up message works
                 if (storageInfo) {
-                    lastMediaStore.set(sender, { storageInfo, timestamp: Date.now() });
+                    lastMediaStore.set(sender, { storageInfo, urls: [storageInfo.driveUrl || storageInfo.gcsUrl].filter(Boolean), timestamp: Date.now() });
                     console.log(`[LAST MEDIA STORE] Cached storageInfo for ${sender} (driveUrl: ${storageInfo.driveUrl || 'none'})`);
                 }
             } else {
@@ -1469,19 +1547,23 @@ CRITICAL INSTRUCTIONS:
 
     // Resolve which storageInfo to use: current message's media OR last cached media (within 10 min)
     let effectiveStorageInfo = storageInfo;
+    let effectiveUrls = storageInfo ? [storageInfo.driveUrl || storageInfo.gcsUrl].filter(Boolean) : [];
     if (!effectiveStorageInfo && saveToDriveIntent && !hasMedia) {
         const cached = lastMediaStore.get(sender);
         if (cached && (Date.now() - cached.timestamp) < 10 * 60 * 1000) {
             effectiveStorageInfo = cached.storageInfo;
+            effectiveUrls = cached.urls || [];
             console.log(`[SAVE-TO-DRIVE] Using cached storageInfo for ${sender} from ${Math.round((Date.now() - cached.timestamp)/1000)}s ago`);
         }
     }
 
     if (saveToDriveIntent && (hasMedia || effectiveStorageInfo)) {
         let directReply = '';
-        const vaultUrl = effectiveStorageInfo?.driveUrl || effectiveStorageInfo?.gcsUrl;
-        if (vaultUrl) {
-            directReply = `✅ Saved to your Cloud Vault!\n\n🔗 ${vaultUrl}`;
+        if (effectiveUrls.length === 1) {
+            directReply = `✅ Saved to your Cloud Vault!\n\n🔗 ${effectiveUrls[0]}`;
+        } else if (effectiveUrls.length > 1) {
+            directReply = `✅ Saved ${effectiveUrls.length} files to your Cloud Vault!\n\n` +
+                effectiveUrls.map((u, i) => `${i + 1}. ${u}`).join('\n');
         } else if (effectiveStorageInfo && effectiveStorageInfo.saved) {
             directReply = `✅ Archived securely on the cloud server.`;
         } else {
