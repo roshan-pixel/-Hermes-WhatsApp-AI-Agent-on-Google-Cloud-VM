@@ -204,11 +204,12 @@ async function transcribeAudioWithSpeech(base64Data, mimeType = 'audio/ogg') {
         }
 
         let encoding = 'OGG_OPUS';
-        let sampleRateHertz = 16000;
+        let sampleRateHertz = 48000; // WhatsApp voice notes are Opus @ 48kHz
 
         const cleanMime = (mimeType || '').toLowerCase();
         if (cleanMime.includes('mp4') || cleanMime.includes('m4a') || cleanMime.includes('aac')) {
             encoding = 'MP3';
+            sampleRateHertz = 16000;
         }
 
         const requestBody = {
@@ -312,31 +313,18 @@ async function transcribeAudioWithGemini(base64Data, mimeType = 'audio/ogg') {
 }
 
 /**
- * Multi-layer Audio Engine: Tries Gemini first for OGG/Opus (WhatsApp native format),
- * then Google Cloud Speech-to-Text, with final fallback message.
+ * Multi-layer Audio Engine: Google Cloud Speech-to-Text (48kHz Opus) → Gemini fallback
  */
 async function getAudioTranscription(base64Data, mimeType = 'audio/ogg') {
-    const cleanMime = (mimeType || '').toLowerCase();
-    const isOgg = cleanMime.includes('ogg') || cleanMime.includes('opus');
-
-    // For OGG/Opus (WhatsApp voice notes): try Gemini first — handles natively
-    if (isOgg && GEMINI_API_KEY) {
-        console.log('[Audio Engine] OGG/Opus detected — trying Gemini Multimodal first...');
-        const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
-        if (geminiResult) return geminiResult;
-    }
-
-    // Google Cloud Speech-to-Text
-    console.log('[Audio Engine] Trying Google Cloud Speech-to-Text...');
+    // Google Cloud Speech-to-Text (primary — confirmed working @ 48kHz)
+    console.log('[Audio Engine] Trying Google Cloud Speech-to-Text (OGG_OPUS 48kHz)...');
     const speechResult = await transcribeAudioWithSpeech(base64Data, mimeType);
     if (speechResult) return speechResult;
 
-    // Final Gemini fallback (if not already tried)
-    if (!isOgg || !GEMINI_API_KEY) {
-        console.log('[Audio Engine] Falling back to Gemini Multimodal...');
-        const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
-        if (geminiResult) return geminiResult;
-    }
+    // Gemini Multimodal (fallback)
+    console.log('[Audio Engine] Speech API empty — trying Gemini Multimodal fallback...');
+    const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
+    if (geminiResult) return geminiResult;
 
     return '[VOICE NOTE / AUDIO RECEIVED]: A voice message was received, but automated transcription was unavailable.';
 }
