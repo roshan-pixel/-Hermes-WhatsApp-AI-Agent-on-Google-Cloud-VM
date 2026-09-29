@@ -30,6 +30,20 @@ const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV
 const GOOGLE_SPEECH_API_KEY = process.env.GOOGLE_SPEECH_API_KEY || process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV3SMllSsMvdALP81zmQlrV_9w7k0';
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'hermes-whatsapp-vault-390608';
 
+// Google Drive Vault Settings (Option B)
+const GOOGLE_DRIVE_KEY_PATH = process.env.GOOGLE_DRIVE_KEY_PATH || path.join(__dirname, 'google-drive-key.json');
+const GOOGLE_DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
+
+let googleDriveKey = null;
+if (fs.existsSync(GOOGLE_DRIVE_KEY_PATH)) {
+    try {
+        googleDriveKey = JSON.parse(fs.readFileSync(GOOGLE_DRIVE_KEY_PATH, 'utf8'));
+        console.log(`[GOOGLE DRIVE] Loaded Service Account: ${googleDriveKey.client_email}`);
+    } catch (e) {
+        console.warn('[GOOGLE DRIVE] Could not load service account key:', e.message);
+    }
+}
+
 /**
  * Attempts to retrieve Google Cloud OAuth token from GCE metadata server if running on GCP VM
  */
@@ -330,7 +344,116 @@ async function getAudioTranscription(base64Data, mimeType = 'audio/ogg') {
 }
 
 /**
- * Google Cloud Storage Vault: Automatically archives incoming media (images, audio, docs) to persistent disk and Google Cloud Storage bucket
+ * Retrieves a Google OAuth2 access token for Google Drive API using RS256 JWT
+ */
+async function getGoogleDriveAccessToken() {
+    if (!googleDriveKey) return null;
+    try {
+        const crypto = require('crypto');
+        const now = Math.floor(Date.now() / 1000);
+        const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+        const claim = Buffer.from(JSON.stringify({
+            iss: googleDriveKey.client_email,
+            scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file',
+            aud: 'https://oauth2.googleapis.com/token',
+            exp: now + 3600,
+            iat: now
+        })).toString('base64url');
+
+        const signer = crypto.createSign('RSA-SHA256');
+        signer.update(`${header}.${claim}`);
+        const signature = signer.sign(googleDriveKey.private_key, 'base64url');
+        const jwt = `${header}.${claim}.${signature}`;
+
+        const resp = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+        });
+
+        const data = await resp.json();
+        return data.access_token || null;
+    } catch (e) {
+        console.error('[GOOGLE DRIVE AUTH ERROR]:', e.message);
+        return null;
+    }
+}
+
+/**
+ * Uploads a file buffer directly to Google Drive via multipart upload
+ */
+async function uploadToGoogleDrive(buffer, originalFilename, mimeType = 'application/octet-stream') {
+    const accessToken = await getGoogleDriveAccessToken();
+    if (!accessToken) return null;
+
+    try {
+        const boundary = 'hermes_drive_boundary_' + Date.now();
+        const cleanName = originalFilename || `file_${Date.now()}`;
+        const cleanMime = (mimeType || 'application/octet-stream').split(';')[0];
+
+        const metadata = {
+            name: cleanName,
+            mimeType: cleanMime,
+            description: 'Uploaded by Hermes WhatsApp AI Agent'
+        };
+
+        if (GOOGLE_DRIVE_FOLDER_ID) {
+            metadata.parents = [GOOGLE_DRIVE_FOLDER_ID];
+        }
+
+        const multipartBody = Buffer.concat([
+            Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n--${boundary}\r\nContent-Type: ${cleanMime}\r\n\r\n`),
+            buffer,
+            Buffer.from(`\r\n--${boundary}--`)
+        ]);
+
+        const uploadUrl = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id,name,webViewLink,webContentLink';
+
+        const uploadResp = await fetch(uploadUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': `multipart/related; boundary=${boundary}`
+            },
+            body: multipartBody,
+            signal: AbortSignal.timeout(60000)
+        });
+
+        if (!uploadResp.ok) {
+            const errText = await uploadResp.text();
+            console.warn(`[GOOGLE DRIVE UPLOAD WARN ${uploadResp.status}]:`, errText);
+            return null;
+        }
+
+        const fileResult = await uploadResp.json();
+        console.log(`[GOOGLE DRIVE] Uploaded successfully: "${fileResult.name}" (ID: ${fileResult.id})`);
+
+        // Attempt to make file readable via link
+        try {
+            await fetch(`https://www.googleapis.com/drive/v3/files/${fileResult.id}/permissions?supportsAllDrives=true`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ role: 'reader', type: 'anyone' })
+            });
+        } catch (_) {}
+
+        return {
+            id: fileResult.id,
+            name: fileResult.name,
+            driveUrl: fileResult.webViewLink || `https://drive.google.com/file/d/${fileResult.id}/view?usp=sharing`
+        };
+    } catch (e) {
+        console.error('[GOOGLE DRIVE ERROR]:', e.message);
+        return null;
+    }
+}
+
+/**
+ * Multi-destination Storage Vault: Archives incoming media (images, audio, docs)
+ * to local disk, Google Drive, and Google Cloud Storage bucket
  */
 async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFilename = null) {
     try {
@@ -360,7 +483,20 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
         fs.writeFileSync(localFilePath, buffer);
         console.log(`[CLOUD VAULT] Saved local archive: ${localFilePath} (~${Math.round(buffer.length / 1024)} KB)`);
 
-        // Upload to Google Cloud Storage Bucket if GCE token or auth available
+        let gcsUrl = null;
+        let driveUrl = null;
+
+        // 1. Google Drive Upload (Option B)
+        if (googleDriveKey) {
+            console.log(`[GOOGLE DRIVE] Attempting upload for ${originalFilename || fileName}...`);
+            const driveResult = await uploadToGoogleDrive(buffer, originalFilename || path.basename(fileName), cleanMime);
+            if (driveResult && driveResult.driveUrl) {
+                driveUrl = driveResult.driveUrl;
+                console.log(`[GOOGLE DRIVE LINK]: ${driveUrl}`);
+            }
+        }
+
+        // 2. Google Cloud Storage Bucket Upload
         if (GCS_BUCKET_NAME) {
             const accessToken = await getGCPAccessToken();
             if (accessToken) {
@@ -376,13 +512,8 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
                 });
 
                 if (uploadResp.ok) {
+                    gcsUrl = `https://storage.googleapis.com/${GCS_BUCKET_NAME}/${fileName}`;
                     console.log(`[CLOUD STORAGE] Successfully uploaded to gs://${GCS_BUCKET_NAME}/${fileName}`);
-                    return {
-                        saved: true,
-                        gcsUrl: `https://storage.googleapis.com/${GCS_BUCKET_NAME}/${fileName}`,
-                        fileName: fileName,
-                        localPath: localFilePath
-                    };
                 } else {
                     const errText = await uploadResp.text();
                     console.warn(`[CLOUD STORAGE] Upload response status ${uploadResp.status}:`, errText);
@@ -392,7 +523,13 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
             }
         }
 
-        return { saved: true, fileName: fileName, localPath: localFilePath };
+        return {
+            saved: true,
+            fileName: fileName,
+            localPath: localFilePath,
+            gcsUrl: gcsUrl,
+            driveUrl: driveUrl
+        };
     } catch (e) {
         console.error('[CLOUD VAULT ERROR]:', e.message);
         return null;
@@ -1029,10 +1166,16 @@ CRITICAL INSTRUCTIONS:
                 } else if (isDoc) {
                     const docName = media.filename || 'Document';
                     console.log(`[DOCUMENT] Received document/file: "${docName}" (${media.mimetype}).`);
-                    mediaContext = `[DOCUMENT RECEIVED]: A document named "${docName}" was received and securely archived in Google Cloud Storage.`;
+                    if (storageInfo && storageInfo.driveUrl) {
+                        mediaContext = `[DOCUMENT RECEIVED & SAVED TO GOOGLE DRIVE]: A document named "${docName}" was received and successfully uploaded to Google Drive. Direct Link: ${storageInfo.driveUrl}`;
+                    } else {
+                        mediaContext = `[DOCUMENT RECEIVED]: A document named "${docName}" was received and securely archived in the Cloud Storage Vault.`;
+                    }
                 }
 
-                if (storageInfo && storageInfo.gcsUrl) {
+                if (storageInfo && storageInfo.driveUrl) {
+                    mediaContext += `\n[GOOGLE DRIVE LINK]: ${storageInfo.driveUrl}`;
+                } else if (storageInfo && storageInfo.gcsUrl) {
                     mediaContext += `\n[CLOUD STORAGE LINK]: ${storageInfo.gcsUrl}`;
                 }
             } else {
