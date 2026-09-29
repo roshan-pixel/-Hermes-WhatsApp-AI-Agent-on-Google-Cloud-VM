@@ -1,16 +1,16 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-09-29)
 
 ## Corpus Check
-- 32 files · ~22,872 words
+- 32 files · ~22,971 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 340 nodes · 390 edges · 39 communities (37 shown, 2 thin omitted)
+- 341 nodes · 392 edges · 39 communities (37 shown, 2 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2ab106e9`
+- Built from commit: `c2c9de0a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,8 +56,8 @@
 - [[_COMMUNITY_Community 38|Community 38]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
-2. `handleIncomingMessage()` - 13 edges
+1. `handleIncomingMessage()` - 14 edges
+2. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
 3. `sendEmail()` - 6 edges
 4. `publishAllPosts()` - 6 edges
 5. `🛠️ Core Engineering Highlights` - 6 edges
@@ -103,8 +103,8 @@ Cohesion: 0.29
 Nodes (10): Memory Graph Loader, queryChatMemory Function, chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply(), Inbound Message Handler (+2 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.17
-Nodes (12): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory(), buildEmailConfirmation(), getCurrentISTContext() (+4 more)
+Cohesion: 0.15
+Nodes (13): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory(), buildEmailConfirmation(), buildEmailPreviewCard() (+5 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.22

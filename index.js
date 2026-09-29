@@ -620,6 +620,14 @@ function buildEmailConfirmation({ to, subject, body, fromHistory }) {
         `_Sent from sgarmy200@gmail.com_`;
 }
 
+function buildEmailPreviewCard({ to, subject, body, fromHistory }) {
+    return `✉️ *Email Ready to Send!*\n\n` +
+        `*To:* ${to}${fromHistory ? ' _(resolved from recent chat)_' : ''}\n` +
+        `*Subject:* ${subject}\n` +
+        `*Preview:* "${body}"\n\n` +
+        `Shall I send this mail? Reply *Yes / Send* (or *Haan / Bhej do*) to dispatch, or *Cancel* to discard.`;
+}
+
 /**
  * Final delivery sanitizer: enforces WhatsApp-native formatting and strips AI boilerplate.
  */
@@ -1406,37 +1414,50 @@ CRITICAL INSTRUCTIONS:
         if (Date.now() - draft.timestamp > 15 * 60 * 1000) {
             pendingEmailDrafts.delete(sender);
         } else {
-            // Check if user wants to cancel
-            if (/^(cancel|discard|radd|nahi|chhoro|stop|rehne do)\b/i.test(incomingText.trim())) {
+            const replyText = incomingText.trim();
+
+            // Cancellation
+            if (/^(cancel|no|nahi|nahin|mat bhej|mat bhejo|discard|radd|stop|chhoro|chhod do|rehne do)\b[\s.!]*$/i.test(replyText) ||
+                /^(cancel|discard|radd|chhoro|stop|rehne do)\b/i.test(replyText)) {
                 pendingEmailDrafts.delete(sender);
                 console.log(`[MULTI-TURN EMAIL] Draft cancelled by ${sender}`);
                 await msg.reply('❌ *Draft discarded.* Nothing was sent.');
                 return;
             }
 
-            // Check if the reply contains an email address
+            // A (new) email address sets/updates the recipient, then asks for confirmation
             const matchEmail = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
             if (matchEmail) {
-                const targetEmail = matchEmail[1];
-                pendingEmailDrafts.delete(sender);
+                draft.to = matchEmail[1];
+                draft.fromHistory = false;
+                draft.timestamp = Date.now();
+                await msg.reply(buildEmailPreviewCard({ to: draft.to, subject: draft.subject, body: draft.body }));
+                return;
+            }
 
+            // Confirmation
+            if (/^(yes|yeah|yep|yup|y|send|send it|send now|haan|han|ha|haa|haan bhej do|bhej do|bhejo|bhej|bhej dena|bhej de|ok|okay|ok send|sure|proceed|go ahead|confirm|confirmed|done|kar do|kardo)[\s.!]*$/i.test(replyText)) {
+                if (!draft.to) {
+                    await msg.reply('👉 *Send to whom?* Please reply with the recipient\'s email address, or *Cancel* to discard.');
+                    return;
+                }
+                pendingEmailDrafts.delete(sender);
                 try {
                     const chat = await msg.getChat().catch(() => null);
                     if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
 
-                    console.log(`[MULTI-TURN EMAIL] Dispatching pending draft to ${targetEmail}...`);
+                    console.log(`[MULTI-TURN EMAIL] Dispatching confirmed draft to ${draft.to}...`);
                     await sendEmail({
-                        to: targetEmail,
+                        to: draft.to,
                         subject: draft.subject,
                         text: draft.body
                     });
 
-                    const sentConfirm = buildEmailConfirmation({ to: targetEmail, subject: draft.subject, body: draft.body });
-                    await msg.reply(sentConfirm);
+                    await msg.reply(buildEmailConfirmation({ to: draft.to, subject: draft.subject, body: draft.body, fromHistory: draft.fromHistory }));
                     if (chat && chat.clearState) await chat.clearState().catch(() => {});
                 } catch (sendErr) {
                     console.error('[MULTI-TURN EMAIL SEND ERROR]:', sendErr);
-                    await msg.reply(`⚠️ Failed to send email to ${targetEmail}: ${sendErr.message || 'SMTP error'}. Please try again.`);
+                    await msg.reply(`⚠️ Failed to send email to ${draft.to}: ${sendErr.message || 'SMTP error'}. Please try again.`);
                 }
                 return;
             }
@@ -1525,20 +1546,19 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
             return;
         }
 
-        // Case 2: Recipient email is provided -> Send immediately!
+        // Case 2: Recipient known -> never send immediately; save draft & ask for confirmation
+        pendingEmailDrafts.set(sender, {
+            to: recipientEmail,
+            fromHistory: recipientFromHistory,
+            subject: emailSubject,
+            body: emailBody,
+            effectiveStorageInfo,
+            timestamp: Date.now()
+        });
         try {
-            await sendEmail({
-                to: recipientEmail,
-                subject: emailSubject,
-                text: emailBody
-            });
-
-            const successReply = buildEmailConfirmation({ to: recipientEmail, subject: emailSubject, body: emailBody, fromHistory: recipientFromHistory });
-            console.log(`[EMAIL DISPATCH SUCCESS to ${recipientEmail}]`);
-            await msg.reply(successReply);
-        } catch (sendErr) {
-            console.error('[EMAIL DISPATCH ERROR]:', sendErr);
-            await msg.reply(`⚠️ Failed to send email: ${sendErr.message || 'SMTP transmission error'}. Please try again.`);
+            await msg.reply(buildEmailPreviewCard({ to: recipientEmail, subject: emailSubject, body: emailBody, fromHistory: recipientFromHistory }));
+        } catch (err) {
+            console.error('[EMAIL PREVIEW REPLY ERROR]:', err);
         }
         return;
     }
