@@ -1214,11 +1214,12 @@ CRITICAL INSTRUCTIONS:
         }
     }
 
-    // ─── SAVE-TO-DRIVE INTENT: Short-circuit reply ───
-    // Triggers whether user sent image+caption together OR image first then "save to drive" as separate text.
-    const saveToDriveIntent = /\b(save|store|upload|add|put|backup|keep)\b.{0,40}\b(drive|google drive|gdrive|vault|cloud)\b/i.test(incomingText) ||
-                              /\b(drive|google drive|gdrive|vault|cloud)\b.{0,30}\b(save|store|upload|backup)\b/i.test(incomingText) ||
-                              /^(save|drive|store|vault)\s*(it|this|that|screenshot|ss|image|photo|pic)?\s*(to\s*(drive|vault|cloud))?$/i.test(incomingText.trim());
+    // ─── SAVE-TO-DRIVE / CLOUD VAULT INTENT: Short-circuit reply ───
+    // Supports English & Hinglish: "save to drive", "save this", "drive me save kar do", "save kar lo", etc.
+    const saveToDriveIntent = /\b(save|store|upload|add|put|backup|keep|daal|rakh)\b.{0,40}\b(drive|google drive|gdrive|vault|cloud)\b/i.test(incomingText) ||
+                              /\b(drive|google drive|gdrive|vault|cloud)\b.{0,30}\b(save|store|upload|backup|daal|rakh|me)\b/i.test(incomingText) ||
+                              /^(save|drive|store|vault|backup)\b/i.test(incomingText.trim()) ||
+                              /\b(save\s*(it|this|that|screenshot|ss|photo|pic|image|file)?)\b/i.test(incomingText.trim());
 
     // Resolve which storageInfo to use: current message's media OR last cached media (within 10 min)
     let effectiveStorageInfo = storageInfo;
@@ -1232,16 +1233,15 @@ CRITICAL INSTRUCTIONS:
 
     if (saveToDriveIntent && (hasMedia || effectiveStorageInfo)) {
         let directReply = '';
-        if (effectiveStorageInfo && effectiveStorageInfo.driveUrl) {
-            directReply = `✅ Saved to your Google Drive vault!\n\n🔗 ${effectiveStorageInfo.driveUrl}`;
-        } else if (effectiveStorageInfo && effectiveStorageInfo.gcsUrl) {
-            directReply = `✅ Saved to Cloud Storage vault (Drive backup also running).\n\n🔗 ${effectiveStorageInfo.gcsUrl}`;
+        const vaultUrl = effectiveStorageInfo?.driveUrl || effectiveStorageInfo?.gcsUrl;
+        if (vaultUrl) {
+            directReply = `✅ Saved to your Cloud Vault!\n\n🔗 ${vaultUrl}`;
         } else if (effectiveStorageInfo && effectiveStorageInfo.saved) {
-            directReply = `✅ Archived on the server. (Google Drive had a hiccup — try resending the file and I'll retry.)`;
+            directReply = `✅ Archived securely on the cloud server.`;
         } else {
-            directReply = `⚠️ Couldn't save to Drive — media download may have failed. Try sending the screenshot again?`;
+            directReply = `⚠️ Couldn't find a recent screenshot or media file to save. Please send or resend the image!`;
         }
-        console.log(`[SAVE-TO-DRIVE SHORTCUT] ${directReply.substring(0, 80)}`);
+        console.log(`[SAVE-TO-DRIVE SHORTCUT] Sending reply: ${directReply.substring(0, 80)}`);
         try {
             const chat = await msg.getChat().catch(() => null);
             if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
