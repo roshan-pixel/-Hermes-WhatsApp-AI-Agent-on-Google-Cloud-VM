@@ -241,8 +241,8 @@ async function transcribeAudioWithSpeech(base64Data, mimeType = 'audio/ogg') {
         const data = await resp.json();
         const results = data.results || [];
         if (results.length === 0) {
-            console.log('[Speech API] Voice note processed, but no speech transcript detected.');
-            return '[VOICE NOTE RECEIVED]: A voice message was received, but speech was unintelligible or silent.';
+            console.log('[Speech API] No speech transcript detected — trying Gemini fallback.');
+            return null;  // null triggers Gemini fallback
         }
 
         const transcript = results
@@ -261,50 +261,82 @@ async function transcribeAudioWithSpeech(base64Data, mimeType = 'audio/ogg') {
 }
 
 /**
- * Fallback audio transcription using Gemini Multimodal if Google Cloud Speech API fails
+ * Fallback audio transcription using Gemini Multimodal if Google Cloud Speech API fails.
+ * Uses GEMINI_API_KEY or falls back to GOOGLE_VISION_API_KEY (same GCP project).
  */
 async function transcribeAudioWithGemini(base64Data, mimeType = 'audio/ogg') {
-    if (!GEMINI_API_KEY) return null;
-    try {
-        const cleanMime = mimeType.split(';')[0].trim();
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [
-                        { text: "Accurately transcribe what is spoken in this audio voice note verbatim in Hindi, Hinglish, or English. Return only the transcript." },
-                        { inline_data: { mime_type: cleanMime, data: base64Data } }
-                    ]
-                }],
-                generationConfig: { maxOutputTokens: 300 }
-            }),
-            signal: AbortSignal.timeout(15000)
-        });
-        if (resp.ok) {
-            const data = await resp.json();
-            const desc = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-            if (desc) {
-                return `[VOICE NOTE / AUDIO RECEIVED - TRANSCRIBED BY GEMINI MULTIMODAL]: "${desc}"`;
+    // Use GEMINI_API_KEY first, then Vision key as fallback (same GCP project)
+    const apiKey = GEMINI_API_KEY || GOOGLE_VISION_API_KEY;
+    if (!apiKey) return null;
+
+    // WhatsApp sends audio/ogg;codecs=opus — Gemini needs clean audio/ogg
+    const cleanMime = (mimeType || 'audio/ogg').split(';')[0].trim() || 'audio/ogg';
+
+    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash', GEMINI_MODEL].filter(Boolean);
+
+    for (const model of modelsToTry) {
+        try {
+            const resp = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: 'Transcribe this voice note verbatim. The speaker may use Hindi, Hinglish, or English. Return only the spoken words, nothing else.' },
+                                { inline_data: { mime_type: cleanMime, data: base64Data } }
+                            ]
+                        }],
+                        generationConfig: { maxOutputTokens: 400, temperature: 0 }
+                    }),
+                    signal: AbortSignal.timeout(20000)
+                }
+            );
+            if (resp.ok) {
+                const data = await resp.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                if (text && text.length > 1) {
+                    console.log(`[Gemini Audio] Transcribed via ${model}.`);
+                    return `[VOICE NOTE / AUDIO RECEIVED - TRANSCRIBED BY GEMINI]: "${text}"`;
+                }
+            } else {
+                const errText = await resp.text().catch(() => '');
+                console.warn(`[Gemini Audio] ${model} returned ${resp.status}:`, errText.substring(0, 100));
             }
+        } catch (e) {
+            console.warn(`[Gemini Audio] ${model} error:`, e.message);
         }
-    } catch (e) {
-        console.error('[Gemini Audio Fallback Error]:', e.message);
     }
     return null;
 }
 
 /**
- * Multi-layer Audio Engine: Prioritizes Google Cloud Speech-to-Text API, falls back to Gemini Multimodal
+ * Multi-layer Audio Engine: Tries Gemini first for OGG/Opus (WhatsApp native format),
+ * then Google Cloud Speech-to-Text, with final fallback message.
  */
 async function getAudioTranscription(base64Data, mimeType = 'audio/ogg') {
-    console.log('[Audio Engine] Transcribing voice note with Google Cloud Speech-to-Text API...');
+    const cleanMime = (mimeType || '').toLowerCase();
+    const isOgg = cleanMime.includes('ogg') || cleanMime.includes('opus');
+
+    // For OGG/Opus (WhatsApp voice notes): try Gemini first — handles natively
+    if (isOgg && GEMINI_API_KEY) {
+        console.log('[Audio Engine] OGG/Opus detected — trying Gemini Multimodal first...');
+        const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
+        if (geminiResult) return geminiResult;
+    }
+
+    // Google Cloud Speech-to-Text
+    console.log('[Audio Engine] Trying Google Cloud Speech-to-Text...');
     const speechResult = await transcribeAudioWithSpeech(base64Data, mimeType);
     if (speechResult) return speechResult;
 
-    console.log('[Audio Engine] Cloud Speech API unavailable or returned empty. Falling back to Gemini Multimodal...');
-    const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
-    if (geminiResult) return geminiResult;
+    // Final Gemini fallback (if not already tried)
+    if (!isOgg || !GEMINI_API_KEY) {
+        console.log('[Audio Engine] Falling back to Gemini Multimodal...');
+        const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
+        if (geminiResult) return geminiResult;
+    }
 
     return '[VOICE NOTE / AUDIO RECEIVED]: A voice message was received, but automated transcription was unavailable.';
 }
