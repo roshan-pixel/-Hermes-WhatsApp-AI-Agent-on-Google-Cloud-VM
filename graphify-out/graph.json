@@ -51,6 +51,69 @@
   },
   "nodes": [
     {
+      "label": "build-x-thread.js",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L1",
+      "id": "build_x_thread_js",
+      "community": 22,
+      "norm_label": "build-x-thread.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_fs",
+      "community": 22,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L2",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_path",
+      "community": 22,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L7",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sendkimicommand",
+      "community": 22,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "posts",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L23",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_posts",
+      "community": 22,
+      "norm_label": "posts"
+    },
+    {
+      "label": "sleep()",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L81",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sleep",
+      "community": 22,
+      "norm_label": "sleep()"
+    },
+    {
+      "label": "composeThread()",
+      "file_type": "code",
+      "source_file": "build-x-thread.js",
+      "source_location": "L85",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_composethread",
+      "community": 22,
+      "norm_label": "composethread()"
+    },
+    {
       "label": "chatMemory.js",
       "file_type": "code",
       "source_file": "chatMemory.js",
@@ -94,6 +157,24 @@
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_querychatmemory",
       "community": 4,
       "norm_label": "querychatmemory()"
+    },
+    {
+      "label": "findRecentEmail()",
+      "file_type": "code",
+      "source_file": "chatMemory.js",
+      "source_location": "L71",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_findrecentemail",
+      "community": 4,
+      "norm_label": "findrecentemail()"
+    },
+    {
+      "label": "createSequentialQueue()",
+      "file_type": "code",
+      "source_file": "chatMemory.js",
+      "source_location": "L90",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_createsequentialqueue",
+      "community": 4,
+      "norm_label": "createsequentialqueue()"
     },
     {
       "label": "emailService.js",
@@ -420,13 +501,13 @@
       "norm_label": "qrcode"
     },
     {
-      "label": "{ queryChatMemory }",
+      "label": "{ queryChatMemory, findRecentEmail, createSequentialQueue }",
       "file_type": "code",
       "source_file": "index.js",
       "source_location": "L10",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory_findrecentemail_createsequentialqueue",
       "community": 0,
-      "norm_label": "{ querychatmemory }"
+      "norm_label": "{ querychatmemory, findrecentemail, createsequentialqueue }"
     },
     {
       "label": "{ sendEmail }",
@@ -456,10 +537,28 @@
       "norm_label": "getgcpaccesstoken()"
     },
     {
+      "label": "cleanOcrText()",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L75",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanocrtext",
+      "community": 12,
+      "norm_label": "cleanocrtext()"
+    },
+    {
+      "label": "compactForHistory()",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L98",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_compactforhistory",
+      "community": 6,
+      "norm_label": "compactforhistory()"
+    },
+    {
       "label": "analyzeImageWithVision()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L70",
+      "source_location": "L115",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithvision",
       "community": 12,
       "norm_label": "analyzeimagewithvision()"
@@ -468,7 +567,7 @@
       "label": "analyzeImageWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L155",
+      "source_location": "L200",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithgemini",
       "community": 12,
       "norm_label": "analyzeimagewithgemini()"
@@ -477,7 +576,7 @@
       "label": "getImageVisionDescription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L188",
+      "source_location": "L233",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getimagevisiondescription",
       "community": 12,
       "norm_label": "getimagevisiondescription()"
@@ -486,7 +585,7 @@
       "label": "transcribeAudioWithSpeech()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L204",
+      "source_location": "L249",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithspeech",
       "community": 12,
       "norm_label": "transcribeaudiowithspeech()"
@@ -495,7 +594,7 @@
       "label": "transcribeAudioWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L283",
+      "source_location": "L328",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithgemini",
       "community": 12,
       "norm_label": "transcribeaudiowithgemini()"
@@ -504,7 +603,7 @@
       "label": "getAudioTranscription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L333",
+      "source_location": "L378",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getaudiotranscription",
       "community": 12,
       "norm_label": "getaudiotranscription()"
@@ -513,7 +612,7 @@
       "label": "getGoogleDriveAccessToken()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L350",
+      "source_location": "L395",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
       "community": 12,
       "norm_label": "getgoogledriveaccesstoken()"
@@ -522,7 +621,7 @@
       "label": "uploadToGoogleDrive()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L386",
+      "source_location": "L431",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
       "community": 12,
       "norm_label": "uploadtogoogledrive()"
@@ -531,16 +630,43 @@
       "label": "saveMediaToCloudStorage()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L459",
+      "source_location": "L504",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
       "community": 12,
       "norm_label": "savemediatocloudstorage()"
     },
     {
+      "label": "withTimeout()",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L605",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_withtimeout",
+      "community": 4,
+      "norm_label": "withtimeout()"
+    },
+    {
+      "label": "buildEmailConfirmation()",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L616",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_buildemailconfirmation",
+      "community": 4,
+      "norm_label": "buildemailconfirmation()"
+    },
+    {
+      "label": "sanitizeWhatsAppReply()",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L626",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sanitizewhatsappreply",
+      "community": 4,
+      "norm_label": "sanitizewhatsappreply()"
+    },
+    {
       "label": "chatHistory",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L552",
+      "source_location": "L671",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_chathistory",
       "community": 0,
       "norm_label": "chathistory"
@@ -549,16 +675,16 @@
       "label": "getCurrentISTContext()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L560",
+      "source_location": "L679",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getcurrentistcontext",
-      "community": 0,
+      "community": 4,
       "norm_label": "getcurrentistcontext()"
     },
     {
       "label": "getDeepSeekReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L589",
+      "source_location": "L708",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getdeepseekreply",
       "community": 6,
       "norm_label": "getdeepseekreply()"
@@ -567,7 +693,7 @@
       "label": "getGeminiReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L637",
+      "source_location": "L757",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgeminireply",
       "community": 6,
       "norm_label": "getgeminireply()"
@@ -576,7 +702,7 @@
       "label": "getHermesReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L686",
+      "source_location": "L807",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_gethermesreply",
       "community": 6,
       "norm_label": "gethermesreply()"
@@ -585,7 +711,7 @@
       "label": "generateAIReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L734",
+      "source_location": "L856",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply",
       "community": 6,
       "norm_label": "generateaireply()"
@@ -594,16 +720,16 @@
       "label": "robustDownloadMedia()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L752",
+      "source_location": "L874",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia",
-      "community": 0,
+      "community": 4,
       "norm_label": "robustdownloadmedia()"
     },
     {
       "label": "sessionDir",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L931",
+      "source_location": "L1053",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sessiondir",
       "community": 0,
       "norm_label": "sessiondir"
@@ -612,7 +738,7 @@
       "label": "p",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L934",
+      "source_location": "L1056",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_p",
       "community": 0,
       "norm_label": "p"
@@ -621,7 +747,7 @@
       "label": "client",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L942",
+      "source_location": "L1064",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_client",
       "community": 0,
       "norm_label": "client"
@@ -630,7 +756,7 @@
       "label": "activePage",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1009",
+      "source_location": "L1131",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_activepage",
       "community": 0,
       "norm_label": "activepage"
@@ -639,7 +765,7 @@
       "label": "pendingBuffers",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1049",
+      "source_location": "L1171",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingbuffers",
       "community": 0,
       "norm_label": "pendingbuffers"
@@ -648,7 +774,7 @@
       "label": "lastMediaStore",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1050",
+      "source_location": "L1172",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_lastmediastore",
       "community": 0,
       "norm_label": "lastmediastore"
@@ -657,160 +783,43 @@
       "label": "pendingEmailDrafts",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1051",
+      "source_location": "L1173",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts",
       "community": 0,
       "norm_label": "pendingemaildrafts"
     },
     {
-      "label": "hasMedia",
+      "label": "enqueueChatTask",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1058",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasmedia",
+      "source_location": "L1176",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_enqueuechattask",
       "community": 0,
-      "norm_label": "hasmedia"
+      "norm_label": "enqueuechattask"
     },
     {
-      "label": "incomingText",
+      "label": "seenMessageIds",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1059",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_incomingtext",
+      "source_location": "L1177",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_seenmessageids",
       "community": 0,
-      "norm_label": "incomingtext"
+      "norm_label": "seenmessageids"
     },
     {
-      "label": "allowedLIDs",
+      "label": "handleIncomingMessage()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1065",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowedlids",
-      "community": 0,
-      "norm_label": "allowedlids"
-    },
-    {
-      "label": "allowedNumbers",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1070",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowednumbers",
-      "community": 0,
-      "norm_label": "allowednumbers"
-    },
-    {
-      "label": "mime",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1157",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_mime",
-      "community": 0,
-      "norm_label": "mime"
-    },
-    {
-      "label": "isImage",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1158",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_isimage",
-      "community": 0,
-      "norm_label": "isimage"
-    },
-    {
-      "label": "cached",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1229",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cached",
-      "community": 0,
-      "norm_label": "cached"
-    },
-    {
-      "label": "draft",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1261",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft",
-      "community": 0,
-      "norm_label": "draft"
-    },
-    {
-      "label": "matchEmail",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1275",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail",
-      "community": 0,
-      "norm_label": "matchemail"
-    },
-    {
-      "label": "hasEmailAddress",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1304",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress",
-      "community": 0,
-      "norm_label": "hasemailaddress"
-    },
-    {
-      "label": "hasEmailKeyword",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1305",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword",
-      "community": 0,
-      "norm_label": "hasemailkeyword"
-    },
-    {
-      "label": "emailMatch",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1310",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch",
-      "community": 0,
-      "norm_label": "emailmatch"
-    },
-    {
-      "label": "cleanJson",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1335",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson",
-      "community": 0,
-      "norm_label": "cleanjson"
-    },
-    {
-      "label": "parsed",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1336",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed",
-      "community": 0,
-      "norm_label": "parsed"
-    },
-    {
-      "label": "timeContext",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1395",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_timecontext",
-      "community": 0,
-      "norm_label": "timecontext"
-    },
-    {
-      "label": "memoryContext",
-      "file_type": "code",
-      "source_file": "index.js",
-      "source_location": "L1396",
-      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_memorycontext",
-      "community": 0,
-      "norm_label": "memorycontext"
+      "source_location": "L1192",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "community": 4,
+      "norm_label": "handleincomingmessage()"
     },
     {
       "label": "server",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1418",
+      "source_location": "L1573",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_server",
       "community": 0,
       "norm_label": "server"
@@ -1005,6 +1014,132 @@
       "norm_label": "whatsapp-web.js"
     },
     {
+      "label": "publish-10-posts.js",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L1",
+      "id": "publish_10_posts_js",
+      "community": 14,
+      "norm_label": "publish-10-posts.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_fs",
+      "community": 14,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L2",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_path",
+      "community": 14,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L7",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "community": 14,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "posts",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L23",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_posts",
+      "community": 14,
+      "norm_label": "posts"
+    },
+    {
+      "label": "sleep()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L81",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sleep",
+      "community": 14,
+      "norm_label": "sleep()"
+    },
+    {
+      "label": "waitForComposer()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L85",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_waitforcomposer",
+      "community": 14,
+      "norm_label": "waitforcomposer()"
+    },
+    {
+      "label": "insertPostText()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L108",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_insertposttext",
+      "community": 14,
+      "norm_label": "insertposttext()"
+    },
+    {
+      "label": "clickPostButton()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L151",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_clickpostbutton",
+      "community": 14,
+      "norm_label": "clickpostbutton()"
+    },
+    {
+      "label": "publishAllPosts()",
+      "file_type": "code",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L201",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "community": 14,
+      "norm_label": "publishallposts()"
+    },
+    {
+      "label": "send-30-qualities.js",
+      "file_type": "code",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L1",
+      "id": "send_30_qualities_js",
+      "community": 21,
+      "norm_label": "send-30-qualities.js"
+    },
+    {
+      "label": "{ sendEmail }",
+      "file_type": "code",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_sendemail",
+      "community": 21,
+      "norm_label": "{ sendemail }"
+    },
+    {
+      "label": "qualities",
+      "file_type": "code",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L5",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_qualities",
+      "community": 21,
+      "norm_label": "qualities"
+    },
+    {
+      "label": "sendSequence()",
+      "file_type": "code",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L371",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_sendsequence",
+      "community": 21,
+      "norm_label": "sendsequence()"
+    },
+    {
       "label": "test-drive-upload.js",
       "file_type": "code",
       "source_file": "test-drive-upload.js",
@@ -1122,6 +1257,555 @@
       "norm_label": "testuploadtofolder()"
     },
     {
+      "label": "check-add-button.js",
+      "file_type": "code",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L1",
+      "id": "scratch_check_add_button_js",
+      "community": 24,
+      "norm_label": "check-add-button.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L1",
+      "id": "scratch_check_add_button_fs",
+      "community": 24,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L2",
+      "id": "scratch_check_add_button_path",
+      "community": 24,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L4",
+      "id": "scratch_check_add_button_sendkimicommand",
+      "community": 24,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "checkUI()",
+      "file_type": "code",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L20",
+      "id": "scratch_check_add_button_checkui",
+      "community": 24,
+      "norm_label": "checkui()"
+    },
+    {
+      "label": "check-composer.js",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L1",
+      "id": "scratch_check_composer_js",
+      "community": 23,
+      "norm_label": "check-composer.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L1",
+      "id": "scratch_check_composer_fs",
+      "community": 23,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L2",
+      "id": "scratch_check_composer_path",
+      "community": 23,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L7",
+      "id": "scratch_check_composer_sendkimicommand",
+      "community": 23,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "sleep()",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L23",
+      "id": "scratch_check_composer_sleep",
+      "community": 23,
+      "norm_label": "sleep()"
+    },
+    {
+      "label": "checkComposer()",
+      "file_type": "code",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L27",
+      "id": "scratch_check_composer_checkcomposer",
+      "community": 23,
+      "norm_label": "checkcomposer()"
+    },
+    {
+      "label": "check-profile.js",
+      "file_type": "code",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L1",
+      "id": "scratch_check_profile_js",
+      "community": 25,
+      "norm_label": "check-profile.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L1",
+      "id": "scratch_check_profile_fs",
+      "community": 25,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L2",
+      "id": "scratch_check_profile_path",
+      "community": 25,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L7",
+      "id": "scratch_check_profile_sendkimicommand",
+      "community": 25,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "checkProfile()",
+      "file_type": "code",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L23",
+      "id": "scratch_check_profile_checkprofile",
+      "community": 25,
+      "norm_label": "checkprofile()"
+    },
+    {
+      "label": "check-x.js",
+      "file_type": "code",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L1",
+      "id": "scratch_check_x_js",
+      "community": 26,
+      "norm_label": "check-x.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L1",
+      "id": "scratch_check_x_fs",
+      "community": 26,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L2",
+      "id": "scratch_check_x_path",
+      "community": 26,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L4",
+      "id": "scratch_check_x_sendkimicommand",
+      "community": 26,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L20",
+      "id": "scratch_check_x_main",
+      "community": 26,
+      "norm_label": "main()"
+    },
+    {
+      "label": "draft-thread.js",
+      "file_type": "code",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L1",
+      "id": "scratch_draft_thread_js",
+      "community": 27,
+      "norm_label": "draft-thread.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L1",
+      "id": "scratch_draft_thread_fs",
+      "community": 27,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L2",
+      "id": "scratch_draft_thread_path",
+      "community": 27,
+      "norm_label": "path"
+    },
+    {
+      "label": "posts",
+      "file_type": "code",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L4",
+      "id": "scratch_draft_thread_posts",
+      "community": 27,
+      "norm_label": "posts"
+    },
+    {
+      "label": "normalized",
+      "file_type": "code",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L63",
+      "id": "scratch_draft_thread_normalized",
+      "community": 27,
+      "norm_label": "normalized"
+    },
+    {
+      "label": "find-plus.js",
+      "file_type": "code",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L1",
+      "id": "scratch_find_plus_js",
+      "community": 28,
+      "norm_label": "find-plus.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L1",
+      "id": "scratch_find_plus_fs",
+      "community": 28,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L2",
+      "id": "scratch_find_plus_path",
+      "community": 28,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L4",
+      "id": "scratch_find_plus_sendkimicommand",
+      "community": 28,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "findPlus()",
+      "file_type": "code",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L20",
+      "id": "scratch_find_plus_findplus",
+      "community": 28,
+      "norm_label": "findplus()"
+    },
+    {
+      "label": "inspect-buttons.js",
+      "file_type": "code",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_buttons_js",
+      "community": 29,
+      "norm_label": "inspect-buttons.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_buttons_fs",
+      "community": 29,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L2",
+      "id": "scratch_inspect_buttons_path",
+      "community": 29,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L4",
+      "id": "scratch_inspect_buttons_sendkimicommand",
+      "community": 29,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "inspectButtons()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L20",
+      "id": "scratch_inspect_buttons_inspectbuttons",
+      "community": 29,
+      "norm_label": "inspectbuttons()"
+    },
+    {
+      "label": "inspect-char-count.js",
+      "file_type": "code",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_char_count_js",
+      "community": 30,
+      "norm_label": "inspect-char-count.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_char_count_fs",
+      "community": 30,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L2",
+      "id": "scratch_inspect_char_count_path",
+      "community": 30,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L7",
+      "id": "scratch_inspect_char_count_sendkimicommand",
+      "community": 30,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "inspectCharCount()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L23",
+      "id": "scratch_inspect_char_count_inspectcharcount",
+      "community": 30,
+      "norm_label": "inspectcharcount()"
+    },
+    {
+      "label": "inspect-modal.js",
+      "file_type": "code",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_modal_js",
+      "community": 31,
+      "norm_label": "inspect-modal.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L1",
+      "id": "scratch_inspect_modal_fs",
+      "community": 31,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L2",
+      "id": "scratch_inspect_modal_path",
+      "community": 31,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L4",
+      "id": "scratch_inspect_modal_sendkimicommand",
+      "community": 31,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "inspectModal()",
+      "file_type": "code",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L20",
+      "id": "scratch_inspect_modal_inspectmodal",
+      "community": 31,
+      "norm_label": "inspectmodal()"
+    },
+    {
+      "label": "test-cdp-click.js",
+      "file_type": "code",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L1",
+      "id": "scratch_test_cdp_click_js",
+      "community": 32,
+      "norm_label": "test-cdp-click.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L1",
+      "id": "scratch_test_cdp_click_fs",
+      "community": 32,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L2",
+      "id": "scratch_test_cdp_click_path",
+      "community": 32,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L4",
+      "id": "scratch_test_cdp_click_sendkimicommand",
+      "community": 32,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testTrustedClick()",
+      "file_type": "code",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L20",
+      "id": "scratch_test_cdp_click_testtrustedclick",
+      "community": 32,
+      "norm_label": "testtrustedclick()"
+    },
+    {
+      "label": "test-click-add.js",
+      "file_type": "code",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L1",
+      "id": "scratch_test_click_add_js",
+      "community": 33,
+      "norm_label": "test-click-add.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L1",
+      "id": "scratch_test_click_add_fs",
+      "community": 33,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L2",
+      "id": "scratch_test_click_add_path",
+      "community": 33,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L4",
+      "id": "scratch_test_click_add_sendkimicommand",
+      "community": 33,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testClickAdd()",
+      "file_type": "code",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L20",
+      "id": "scratch_test_click_add_testclickadd",
+      "community": 33,
+      "norm_label": "testclickadd()"
+    },
+    {
+      "label": "test-fill.js",
+      "file_type": "code",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L1",
+      "id": "scratch_test_fill_js",
+      "community": 34,
+      "norm_label": "test-fill.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L1",
+      "id": "scratch_test_fill_fs",
+      "community": 34,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L2",
+      "id": "scratch_test_fill_path",
+      "community": 34,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L4",
+      "id": "scratch_test_fill_sendkimicommand",
+      "community": 34,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testFill()",
+      "file_type": "code",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L20",
+      "id": "scratch_test_fill_testfill",
+      "community": 34,
+      "norm_label": "testfill()"
+    },
+    {
       "label": "test-gmail.js",
       "file_type": "code",
       "source_file": "scratch/test-gmail.js",
@@ -1165,6 +1849,141 @@
       "id": "scratch_test_gmail_testgmailapi",
       "community": 20,
       "norm_label": "testgmailapi()"
+    },
+    {
+      "label": "test-multiline-input.js",
+      "file_type": "code",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L1",
+      "id": "scratch_test_multiline_input_js",
+      "community": 35,
+      "norm_label": "test-multiline-input.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L1",
+      "id": "scratch_test_multiline_input_fs",
+      "community": 35,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L2",
+      "id": "scratch_test_multiline_input_path",
+      "community": 35,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L7",
+      "id": "scratch_test_multiline_input_sendkimicommand",
+      "community": 35,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testMultiline()",
+      "file_type": "code",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L23",
+      "id": "scratch_test_multiline_input_testmultiline",
+      "community": 35,
+      "norm_label": "testmultiline()"
+    },
+    {
+      "label": "test-post-btn.js",
+      "file_type": "code",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L1",
+      "id": "scratch_test_post_btn_js",
+      "community": 36,
+      "norm_label": "test-post-btn.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L1",
+      "id": "scratch_test_post_btn_fs",
+      "community": 36,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L2",
+      "id": "scratch_test_post_btn_path",
+      "community": 36,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L7",
+      "id": "scratch_test_post_btn_sendkimicommand",
+      "community": 36,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testFillAndCheckButton()",
+      "file_type": "code",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L23",
+      "id": "scratch_test_post_btn_testfillandcheckbutton",
+      "community": 36,
+      "norm_label": "testfillandcheckbutton()"
+    },
+    {
+      "label": "test-thread.js",
+      "file_type": "code",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L1",
+      "id": "scratch_test_thread_js",
+      "community": 37,
+      "norm_label": "test-thread.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L1",
+      "id": "scratch_test_thread_fs",
+      "community": 37,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L2",
+      "id": "scratch_test_thread_path",
+      "community": 37,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L4",
+      "id": "scratch_test_thread_sendkimicommand",
+      "community": 37,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "testThreadBuilding()",
+      "file_type": "code",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L20",
+      "id": "scratch_test_thread_testthreadbuilding",
+      "community": 37,
+      "norm_label": "testthreadbuilding()"
     },
     {
       "label": "patch-wwebjs.js",
@@ -1246,6 +2065,42 @@
       "id": "scripts_patch_wwebjs_utilscode",
       "community": 5,
       "norm_label": "utilscode"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "id": "claude_md",
+      "community": 38,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "Hermes WhatsApp AI Agent - Architecture & System Guide",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_claude_hermes_whatsapp_ai_agent_architecture_system_guide",
+      "community": 38,
+      "norm_label": "hermes whatsapp ai agent - architecture & system guide"
+    },
+    {
+      "label": "Core System Architecture & God Nodes",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L5",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_claude_core_system_architecture_god_nodes",
+      "community": 38,
+      "norm_label": "core system architecture & god nodes"
+    },
+    {
+      "label": "Critical Guidelines",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L13",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_claude_critical_guidelines",
+      "community": 38,
+      "norm_label": "critical guidelines"
     },
     {
       "label": "README.md",
@@ -1577,7 +2432,7 @@
       "source_file": "README.md",
       "source_location": "L433",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_whatsapp_multi_device_linking_protocol",
-      "community": 14,
+      "community": 10,
       "norm_label": "\ud83d\udcf2 whatsapp multi-device linking protocol"
     },
     {
@@ -1586,7 +2441,7 @@
       "source_file": "README.md",
       "source_location": "L435",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_a_8_digit_pairing_code_recommended_zero_camera_scanning",
-      "community": 14,
+      "community": 10,
       "norm_label": "option a: 8-digit pairing code (recommended - zero camera scanning)"
     },
     {
@@ -1595,7 +2450,7 @@
       "source_file": "README.md",
       "source_location": "L439",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_13",
-      "community": 14,
+      "community": 10,
       "norm_label": "code:powershell (ssh -i \"$env:userprofile\\.ssh\\google_compute_engine\" -l 3000)"
     },
     {
@@ -1604,7 +2459,7 @@
       "source_file": "README.md",
       "source_location": "L443",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_14",
-      "community": 14,
+      "community": 10,
       "norm_label": "code:block14 (http://localhost:3000/pair-code?phone=918058363027)"
     },
     {
@@ -1613,7 +2468,7 @@
       "source_file": "README.md",
       "source_location": "L448",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_b_terminal_ascii_qr_code",
-      "community": 14,
+      "community": 10,
       "norm_label": "option b: terminal ascii qr code"
     },
     {
@@ -1622,7 +2477,7 @@
       "source_file": "README.md",
       "source_location": "L450",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_15",
-      "community": 14,
+      "community": 10,
       "norm_label": "code:powershell (ssh -i \"$env:userprofile\\.ssh\\google_compute_engine\" sgarm@1)"
     },
     {
@@ -1631,7 +2486,7 @@
       "source_file": "README.md",
       "source_location": "L454",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_c_browser_visual_qr",
-      "community": 14,
+      "community": 10,
       "norm_label": "option c: browser visual qr"
     },
     {
@@ -1669,6 +2524,159 @@
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_license",
       "community": 10,
       "norm_label": "\ud83d\udcc4 license"
+    },
+    {
+      "label": "{ queryChatMemory }",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L10",
+      "community": 0,
+      "norm_label": "{ querychatmemory }",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory"
+    },
+    {
+      "label": "hasMedia",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1058",
+      "community": 0,
+      "norm_label": "hasmedia",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasmedia"
+    },
+    {
+      "label": "incomingText",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1059",
+      "community": 0,
+      "norm_label": "incomingtext",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_incomingtext"
+    },
+    {
+      "label": "allowedLIDs",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1065",
+      "community": 0,
+      "norm_label": "allowedlids",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowedlids"
+    },
+    {
+      "label": "allowedNumbers",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1070",
+      "community": 0,
+      "norm_label": "allowednumbers",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowednumbers"
+    },
+    {
+      "label": "mime",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1157",
+      "community": 0,
+      "norm_label": "mime",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_mime"
+    },
+    {
+      "label": "isImage",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1158",
+      "community": 0,
+      "norm_label": "isimage",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_isimage"
+    },
+    {
+      "label": "cached",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1229",
+      "community": 0,
+      "norm_label": "cached",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cached"
+    },
+    {
+      "label": "draft",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1261",
+      "community": 0,
+      "norm_label": "draft",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft"
+    },
+    {
+      "label": "matchEmail",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1275",
+      "community": 0,
+      "norm_label": "matchemail",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail"
+    },
+    {
+      "label": "hasEmailAddress",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1304",
+      "community": 0,
+      "norm_label": "hasemailaddress",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress"
+    },
+    {
+      "label": "hasEmailKeyword",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1305",
+      "community": 0,
+      "norm_label": "hasemailkeyword",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword"
+    },
+    {
+      "label": "emailMatch",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1310",
+      "community": 0,
+      "norm_label": "emailmatch",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch"
+    },
+    {
+      "label": "cleanJson",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1335",
+      "community": 0,
+      "norm_label": "cleanjson",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson"
+    },
+    {
+      "label": "parsed",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1336",
+      "community": 0,
+      "norm_label": "parsed",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed"
+    },
+    {
+      "label": "timeContext",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1395",
+      "community": 0,
+      "norm_label": "timecontext",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_timecontext"
+    },
+    {
+      "label": "memoryContext",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1396",
+      "community": 0,
+      "norm_label": "memorycontext",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_memorycontext"
     },
     {
       "label": "Memory Graph Loader",
@@ -2232,6 +3240,88 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_posts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "build_x_thread_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_composethread",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_composethread",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "build-x-thread.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_composethread",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_build_x_thread_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "chatMemory.js",
       "source_location": "L1",
       "weight": 1.0,
@@ -2270,6 +3360,26 @@
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_querychatmemory"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "chatMemory.js",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "chatmemory_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_findrecentemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "chatMemory.js",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "chatmemory_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_createsequentialqueue",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -2292,14 +3402,58 @@
       "target": "index_js"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.js",
+      "source_location": "L1551",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_querychatmemory"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_findrecentemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.js",
+      "source_location": "L1463",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_findrecentemail"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_chatmemory_createsequentialqueue",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "emailService.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "emailservice_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_nodemailer",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_nodemailer"
     },
     {
       "relation": "contains",
@@ -2307,9 +3461,9 @@
       "source_file": "emailService.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "emailservice_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter"
     },
     {
       "relation": "contains",
@@ -2317,9 +3471,9 @@
       "source_file": "emailService.js",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "emailservice_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail"
     },
     {
       "relation": "imports_from",
@@ -2328,7 +3482,18 @@
       "source_file": "index.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
+      "target": "emailservice_js"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "send_30_qualities_js",
       "target": "emailservice_js",
       "confidence_score": 1.0
     },
@@ -2339,9 +3504,9 @@
       "source_file": "emailService.js",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter"
     },
     {
       "relation": "imports",
@@ -2350,9 +3515,42 @@
       "source_file": "index.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "send_30_qualities_js",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.js",
+      "source_location": "L1428",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "send-30-qualities.js",
+      "source_location": "L380",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_sendsequence",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail"
     },
     {
       "relation": "contains",
@@ -2470,9 +3668,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_type",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_type"
     },
     {
       "relation": "contains",
@@ -2480,9 +3678,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_project_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_project_id"
     },
     {
       "relation": "contains",
@@ -2490,9 +3688,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key_id"
     },
     {
       "relation": "contains",
@@ -2500,9 +3698,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key"
     },
     {
       "relation": "contains",
@@ -2510,9 +3708,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_email",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_email"
     },
     {
       "relation": "contains",
@@ -2520,9 +3718,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_id"
     },
     {
       "relation": "contains",
@@ -2530,9 +3728,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_uri",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_uri"
     },
     {
       "relation": "contains",
@@ -2540,9 +3738,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_token_uri",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_token_uri"
     },
     {
       "relation": "contains",
@@ -2550,9 +3748,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_provider_x509_cert_url",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_provider_x509_cert_url"
     },
     {
       "relation": "contains",
@@ -2560,9 +3758,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_x509_cert_url",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_x509_cert_url"
     },
     {
       "relation": "contains",
@@ -2570,9 +3768,9 @@
       "source_file": "google-gmail-key.json",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_gmail_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_universe_domain",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_universe_domain"
     },
     {
       "relation": "contains",
@@ -2650,9 +3848,9 @@
       "source_file": "index.js",
       "source_location": "L10",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory"
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory_findrecentemail_createsequentialqueue",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -2660,9 +3858,9 @@
       "source_file": "index.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_sendemail",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_sendemail"
     },
     {
       "relation": "contains",
@@ -2683,6 +3881,26 @@
       "confidence_score": 1.0,
       "source": "index_js",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgcpaccesstoken"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanocrtext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_compactforhistory",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -2773,6 +3991,36 @@
       "confidence_score": 1.0,
       "source": "index_js",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L605",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_withtimeout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L616",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_buildemailconfirmation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L626",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_sanitizewhatsappreply",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -2910,9 +4158,59 @@
       "source_file": "index.js",
       "source_location": "L1051",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1176",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_enqueuechattask",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1177",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_seenmessageids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1192",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L470",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_server"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory"
     },
     {
       "relation": "contains",
@@ -2990,9 +4288,9 @@
       "source_file": "index.js",
       "source_location": "L1261",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft"
     },
     {
       "relation": "contains",
@@ -3000,9 +4298,9 @@
       "source_file": "index.js",
       "source_location": "L1275",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail"
     },
     {
       "relation": "contains",
@@ -3010,9 +4308,9 @@
       "source_file": "index.js",
       "source_location": "L1304",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress"
     },
     {
       "relation": "contains",
@@ -3020,9 +4318,9 @@
       "source_file": "index.js",
       "source_location": "L1305",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword"
     },
     {
       "relation": "contains",
@@ -3030,9 +4328,9 @@
       "source_file": "index.js",
       "source_location": "L1310",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch"
     },
     {
       "relation": "contains",
@@ -3040,9 +4338,9 @@
       "source_file": "index.js",
       "source_location": "L1335",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson"
     },
     {
       "relation": "contains",
@@ -3050,9 +4348,9 @@
       "source_file": "index.js",
       "source_location": "L1336",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed"
     },
     {
       "relation": "contains",
@@ -3073,16 +4371,6 @@
       "confidence_score": 1.0,
       "source": "index_js",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_memorycontext"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "index.js",
-      "source_location": "L470",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_server"
     },
     {
       "relation": "contains",
@@ -3432,6 +4720,61 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "index.js",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithvision",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanocrtext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L219",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithgemini",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanocrtext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L746",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_getdeepseekreply",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_compactforhistory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L796",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgeminireply",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_compactforhistory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L845",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_gethermesreply",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_compactforhistory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
       "source_location": "L77",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3465,6 +4808,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "index.js",
+      "source_location": "L1309",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getimagevisiondescription",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
       "source_location": "L298",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3481,6 +4835,17 @@
       "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_getaudiotranscription",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithgemini"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1314",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getaudiotranscription",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -3520,6 +4885,61 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "index.js",
+      "source_location": "L1304",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1296",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_withtimeout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1434",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_buildemailconfirmation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1560",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_sanitizewhatsappreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1550",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getcurrentistcontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
       "source_location": "L219",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3549,14 +4969,36 @@
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1489",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1296",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "kimiMail.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "kimimail_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_fs",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_fs"
     },
     {
       "relation": "contains",
@@ -3564,9 +5006,9 @@
       "source_file": "kimiMail.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "kimimail_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_path",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_path"
     },
     {
       "relation": "contains",
@@ -3574,9 +5016,9 @@
       "source_file": "kimiMail.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "kimimail_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand"
     },
     {
       "relation": "contains",
@@ -3584,9 +5026,9 @@
       "source_file": "kimiMail.js",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "kimimail_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi"
     },
     {
       "relation": "imports_from",
@@ -3595,9 +5037,9 @@
       "source_file": "test-kimi-send.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_kimi_send_js",
-      "target": "kimimail_js",
-      "confidence_score": 1.0
+      "target": "kimimail_js"
     },
     {
       "relation": "calls",
@@ -3606,9 +5048,9 @@
       "source_file": "kimiMail.js",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand"
     },
     {
       "relation": "imports",
@@ -3617,9 +5059,9 @@
       "source_file": "test-kimi-send.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_kimi_send_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi"
     },
     {
       "relation": "calls",
@@ -3748,9 +5190,9 @@
       "source_file": "package.json",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_nodemailer",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_nodemailer"
     },
     {
       "relation": "contains",
@@ -3781,6 +5223,236 @@
       "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_whatsapp_web_js"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_posts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_waitforcomposer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_insertposttext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_clickpostbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "publish_10_posts_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_waitforcomposer",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_insertposttext",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_clickpostbutton",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_waitforcomposer",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_insertposttext",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_waitforcomposer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_insertposttext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "publish-10-posts.js",
+      "source_location": "L233",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_publishallposts",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_publish_10_posts_clickpostbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "send_30_qualities_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_sendemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "send_30_qualities_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_qualities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "send-30-qualities.js",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "send_30_qualities_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_send_30_qualities_sendsequence",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -3828,9 +5500,9 @@
       "source_file": "test-kimi-send.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_kimi_send_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_sendemailviakimi",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_sendemailviakimi"
     },
     {
       "relation": "contains",
@@ -3838,9 +5510,9 @@
       "source_file": "test-kimi-send.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_kimi_send_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_test",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_test"
     },
     {
       "relation": "contains",
@@ -3885,12 +5557,623 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_check_add_button_js",
+      "target": "scratch_check_add_button_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_check_add_button_js",
+      "target": "scratch_check_add_button_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_check_add_button_js",
+      "target": "scratch_check_add_button_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_check_add_button_js",
+      "target": "scratch_check_add_button_checkui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-add-button.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "scratch_check_add_button_checkui",
+      "target": "scratch_check_add_button_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_check_composer_js",
+      "target": "scratch_check_composer_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_check_composer_js",
+      "target": "scratch_check_composer_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "scratch_check_composer_js",
+      "target": "scratch_check_composer_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_check_composer_js",
+      "target": "scratch_check_composer_sleep",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "scratch_check_composer_js",
+      "target": "scratch_check_composer_checkcomposer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-composer.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "scratch_check_composer_checkcomposer",
+      "target": "scratch_check_composer_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_check_profile_js",
+      "target": "scratch_check_profile_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_check_profile_js",
+      "target": "scratch_check_profile_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "scratch_check_profile_js",
+      "target": "scratch_check_profile_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_check_profile_js",
+      "target": "scratch_check_profile_checkprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-profile.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "scratch_check_profile_checkprofile",
+      "target": "scratch_check_profile_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_check_x_js",
+      "target": "scratch_check_x_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_check_x_js",
+      "target": "scratch_check_x_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_check_x_js",
+      "target": "scratch_check_x_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_check_x_js",
+      "target": "scratch_check_x_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-x.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "scratch_check_x_main",
+      "target": "scratch_check_x_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_draft_thread_js",
+      "target": "scratch_draft_thread_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_draft_thread_js",
+      "target": "scratch_draft_thread_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_draft_thread_js",
+      "target": "scratch_draft_thread_posts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/draft-thread.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "scratch_draft_thread_js",
+      "target": "scratch_draft_thread_normalized",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_find_plus_js",
+      "target": "scratch_find_plus_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_find_plus_js",
+      "target": "scratch_find_plus_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_find_plus_js",
+      "target": "scratch_find_plus_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_find_plus_js",
+      "target": "scratch_find_plus_findplus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/find-plus.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "scratch_find_plus_findplus",
+      "target": "scratch_find_plus_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_inspect_buttons_js",
+      "target": "scratch_inspect_buttons_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_inspect_buttons_js",
+      "target": "scratch_inspect_buttons_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_inspect_buttons_js",
+      "target": "scratch_inspect_buttons_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_inspect_buttons_js",
+      "target": "scratch_inspect_buttons_inspectbuttons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-buttons.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "scratch_inspect_buttons_inspectbuttons",
+      "target": "scratch_inspect_buttons_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_inspect_char_count_js",
+      "target": "scratch_inspect_char_count_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_inspect_char_count_js",
+      "target": "scratch_inspect_char_count_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "scratch_inspect_char_count_js",
+      "target": "scratch_inspect_char_count_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_inspect_char_count_js",
+      "target": "scratch_inspect_char_count_inspectcharcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-char-count.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "scratch_inspect_char_count_inspectcharcount",
+      "target": "scratch_inspect_char_count_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_inspect_modal_js",
+      "target": "scratch_inspect_modal_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_inspect_modal_js",
+      "target": "scratch_inspect_modal_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_inspect_modal_js",
+      "target": "scratch_inspect_modal_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_inspect_modal_js",
+      "target": "scratch_inspect_modal_inspectmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/inspect-modal.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "scratch_inspect_modal_inspectmodal",
+      "target": "scratch_inspect_modal_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_cdp_click_js",
+      "target": "scratch_test_cdp_click_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_cdp_click_js",
+      "target": "scratch_test_cdp_click_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_test_cdp_click_js",
+      "target": "scratch_test_cdp_click_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_test_cdp_click_js",
+      "target": "scratch_test_cdp_click_testtrustedclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-cdp-click.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_test_cdp_click_testtrustedclick",
+      "target": "scratch_test_cdp_click_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_click_add_js",
+      "target": "scratch_test_click_add_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_click_add_js",
+      "target": "scratch_test_click_add_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_test_click_add_js",
+      "target": "scratch_test_click_add_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_test_click_add_js",
+      "target": "scratch_test_click_add_testclickadd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-click-add.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "scratch_test_click_add_testclickadd",
+      "target": "scratch_test_click_add_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_fill_js",
+      "target": "scratch_test_fill_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_fill_js",
+      "target": "scratch_test_fill_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_test_fill_js",
+      "target": "scratch_test_fill_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_test_fill_js",
+      "target": "scratch_test_fill_testfill",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-fill.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "scratch_test_fill_testfill",
+      "target": "scratch_test_fill_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "scratch/test-gmail.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scratch_test_gmail_js",
-      "target": "scratch_test_gmail_fs",
-      "confidence_score": 1.0
+      "target": "scratch_test_gmail_fs"
     },
     {
       "relation": "contains",
@@ -3898,9 +6181,9 @@
       "source_file": "scratch/test-gmail.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scratch_test_gmail_js",
-      "target": "scratch_test_gmail_crypto",
-      "confidence_score": 1.0
+      "target": "scratch_test_gmail_crypto"
     },
     {
       "relation": "contains",
@@ -3908,9 +6191,9 @@
       "source_file": "scratch/test-gmail.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scratch_test_gmail_js",
-      "target": "scratch_test_gmail_path",
-      "confidence_score": 1.0
+      "target": "scratch_test_gmail_path"
     },
     {
       "relation": "contains",
@@ -3918,8 +6201,161 @@
       "source_file": "scratch/test-gmail.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scratch_test_gmail_js",
-      "target": "scratch_test_gmail_testgmailapi",
+      "target": "scratch_test_gmail_testgmailapi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_multiline_input_js",
+      "target": "scratch_test_multiline_input_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_multiline_input_js",
+      "target": "scratch_test_multiline_input_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "scratch_test_multiline_input_js",
+      "target": "scratch_test_multiline_input_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_test_multiline_input_js",
+      "target": "scratch_test_multiline_input_testmultiline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-multiline-input.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "scratch_test_multiline_input_testmultiline",
+      "target": "scratch_test_multiline_input_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_post_btn_js",
+      "target": "scratch_test_post_btn_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_post_btn_js",
+      "target": "scratch_test_post_btn_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "scratch_test_post_btn_js",
+      "target": "scratch_test_post_btn_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_test_post_btn_js",
+      "target": "scratch_test_post_btn_testfillandcheckbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-post-btn.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "scratch_test_post_btn_testfillandcheckbutton",
+      "target": "scratch_test_post_btn_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_thread_js",
+      "target": "scratch_test_thread_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_thread_js",
+      "target": "scratch_test_thread_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "scratch_test_thread_js",
+      "target": "scratch_test_thread_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "scratch_test_thread_js",
+      "target": "scratch_test_thread_testthreadbuilding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-thread.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "scratch_test_thread_testthreadbuilding",
+      "target": "scratch_test_thread_sendkimicommand",
       "confidence_score": 1.0
     },
     {
@@ -4001,6 +6437,36 @@
       "confidence_score": 1.0,
       "source": "scripts_patch_wwebjs_js",
       "target": "scripts_patch_wwebjs_utilscode"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_claude_hermes_whatsapp_ai_agent_architecture_system_guide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_claude_hermes_whatsapp_ai_agent_architecture_system_guide",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_claude_core_system_architecture_god_nodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_claude_hermes_whatsapp_ai_agent_architecture_system_guide",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_claude_critical_guidelines",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -4795,5 +7261,5 @@
       "source_file": "index.js"
     }
   ],
-  "built_at_commit": "ba040d7a292ffcd9cbe96dbada85194e2aca6cb0"
+  "built_at_commit": "2ab106e911a9f2e5633b8e0cb1d20377f6e08cc8"
 }

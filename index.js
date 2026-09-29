@@ -7,7 +7,7 @@ const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
-const { queryChatMemory } = require('./chatMemory');
+const { queryChatMemory, findRecentEmail, createSequentialQueue } = require('./chatMemory');
 const { sendEmail } = require('./emailService');
 
 const AI_PROVIDER = (process.env.AI_PROVIDER || 'deepseek').toLowerCase();
@@ -64,6 +64,51 @@ async function getGCPAccessToken() {
     return null;
 }
 
+const OCR_MAX_CHARS = 1200;
+const HISTORY_MSG_MAX_CHARS = 400;
+const REPLY_MAX_TOKENS = 350;
+
+/**
+ * Cleans raw OCR output (collapses whitespace/noise, dedupes lines) and truncates it
+ * so it cannot burn LLM tokens.
+ */
+function cleanOcrText(raw) {
+    if (!raw) return '';
+    const seen = new Set();
+    const lines = [];
+    for (const line of String(raw).split(/\r?\n/)) {
+        const l = line.replace(/[^\S\n]+/g, ' ').replace(/[|_~=\-]{4,}/g, ' ').trim();
+        if (l.length < 2) continue;
+        // Drop noise: lines with no letters/digits, or mostly symbols (OCR garbage from textures/borders)
+        const alnum = (l.match(/[\p{L}\p{N}]/gu) || []).length;
+        if (alnum === 0 || (l.length > 4 && alnum / l.length < 0.4)) continue;
+        const key = l.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        lines.push(l);
+    }
+    const joined = lines.join('\n');
+    return joined.length > OCR_MAX_CHARS ? joined.slice(0, OCR_MAX_CHARS).trimEnd() + ' …[truncated]' : joined;
+}
+
+/**
+ * Compact form of a user message for chatHistory: media/OCR dumps become a short summary
+ * marker instead of persisting into every subsequent turn.
+ */
+function compactForHistory(msg) {
+    const text = String(msg || '');
+    if (text.startsWith('[IMAGE RECEIVED')) {
+        const caption = (text.match(/User text accompanying the media: "([\s\S]*?)"$/) || [])[1];
+        const scene = (text.match(/- Labels \/ Scene: (.*)/) || [])[1];
+        const hasOcr = /Detected Text \(OCR/.test(text);
+        return `[User sent a photo${scene ? ` (${scene.split(',').slice(0, 4).join(',').trim()})` : ''}${hasOcr ? ' containing text' : ''}${caption ? `; caption: "${caption.slice(0, 120)}"` : ''}. Summary was given.]`;
+    }
+    if (text.length <= HISTORY_MSG_MAX_CHARS) return text;
+    // Keep any email addresses that truncation would otherwise drop (needed for recipient recall)
+    const dropped = (text.slice(HISTORY_MSG_MAX_CHARS).match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g) || []).slice(0, 2);
+    return text.slice(0, HISTORY_MSG_MAX_CHARS) + '…' + (dropped.length ? ` [emails: ${dropped.join(', ')}]` : '');
+}
+
 /**
  * Calls Google Cloud Vision API to extract labels, full text OCR, objects, and web context.
  */
@@ -117,14 +162,14 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
         if (!annotation) return null;
 
         const labels = (annotation.labelAnnotations || []).map(l => l.description).join(', ');
-        const text = annotation.fullTextAnnotation?.text?.trim() || '';
+        const text = cleanOcrText(annotation.fullTextAnnotation?.text || '');
         const objects = (annotation.localizedObjectAnnotations || []).map(o => o.name).join(', ');
         const webBestGuess = (annotation.webDetection?.bestGuessLabels || []).map(b => b.label).join(', ');
         const webEntities = (annotation.webDetection?.webEntities || []).filter(e => e.description).slice(0, 5).map(e => e.description).join(', ');
 
         const parts = [];
         if (text) {
-            parts.push(`- Detected Text (OCR): "${text}"`);
+            parts.push(`- Detected Text (OCR, cleaned/truncated): "${text}"`);
         }
         if (labels) {
             parts.push(`- Labels / Scene: ${labels}`);
@@ -171,7 +216,7 @@ async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
         });
         if (resp.ok) {
             const data = await resp.json();
-            const desc = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            const desc = cleanOcrText(data.candidates?.[0]?.content?.parts?.[0]?.text || '');
             if (desc) {
                 return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${desc}`;
             }
@@ -540,14 +585,88 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
 
 const OWNER_NAME = process.env.OWNER_NAME || 'My Owner';
 const BOT_NAME = process.env.BOT_NAME || 'Hermes AI';
+const WHATSAPP_STYLE_RULES = `\n\nRESPONSE STYLE (strict): Write like a sharp, warm friend texting on a phone, better than Meta AI. Reply in under ~250 words / 350 tokens. ` +
+    `1) Jump straight into the answer. NEVER open with "Certainly!", "Sure!", "Sure thing!", "Of course!", "Great question!", "Here is what you asked for", and NEVER say "As an AI". NEVER close with "Let me know if you need anything else!" or any similar offer. ` +
+    `2) Keep paragraphs to 1-2 punchy sentences separated by a blank line. ` +
+    `3) Use *single asterisks* for bold key words. NEVER use **double asterisks**, markdown headers (#), tables, or code fences. ` +
+    `4) For lists use "•" bullets, each starting with a fitting emoji, one idea per line. ` +
+    `5) NEVER paste raw OCR text, scans, or memory notes. ` +
+    `For photos/documents/scans, reply with the PHOTO CARD below.`;
+
+// Shared card layout for every photo/document (single or part of a burst).
+const PHOTO_CARD_FORMAT = `PHOTO CARD FORMAT (use exactly, max ~120 words, never paste raw OCR):\n` +
+    `📸 *<Photo/Document Overview: one punchy line>*\n\n` +
+    `• *Key Information:*\n` +
+    `  • <extracted figure, date, name, or key item>\n` +
+    `  • <2-5 clean bullets total>\n\n` +
+    `👉 *Takeaway/Action:* <one-line conclusion or next step>`;
+
+// Rejects if a slow call exceeds ms so one stuck image can't freeze the per-chat queue.
+function withTimeout(promise, ms, label, fallback) {
+    let timer;
+    const guard = new Promise(resolve => {
+        timer = setTimeout(() => {
+            console.warn(`[TIMEOUT] ${label} exceeded ${ms}ms — continuing with fallback.`);
+            resolve(fallback);
+        }, ms);
+    });
+    return Promise.race([Promise.resolve(promise), guard]).finally(() => clearTimeout(timer));
+}
+
+function buildEmailConfirmation({ to, subject, body, fromHistory }) {
+    return `✅ *Email sent to ${to}*${fromHistory ? ' _(recipient from our chat)_' : ''}\n\n` +
+        `📌 *Subject:* ${subject}\n\n` +
+        `📝 ${body}\n\n` +
+        `_Sent from sgarmy200@gmail.com_`;
+}
+
+/**
+ * Final delivery sanitizer: enforces WhatsApp-native formatting and strips AI boilerplate.
+ */
+function sanitizeWhatsAppReply(text) {
+    if (typeof text !== 'string' || !text) return text;
+    let out = text.replace(/\r\n/g, '\n');
+
+    out = out.replace(/```[a-z]*\n?/gi, '');                          // code fences
+    out = out.replace(/^[ \t]{0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$/gm, (_, h) => `*${h.replace(/\*+/g, '').trim()}*`); // headers
+    out = out.replace(/\*\*\*(.+?)\*\*\*/gs, '*$1*');                 // ***bold italic***
+    out = out.replace(/\*\*(.+?)\*\*/gs, '*$1*');                     // **bold**
+    out = out.replace(/__(.+?)__/gs, '*$1*');                         // __bold__
+    out = out.replace(/^[ \t]*[-*+][ \t]+(?=\S)/gm, '• ');           // -, *, + bullets
+    out = out.replace(/^[ \t]*[-*_]{3,}[ \t]*$/gm, '');               // horizontal rules
+
+    // Leading pleasantries / robotic openers
+    const openers = /^\s*(?:(?:certainly|sure(?: thing)?|of course|absolutely|great question|no problem|got it)[!.,:\-–—]*\s*|here(?:'s| is| are) (?:what you asked for|the (?:information|answer|details) you (?:requested|asked for))[^\n.:!]*[.:!]?\s*|as an ai(?: language model| assistant)?[^\n.,]*[.,]\s*)+/i;
+    out = out.replace(openers, '');
+    out = out.replace(/^[ \t]{0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$/gm, (_, h) => `*${h.replace(/\*+/g, '').trim()}*`); // header exposed by opener strip
+
+    // Trailing boilerplate lines
+    const closers = /(?:\n+[ \t]*(?:[^\n]*\b(?:let me know if (?:you|there)[^\n]*|feel free to (?:ask|reach out)[^\n]*|hope (?:this|that) helps[^\n]*|is there anything else[^\n]*|anything else i can (?:help|do)[^\n]*|happy to help (?:further|with anything)[^\n]*)))+[ \t]*$/i;
+    out = out.replace(closers, '');
+    out = out.replace(/(?:^|(?<=[.!?]\s))(?:let me know if you need anything else|feel free to ask(?: me)? anything(?: else)?|hope this helps)[!. ]*$/i, '');
+
+    out = out.replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
+    if (out && /^[a-z]/.test(out) && out !== text.trim()) out = out[0].toUpperCase() + out.slice(1);
+    return out || text.trim();
+}
 const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || 
+
     `You are ${BOT_NAME}, an intelligent personal assistant managing WhatsApp messages for ${OWNER_NAME} while they are away or busy. ` +
     `Be friendly, polite, concise, and helpful. If someone needs urgent contact with ${OWNER_NAME}, let them know their message has been recorded and ${OWNER_NAME} will get back to them as soon as possible. ` +
     `Answer general questions accurately. Keep WhatsApp replies brief and natural, avoiding overly lengthy walls of text unless explicitly requested. ` +
     `IMPORTANT CAPABILITY - GOOGLE DRIVE & CLOUD VAULT: You have a fully integrated Google Drive vault. When a user sends any media (image, document, audio) it is AUTOMATICALLY saved to Google Drive and Google Cloud Storage by the system backend. ` +
     `When you see [GOOGLE DRIVE LINK] in the context, it means the file WAS successfully saved. Confirm this to the user and share the link. ` +
     `When you see [CLOUD STORAGE LINK] instead, the file was saved to Google Cloud Storage backup. ` +
-    `NEVER say you cannot access Drive or cannot save files — you absolutely can and do this automatically for every media received.`;
+    `NEVER say you cannot access Drive or cannot save files — you absolutely can and do this automatically for every media received.` +
+    WHATSAPP_STYLE_RULES;
+
+const OWNER_PROMPT = `You are ${BOT_NAME}, ${OWNER_NAME}'s world-class executive assistant. You are talking directly to ${OWNER_NAME}, the owner. ` +
+    `Always use second person ("you"/"your"). NEVER use "he/him/his" or ${OWNER_NAME}'s name to refer to the person you're talking to, and never say he is away, busy, or that a message "will be passed on". ` +
+    `Understand natural Hinglish, Hindi, and English (and voice-note transcripts with typos) and reply in the language he used. ` +
+    `Give the answer or result first, instantly; no preamble, no restating the question, no filler. Ask at most one short clarifying question, only when truly blocked. ` +
+    `Act on requests (emails, saving media, summaries) rather than describing how. Recalled background context is silent: never recite it. ` +
+    `Google Drive/Cloud Vault: media he sends is automatically saved; when you see [GOOGLE DRIVE LINK] or [CLOUD STORAGE LINK], confirm it was saved and share the link.` +
+    WHATSAPP_STYLE_RULES;
 
 const chatHistory = new Map();
 const MAX_HISTORY = 10;
@@ -586,12 +705,12 @@ function getCurrentISTContext() {
     return `\n[REAL-TIME CLOCK CONTEXT]: Current Time: ${dateStr}, ${timeStr} IST (${period}). ${advice}\n`;
 }
 
-async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null) {
+async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null, maxTokens = REPLY_MAX_TOKENS) {
     if (!DEEPSEEK_API_KEY) {
         return "I am online, but my DeepSeek API key is not configured.";
     }
 
-    const history = chatHistory.get(chatId) || [];
+    const history = [...(chatHistory.get(chatId) || [])];
     history.push({ role: 'user', content: userMessage });
 
     const activePrompt = customSystemPrompt || SYSTEM_PROMPT;
@@ -610,7 +729,7 @@ async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null) 
             body: JSON.stringify({
                 model: DEEPSEEK_MODEL,
                 messages: messages,
-                max_tokens: 500,
+                max_tokens: maxTokens,
                 temperature: 0.7
             })
         });
@@ -624,6 +743,7 @@ async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null) 
         const data = await resp.json();
         const replyText = data.choices?.[0]?.message?.content?.trim() || "Message received!";
         
+        history[history.length - 1] = { role: 'user', content: compactForHistory(userMessage) };
         history.push({ role: 'assistant', content: replyText });
         chatHistory.set(chatId, history.slice(-MAX_HISTORY));
 
@@ -634,12 +754,12 @@ async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null) 
     }
 }
 
-async function getGeminiReply(chatId, userMessage, customSystemPrompt = null) {
+async function getGeminiReply(chatId, userMessage, customSystemPrompt = null, maxTokens = REPLY_MAX_TOKENS) {
     if (!GEMINI_API_KEY) {
         return "I am currently online, but my Gemini API key has not been configured yet.";
     }
 
-    const history = chatHistory.get(chatId) || [];
+    const history = [...(chatHistory.get(chatId) || [])];
     history.push({ role: 'user', parts: [{ text: userMessage }] });
 
     const activePrompt = customSystemPrompt || SYSTEM_PROMPT;
@@ -658,7 +778,7 @@ async function getGeminiReply(chatId, userMessage, customSystemPrompt = null) {
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 500
+                    maxOutputTokens: maxTokens
                 }
             })
         });
@@ -673,6 +793,7 @@ async function getGeminiReply(chatId, userMessage, customSystemPrompt = null) {
         const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
         const replyText = candidate ? candidate.trim() : "Thank you for your message. I'll pass it along!";
         
+        history[history.length - 1] = { role: 'user', parts: [{ text: compactForHistory(userMessage) }] };
         history.push({ role: 'model', parts: [{ text: replyText }] });
         chatHistory.set(chatId, history.slice(-MAX_HISTORY));
 
@@ -683,12 +804,12 @@ async function getGeminiReply(chatId, userMessage, customSystemPrompt = null) {
     }
 }
 
-async function getHermesReply(chatId, userMessage, customSystemPrompt = null) {
+async function getHermesReply(chatId, userMessage, customSystemPrompt = null, maxTokens = REPLY_MAX_TOKENS) {
     if (!HERMES_API_KEY) {
         return "I am currently online, but my Hermes API key has not been configured yet.";
     }
 
-    const history = chatHistory.get(chatId) || [];
+    const history = [...(chatHistory.get(chatId) || [])];
     history.push({ role: 'user', content: userMessage });
 
     const activePrompt = customSystemPrompt || SYSTEM_PROMPT;
@@ -707,7 +828,7 @@ async function getHermesReply(chatId, userMessage, customSystemPrompt = null) {
             body: JSON.stringify({
                 model: HERMES_MODEL,
                 messages: messages,
-                max_tokens: 500,
+                max_tokens: maxTokens,
                 temperature: 0.7
             })
         });
@@ -721,6 +842,7 @@ async function getHermesReply(chatId, userMessage, customSystemPrompt = null) {
         const data = await resp.json();
         const replyText = data.choices?.[0]?.message?.content?.trim() || "Message received!";
         
+        history[history.length - 1] = { role: 'user', content: compactForHistory(userMessage) };
         history.push({ role: 'assistant', content: replyText });
         chatHistory.set(chatId, history.slice(-MAX_HISTORY));
 
@@ -731,13 +853,13 @@ async function getHermesReply(chatId, userMessage, customSystemPrompt = null) {
     }
 }
 
-async function generateAIReply(chatId, userMessage, customSystemPrompt = null) {
+async function generateAIReply(chatId, userMessage, customSystemPrompt = null, maxTokens = REPLY_MAX_TOKENS) {
     if (AI_PROVIDER === 'deepseek') {
-        return await getDeepSeekReply(chatId, userMessage, customSystemPrompt);
+        return await getDeepSeekReply(chatId, userMessage, customSystemPrompt, maxTokens);
     } else if (AI_PROVIDER === 'gemini') {
-        return await getGeminiReply(chatId, userMessage, customSystemPrompt);
+        return await getGeminiReply(chatId, userMessage, customSystemPrompt, maxTokens);
     } else {
-        return await getHermesReply(chatId, userMessage, customSystemPrompt);
+        return await getHermesReply(chatId, userMessage, customSystemPrompt, maxTokens);
     }
 }
 
@@ -1050,7 +1172,24 @@ const pendingBuffers = new Map(); // sender -> { timeout, texts: [], lastMsg }
 const lastMediaStore = new Map();  // sender -> { storageInfo, timestamp } — remembers last upload for 10 minutes
 const pendingEmailDrafts = new Map(); // sender -> { subject, body, effectiveStorageInfo, timestamp } — multi-turn email drafts
 
-client.on('message', async (msg) => {
+// Per-chat sequential queue: burst uploads (e.g. 6 photos) are processed fully and in order, never in parallel.
+const enqueueChatTask = createSequentialQueue();
+const seenMessageIds = new Set();
+
+client.on('message', (msg) => {
+    if (!msg || !msg.from) return;
+    const msgId = msg.id && msg.id._serialized;
+    if (msgId) {
+        if (seenMessageIds.has(msgId)) return; // duplicate event -> no duplicate reply
+        seenMessageIds.add(msgId);
+        if (seenMessageIds.size > 500) seenMessageIds.delete(seenMessageIds.values().next().value);
+    }
+    enqueueChatTask(msg.from, () => handleIncomingMessage(msg)).catch(err => {
+        console.error('[QUEUE] Message handler failed:', err && (err.stack || err.message || err));
+    });
+});
+
+async function handleIncomingMessage(msg) {
     if (msg.from === 'status@broadcast') return;
     if (msg.from.endsWith('@g.us')) return;
     if (msg.fromMe) return;
@@ -1127,7 +1266,9 @@ client.on('message', async (msg) => {
     }
 
     let customPrompt = null;
-    if (isDilip) {
+    if (isRoshan) {
+        customPrompt = OWNER_PROMPT;
+    } else if (isDilip) {
         customPrompt = `You are replying on behalf of Roshan to Dilip Singh (+91 9549477444) on WhatsApp.
 
 CRITICAL INSTRUCTIONS:
@@ -1152,7 +1293,7 @@ CRITICAL INSTRUCTIONS:
     if (hasMedia) {
         try {
             console.log(`[MEDIA] Downloading media attachment from ${sender}...`);
-            const media = await robustDownloadMedia(client, msg);
+            const media = await withTimeout(robustDownloadMedia(client, msg), 45000, 'Media download', null);
             if (media && media.data) {
                 const mime = (media.mimetype || '').toLowerCase();
                 const isImage = mime.startsWith('image/');
@@ -1160,16 +1301,18 @@ CRITICAL INSTRUCTIONS:
                 const isDoc = !isImage && !isAudio;
 
                 // 1. Google Cloud Storage Vault: Save backup
-                storageInfo = await saveMediaToCloudStorage(media.data, media.mimetype, sender, media.filename);
+                storageInfo = await withTimeout(saveMediaToCloudStorage(media.data, media.mimetype, sender, media.filename), 30000, 'Cloud vault save', null);
 
                 // 2. Intelligent Multimodal Processing
                 if (isImage) {
                     console.log(`[VISION] Analyzing image (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Vision Engine...`);
-                    mediaContext = await getImageVisionDescription(media.data, media.mimetype);
+                    mediaContext = await withTimeout(getImageVisionDescription(media.data, media.mimetype), 35000, 'Vision analysis',
+                        '[IMAGE RECEIVED]: An image file was received, but vision analysis timed out.');
                     console.log(`[VISION RESULT]:\n${mediaContext}`);
                 } else if (isAudio) {
                     console.log(`[SPEECH] Transcribing voice note (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Speech-to-Text API...`);
-                    mediaContext = await getAudioTranscription(media.data, media.mimetype);
+                    mediaContext = await withTimeout(getAudioTranscription(media.data, media.mimetype), 40000, 'Audio transcription',
+                        '[VOICE NOTE RECEIVED]: A voice note was received, but transcription timed out.');
                     console.log(`[SPEECH RESULT]:\n${mediaContext}`);
                 } else if (isDoc) {
                     const docName = media.filename || 'Document';
@@ -1204,9 +1347,9 @@ CRITICAL INSTRUCTIONS:
     let finalPrompt = incomingText;
     if (mediaContext) {
         if (incomingText) {
-            finalPrompt = `${mediaContext}\n\nUser text accompanying the media: "${incomingText}"`;
+            finalPrompt = `${mediaContext}\n\n(If this is a photo/scan/document, answer with the card below and address the user's request in the Takeaway line.)\n${PHOTO_CARD_FORMAT}\nUser text accompanying the media: "${incomingText}"`;
         } else {
-            finalPrompt = `${mediaContext}\n\n(Note: User sent this media without any text caption. Acknowledge and react naturally in character.)`;
+            finalPrompt = `${mediaContext}\n\n(No caption. If this is a photo/scan/document, reply with the card below. Do NOT repeat the raw text.)\n${PHOTO_CARD_FORMAT}`;
         }
     } else if (hasMedia) {
         if (incomingText) {
@@ -1267,7 +1410,7 @@ CRITICAL INSTRUCTIONS:
             if (/^(cancel|discard|radd|nahi|chhoro|stop|rehne do)\b/i.test(incomingText.trim())) {
                 pendingEmailDrafts.delete(sender);
                 console.log(`[MULTI-TURN EMAIL] Draft cancelled by ${sender}`);
-                await msg.reply('❌ *Email draft cancelled.* Let me know if you need anything else.');
+                await msg.reply('❌ *Draft discarded.* Nothing was sent.');
                 return;
             }
 
@@ -1288,7 +1431,7 @@ CRITICAL INSTRUCTIONS:
                         text: draft.body
                     });
 
-                    const sentConfirm = `✅ *Email Sent Successfully!*\n\n📨 *To:* ${targetEmail}\n📌 *Subject:* ${draft.subject}\n\n📝 *Polished Message:*\n${draft.body}\n\n_Sent from sgarmy200@gmail.com_`;
+                    const sentConfirm = buildEmailConfirmation({ to: targetEmail, subject: draft.subject, body: draft.body });
                     await msg.reply(sentConfirm);
                     if (chat && chat.clearState) await chat.clearState().catch(() => {});
                 } catch (sendErr) {
@@ -1302,13 +1445,25 @@ CRITICAL INSTRUCTIONS:
 
     // ─── EMAIL INTENT: Send email directly from WhatsApp ───
     const hasEmailAddress = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i.test(incomingText);
-    const hasEmailKeyword = /\b(email|mail|gmail|send email|send mail|mail kar|email kar|mail bhej|email bhej|isko mail|ise mail|mail pe bhej|email pe bhej|forward to email)\b/i.test(incomingText);
+    // Only explicit send/draft instructions trigger the email flow; mere mentions ("did you see my mail?",
+    // "what is your email?") fall through to normal chat and cost no extra LLM calls.
+    const isEmailQuestion = /^\s*(did|have|has|had|was|were|what|which|when|where|why|who|whose|kab|kaun)\b/i.test(incomingText);
+    const hasEmailAction = !isEmailQuestion && (
+        /\b(send|draft|compose|write|forward|shoot|fire\s*off)\b[^.?!\n]{0,40}\b(e-?mail|mail|gmail)\b/i.test(incomingText) ||
+        /\b(e-?mail|mail|gmail)\b[^.?!\n]{0,30}\b(kar\s*do|kardo|kar\s*dena|kar\s*de|karo|bhej\s*do|bhejo|bhej\s*dena|bhej\s*de|send\s*kar|draft\s*kar)\b/i.test(incomingText) ||
+        /\b(isko|ise|ye|yeh|is)\s+(e-?mail|mail|gmail)\s+(kar|bhej)/i.test(incomingText) ||
+        (hasEmailAddress && /\b(send|bhej|bhejo|forward|share|deliver)\b/i.test(incomingText))
+    );
 
-    if (hasEmailKeyword || (hasEmailAddress && /\b(send|bhej|to|ko|forward|share|deliver)\b/i.test(incomingText))) {
+    if (hasEmailAction) {
         console.log(`[EMAIL INTENT DETECTED from ${sender}]: "${incomingText}"`);
 
         const emailMatch = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
-        const recipientEmail = emailMatch ? emailMatch[1] : null;
+        // No address in this message -> look back through recent conversation before asking
+        const recentEmail = emailMatch ? null : findRecentEmail(chatHistory.get(sender), { exclude: ['sgarmy200@gmail.com'] });
+        const recipientEmail = emailMatch ? emailMatch[1] : recentEmail;
+        const recipientFromHistory = Boolean(recentEmail);
+        if (recipientFromHistory) console.log(`[EMAIL RECIPIENT] Resolved ${recentEmail} from recent chat with ${sender}`);
 
         let emailSubject = 'Message from Roshan';
         let emailBody = incomingText;
@@ -1331,7 +1486,7 @@ Task:
 Return ONLY a valid JSON object with keys "subject" and "body". Do not use markdown backticks:
 {"subject": "...", "body": "..."}`;
 
-            const aiResponse = await generateAIReply(sender, polishPrompt, 'You are an email polishing assistant. Return ONLY valid JSON.');
+            const aiResponse = await generateAIReply(sender, polishPrompt, 'You are an email polishing assistant. Return ONLY valid JSON.', 700);
             const cleanJson = aiResponse.replace(/```json/gi, '').replace(/```/g, '').trim();
             const parsed = JSON.parse(cleanJson);
             if (parsed.subject) emailSubject = parsed.subject;
@@ -1361,7 +1516,7 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
                 timestamp: Date.now()
             });
 
-            const askEmailReply = `✍️ *Email Polished & Ready to Send!*\n\n📌 *Subject:* ${emailSubject}\n\n📝 *Message Preview:*\n"${emailBody}"\n\n--------------------------------------\n👉 *Who should I send this to?*\nPlease reply with the recipient's email address (e.g. \`client@example.com\`), or reply *Cancel* to discard.`;
+            const askEmailReply = `✍️ *Draft ready*\n\n📌 *Subject:* ${emailSubject}\n\n📝 ${emailBody}\n\n👉 *Send to whom?* Reply with the email address to send instantly, or *Cancel* to discard.`;
             try {
                 await msg.reply(askEmailReply);
             } catch (err) {
@@ -1378,7 +1533,7 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
                 text: emailBody
             });
 
-            const successReply = `✅ *Email Sent Successfully!*\n\n📨 *To:* ${recipientEmail}\n📌 *Subject:* ${emailSubject}\n\n📝 *Polished Message:*\n${emailBody}\n\n_Sent from sgarmy200@gmail.com_`;
+            const successReply = buildEmailConfirmation({ to: recipientEmail, subject: emailSubject, body: emailBody, fromHistory: recipientFromHistory });
             console.log(`[EMAIL DISPATCH SUCCESS to ${recipientEmail}]`);
             await msg.reply(successReply);
         } catch (sendErr) {
@@ -1393,7 +1548,7 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
 
     // Context enrichment: IST Clock + Past Memory Graph
     const timeContext = getCurrentISTContext();
-    const memoryContext = queryChatMemory(incomingText || finalPrompt);
+    const memoryContext = queryChatMemory(incomingText, { allowed: !hasMedia && !isDilip && !isMother });
     const fullPrompt = (customPrompt || SYSTEM_PROMPT) + timeContext + (memoryContext ? memoryContext : '');
 
     try {
@@ -1402,7 +1557,7 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
             await chat.sendStateTyping().catch(() => {});
         }
 
-        const reply = await generateAIReply(sender, finalPrompt, fullPrompt);
+        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, finalPrompt, fullPrompt));
         console.log(`[REPLY to ${isDilip ? 'Dilip Singh (Formal)' : sender}]: ${reply}`);
         await msg.reply(reply);
 
@@ -1412,7 +1567,7 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
     } catch (err) {
         console.error('[REPLY ERROR]:', err);
     }
-});
+}
 
 
 const server = http.createServer(async (req, res) => {

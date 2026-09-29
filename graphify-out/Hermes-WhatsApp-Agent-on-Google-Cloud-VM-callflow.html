@@ -60,7 +60,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>Hermes-WhatsApp-Agent-on-Google-Cloud-VM — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 228 nodes, 249 edges, 22 communities. Commit: ba040d7</p>
+<p class="subtitle">Generated from graphify knowledge graph: 340 nodes, 390 edges, 39 communities. Commit: 2ab106e</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
@@ -70,8 +70,8 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
     <a href="#ingest-cache-update">Ingestion &amp; Updates</a>
     <a href="#serve-api">Serving API</a>
     <a href="#tests-fixtures">Tests &amp; Fixtures</a>
-    <a href="#community-2">Community 2</a>
     <a href="#community-12">Community 12</a>
+    <a href="#community-2">Community 2</a>
     <a href="#community-3">Community 3</a>
     <a href="#community-13">Community 13</a>
     <a href="#community-21">Community 21</a>
@@ -87,42 +87,44 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    BUILD_GRAPH_321CBB04("Graph Build<br/><small>37 nodes</small>")
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>51 nodes</small>")
     class BUILD_GRAPH_321CBB04 module;
-    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>72 nodes</small>")
+    ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>137 nodes</small>")
     class ANALYSIS_CLUSTERING_C79796DA module;
-    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>2 nodes</small>")
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>6 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
-    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>42 nodes</small>")
+    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>35 nodes</small>")
     class INGEST_CACHE_UPDATE_FF457338 module;
     SERVE_API_35EC8E86("Serving API<br/><small>10 nodes</small>")
     class SERVE_API_35EC8E86 module;
-    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>13 nodes</small>")
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>43 nodes</small>")
     class TESTS_FIXTURES_B84B1DCC module;
+    COMMUNITY_12_82F13F05("Community 12<br/><small>11 nodes</small>")
+    class COMMUNITY_12_82F13F05 module;
     COMMUNITY_2_8C8DF7B9("Community 2<br/><small>11 nodes</small>")
     class COMMUNITY_2_8C8DF7B9 module;
-    COMMUNITY_12_82F13F05("Community 12<br/><small>10 nodes</small>")
-    class COMMUNITY_12_82F13F05 module;
     COMMUNITY_3_D8DFCEA7("Community 3<br/><small>10 nodes</small>")
     class COMMUNITY_3_D8DFCEA7 module;
     COMMUNITY_13_E329587C("Community 13<br/><small>8 nodes</small>")
     class COMMUNITY_13_E329587C module;
-    COMMUNITY_21_47BA4108("Community 21<br/><small>4 nodes</small>")
+    COMMUNITY_21_47BA4108("Community 21<br/><small>8 nodes</small>")
     class COMMUNITY_21_47BA4108 module;
-    COMMUNITY_6_7D637A07("Community 6<br/><small>4 nodes</small>")
+    COMMUNITY_6_7D637A07("Community 6<br/><small>5 nodes</small>")
     class COMMUNITY_6_7D637A07 module;
     COMMUNITY_7_989501FC("Community 7<br/><small>4 nodes</small>")
     class COMMUNITY_7_989501FC module;
     COMMUNITY_9_1D55D1EE("Community 9<br/><small>1 nodes</small>")
     class COMMUNITY_9_1D55D1EE module;
-    ANALYSIS_CLUSTERING_C79796DA -->|contains x10| COMMUNITY_12_82F13F05
+    ANALYSIS_CLUSTERING_C79796DA -->|contains x11| COMMUNITY_12_82F13F05
+    ANALYSIS_CLUSTERING_C79796DA -->|contains x5| COMMUNITY_6_7D637A07
     ANALYSIS_CLUSTERING_C79796DA -->|contains x5| COMMUNITY_3_D8DFCEA7
-    ANALYSIS_CLUSTERING_C79796DA -->|contains x4| COMMUNITY_6_7D637A07
     ANALYSIS_CLUSTERING_C79796DA -->|contains x4| COMMUNITY_7_989501FC
-    COMMUNITY_21_47BA4108 -->|imports x2| ANALYSIS_CLUSTERING_C79796DA
+    COMMUNITY_21_47BA4108 -->|imports x3| ANALYSIS_CLUSTERING_C79796DA
+    COMMUNITY_12_82F13F05 -->|calls x3| ANALYSIS_CLUSTERING_C79796DA
     ANALYSIS_CLUSTERING_C79796DA -->|contains x2| COMMUNITY_2_8C8DF7B9
-    BUILD_GRAPH_321CBB04 -->|contains x2| INGEST_CACHE_UPDATE_FF457338
+    COMMUNITY_6_7D637A07 -->|calls| ANALYSIS_CLUSTERING_C79796DA
     BUILD_GRAPH_321CBB04 -->|contains| COMMUNITY_13_E329587C
+    BUILD_GRAPH_321CBB04 -->|contains| INGEST_CACHE_UPDATE_FF457338
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -139,7 +141,7 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Graph Build</td><td>37</td><td><code>10, 1</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>72</td><td><code>0, 5, 4</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>2</td><td><code>8</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>42</td><td><code>15, 18, 11, 14</code></td></tr><tr><td>Serving API</td><td>10</td><td><code>16, 17</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>13</td><td><code>19, 20</code></td></tr><tr><td>Community 2</td><td>11</td><td><code>2</code></td></tr><tr><td>Community 12</td><td>10</td><td><code>12</code></td></tr><tr><td>Community 3</td><td>10</td><td><code>3</code></td></tr><tr><td>Community 13</td><td>8</td><td><code>13</code></td></tr><tr><td>Community 21</td><td>4</td><td><code>21</code></td></tr><tr><td>Community 6</td><td>4</td><td><code>6</code></td></tr><tr><td>Community 7</td><td>4</td><td><code>7</code></td></tr><tr><td>Community 9</td><td>1</td><td><code>9</code></td></tr>
+      <tr><td>Graph Build</td><td>51</td><td><code>10, 1, 22</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>137</td><td><code>0, 4, 14, 5, 23, 24, 25, 26, 27, 28, 29, 30, 31</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>6</td><td><code>38, 8</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>35</td><td><code>15, 18, 11</code></td></tr><tr><td>Serving API</td><td>10</td><td><code>16, 17</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>43</td><td><code>19, 20, 32, 33, 34, 35, 36, 37</code></td></tr><tr><td>Community 12</td><td>11</td><td><code>12</code></td></tr><tr><td>Community 2</td><td>11</td><td><code>2</code></td></tr><tr><td>Community 3</td><td>10</td><td><code>3</code></td></tr><tr><td>Community 13</td><td>8</td><td><code>13</code></td></tr><tr><td>Community 21</td><td>8</td><td><code>21</code></td></tr><tr><td>Community 6</td><td>5</td><td><code>6</code></td></tr><tr><td>Community 7</td><td>4</td><td><code>7</code></td></tr><tr><td>Community 9</td><td>1</td><td><code>9</code></td></tr>
     </table>
   </div>
   <div class="card">
@@ -151,81 +153,67 @@ flowchart LR
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>228 nodes · 249 edges · 22 communities (20 shown, 2 thin omitted)</li>
-      <li>Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)</li>
+      <li>340 nodes · 390 edges · 39 communities (37 shown, 2 thin omitted)</li>
+      <li>Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)</li>
       <li>Token cost: 0 input · 0 output</li>
       <li>1. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges</li>
-      <li>2. `🛠️ Core Engineering Highlights` - 6 edges</li>
-      <li>3. `wwebjs Monkey Patch Script` - 6 edges</li>
+      <li>2. `handleIncomingMessage()` - 13 edges</li>
+      <li>3. `sendEmail()` - 6 edges</li>
     </ul>
   </div>
 </div>
 <hr>
 <!-- ====== 2. Graph Build ====== -->
 <h2 id="build-graph">2. Graph Build</h2>
-<p>Graph Build groups implementation around readmemd, packagejson, graph, whatsapp, mostly in README.md, package.json. This section covers 37 nodes and 35 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Graph Build groups implementation around readmemd, packagejson, build, threadjs, mostly in README.md, package.json, build-x-thread.js. This section covers 51 nodes and 50 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Graph Build (37 nodes, 35 edges)
+    %% Section: Graph Build (51 nodes, 50 edges)
     subgraph build_graph_package_json_4e40bfbd["package.json"]
-        package_json_ae96f451("package.json")
         hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f("dependencies<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61("scripts<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_06fa4b70("name<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_3b6e4bdf("version<br/><small>package.json</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_package_49bee620("description<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_b59f1a7c("main<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_f20ebf38("start<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_17e45769("pm2<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_4d929939("logs<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_02767a20("postinstall<br/><small>package.json</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_package_2bbfeb0a("dotenv<br/><small>package.json</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_package_4d929939("logs<br/><small>package.json</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_package_b59f1a7c("main<br/><small>package.json</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_package_06fa4b70("name<br/><small>package.json</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_package_8c8b2727("nodemailer<br/><small>package.json</small>")
+        package_json_ae96f451("package.json")
+        hermes_whatsapp_agent_on_google_cloud_vm_package_17e45769("pm2<br/><small>package.json</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_package_02767a20("postinstall<br/><small>package.json</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_package_893a1fc2("qrcode<br/><small>package.json</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_package_75e2201f("qrcode-terminal<br/><small>package.json</small>")
     end
-    subgraph build_graph_README_md_df5bf028["README.md"]
-        hermes_whatsapp_agent_on_google_cloud_vm_readme_2ddedac5("🏛️ Hermes WhatsApp AI Agent on Google C...<br/><small>README.md</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_readme_52a47eca("🕸️ Graphify Knowledge Graph &amp; Codebase...<br/><small>README.md</small>")
-        readme_md_eeb98ce0("README.md")
+    subgraph build_graph_build_x_thread_js_717a29c2["build-x-thread.js"]
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_ab60d7e2("sendKimiCommand()<br/><small>build-x-thread.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_cb747680("sleep()<br/><small>build-x-thread.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_70535d77("composeThread()<br/><small>build-x-thread.js</small>")
+        build_x_thread_js_d0fc6e2b("build-x-thread.js")
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_ad0f6172("fs<br/><small>build-x-thread.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_7e6b60bb("path<br/><small>build-x-thread.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_build_x_314507eb("posts<br/><small>build-x-thread.js</small>")
     end
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_06fa4b70
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_3b6e4bdf
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_49bee620
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_b59f1a7c
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61
-    package_json_ae96f451 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f
-    hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_f20ebf38
-    hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_17e45769
-    hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_4d929939
-    hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_02767a20
-    hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_2bbfeb0a
-    hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_8c8b2727
-    hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_893a1fc2
-    hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_package_75e2201f
-    readme_md_eeb98ce0 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_readme_2ddedac5
-    hermes_whatsapp_agent_on_google_cloud_vm_readme_2ddedac5 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_readme_52a47eca
-    %% Omitted for readability: 19 nodes, 0 edges
-    class package_json_ae96f451 function;
+    hermes_whatsapp_agent_on_google_cloud_vm_build_x_ab60d7e2 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_build_x_70535d77
+    hermes_whatsapp_agent_on_google_cloud_vm_build_x_cb747680 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_build_x_70535d77
+    %% Omitted for readability: 33 nodes, 0 edges
     class hermes_whatsapp_agent_on_google_cloud_vm_package_c939dd8f function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_35ce5d61 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_06fa4b70 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_3b6e4bdf function;
     class hermes_whatsapp_agent_on_google_cloud_vm_package_49bee620 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_b59f1a7c function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_f20ebf38 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_17e45769 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_4d929939 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_02767a20 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_package_2bbfeb0a function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_package_4d929939 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_package_b59f1a7c function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_package_06fa4b70 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_package_8c8b2727 function;
+    class package_json_ae96f451 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_package_17e45769 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_package_02767a20 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_package_893a1fc2 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_package_75e2201f function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_readme_2ddedac5 concept;
-    class hermes_whatsapp_agent_on_google_cloud_vm_readme_52a47eca concept;
-    class readme_md_eeb98ce0 concept;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_ab60d7e2 entry;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_cb747680 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_70535d77 function;
+    class build_x_thread_js_d0fc6e2b module;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_ad0f6172 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_7e6b60bb function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_build_x_314507eb function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -385,6 +373,62 @@ flowchart LR
 </tr>
 <tr>
   <td>18</td>
+  <td><code>📲 WhatsApp Multi-Device Linking Protocol</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 📲 WhatsApp Multi-Device Linking Protocol.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning).</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>code:powershell (ssh -i &quot;$env:USERPROFILE\.ssh\google_compute_engine&quot; -L 3000)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing code:powershell (ssh -i &quot;$env:USERPROFILE\.ssh\google_compute_engine&quot; -L 3000).</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>code:block14 (http://localhost:3000/pair-code?phone=918058363027)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing code:block14 (http://localhost:3000/pair-code?phone=918058363027).</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>Option B: Terminal ASCII QR Code</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Option B: Terminal ASCII QR Code.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>code:powershell (ssh -i &quot;$env:USERPROFILE\.ssh\google_compute_engine&quot; sgarm@1)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing code:powershell (ssh -i &quot;$env:USERPROFILE\.ssh\google_compute_engine&quot; sgarm@1).</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Option C: Browser Visual QR</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Option C: Browser Visual QR.</td>
+</tr>
+<tr>
+  <td>25</td>
   <td><code>🕹️ Operations &amp; Diagnostic Cheatsheet</code><br><small style="color:var(--muted)">README.md</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -392,7 +436,7 @@ flowchart LR
   <td>Documentation node describing 🕹️ Operations &amp; Diagnostic Cheatsheet.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>26</td>
   <td><code>code:powershell (# 1. Check live agent status, memory usage, and uptime)</code><br><small style="color:var(--muted)">README.md</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -400,7 +444,7 @@ flowchart LR
   <td>Documentation node describing code:powershell (# 1. Check live agent status, memory usage, and uptime).</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>27</td>
   <td><code>🔒 Security &amp; Data Privacy</code><br><small style="color:var(--muted)">README.md</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -408,7 +452,7 @@ flowchart LR
   <td>Documentation node describing 🔒 Security &amp; Data Privacy.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>28</td>
   <td><code>📄 License</code><br><small style="color:var(--muted)">README.md</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -416,7 +460,7 @@ flowchart LR
   <td>Documentation node describing 📄 License.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>29</td>
   <td><code>package.json</code><br><small style="color:var(--muted)">package.json</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -424,68 +468,12 @@ flowchart LR
   <td>package.json node in package.json.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>30</td>
   <td><code>name</code><br><small style="color:var(--muted)">package.json</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>name node in package.json.</td>
-</tr>
-<tr>
-  <td>24</td>
-  <td><code>version</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>version node in package.json.</td>
-</tr>
-<tr>
-  <td>25</td>
-  <td><code>description</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>description node in package.json.</td>
-</tr>
-<tr>
-  <td>26</td>
-  <td><code>main</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>main node in package.json.</td>
-</tr>
-<tr>
-  <td>27</td>
-  <td><code>scripts</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>scripts node in package.json.</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>start</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>start node in package.json.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>pm2</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>pm2 node in package.json.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>logs</code><br><small style="color:var(--muted)">package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>logs node in package.json.</td>
 </tr>
 </table>
 
@@ -494,68 +482,89 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>README.md</code></td><td>21 nodes</td></tr>
+      <tr><td><code>README.md</code></td><td>28 nodes</td></tr>
 <tr><td><code>package.json</code></td><td>16 nodes</td></tr>
+<tr><td><code>build-x-thread.js</code></td><td>7 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x35. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x48, calls x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 3. Analysis & Clustering ====== -->
 <h2 id="analysis-clustering">3. Analysis &amp; Clustering</h2>
-<p>Analysis &amp; Clustering groups implementation around indexjs, patch, wwebjsjs, scripts, mostly in index.js, scripts/patch-wwebjs.js, chatMemory.js. This section covers 72 nodes and 71 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Analysis &amp; Clustering groups implementation around indexjs, scratch, check, inspect, mostly in index.js, publish-10-posts.js, scripts/patch-wwebjs.js. This section covers 137 nodes and 153 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Analysis &amp; Clustering (72 nodes, 71 edges)
+    %% Section: Analysis &amp; Clustering (137 nodes, 153 edges)
     subgraph analysis_clustering_index_js_7921891e["index.js"]
-        index_js_71daa22e("index.js")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_a_079719e6("AI_PROVIDER<br/><small>index.js</small>")
-        index_ai_provider_baef4365("AI_PROVIDER<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_q_5a119538("QRCode<br/><small>index.js</small>")
-        index_qrcode_dc8c4322("QRCode<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_a_51e4cadb("activePage<br/><small>index.js</small>")
-        index_activepage_bc8f1d07("activePage<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_a_5f366ed9("allowedLIDs<br/><small>index.js</small>")
-        index_allowedlids_b1eacfa4("allowedLIDs<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_a_d04801b1("allowedNumbers<br/><small>index.js</small>")
-        index_allowednumbers_32893bc1("allowedNumbers<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_c_f64698b4("cached<br/><small>index.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_index_c_0802bdab("chatHistory<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e("handleIncomingMessage()<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_w_06200d01("withTimeout()<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_b_9b7d54e0("buildEmailConfirmation()<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_s_7e83ee84("sanitizeWhatsAppReply()<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_g_97edbf9f("getCurrentISTContext()<br/><small>index.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_index_r_ee93ba9b("robustDownloadMedia()<br/><small>index.js</small>")
+    end
+    subgraph analysis_clustering_publish_10_posts_js_d57a6d36["publish-10-posts.js"]
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26("sendKimiCommand()<br/><small>publish-10-posts.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_b0764586("sleep()<br/><small>publish-10-posts.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_b8c629c9("waitForComposer()<br/><small>publish-10-posts.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_22cb5627("insertPostText()<br/><small>publish-10-posts.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_a893f718("clickPostButton()<br/><small>publish-10-posts.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf("publishAllPosts()<br/><small>publish-10-posts.js</small>")
     end
     subgraph analysis_clustering_chatMemory_js_fb7c4e78["chatMemory.js"]
-        chatmemory_js_b87419ba("chatMemory.js")
+        hermes_whatsapp_agent_on_google_cloud_vm_chatmem_51440b8d("findRecentEmail()<br/><small>chatMemory.js</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_chatmem_61299837("queryChatMemory()<br/><small>chatMemory.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_chatmem_9818c46f("fs<br/><small>chatMemory.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_chatmem_0ea91cdb("graphPath<br/><small>chatMemory.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_chatmem_116ad6b1("path<br/><small>chatMemory.js</small>")
+        chatmemory_js_b87419ba("chatMemory.js")
+        hermes_whatsapp_agent_on_google_cloud_vm_chatmem_1aa55334("createSequentialQueue()<br/><small>chatMemory.js</small>")
     end
-    chatmemory_js_b87419ba -->|imports| index_js_71daa22e
-    hermes_whatsapp_agent_on_google_cloud_vm_chatmem_61299837 -->|imports| index_js_71daa22e
-    %% Omitted for readability: 54 nodes, 0 edges
-    class index_js_71daa22e module;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_079719e6 klass;
-    class index_ai_provider_baef4365 klass;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_q_5a119538 klass;
-    class index_qrcode_dc8c4322 klass;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_51e4cadb function;
-    class index_activepage_bc8f1d07 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_5f366ed9 function;
-    class index_allowedlids_b1eacfa4 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_d04801b1 function;
-    class index_allowednumbers_32893bc1 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_c_f64698b4 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_c_0802bdab function;
-    class chatmemory_js_b87419ba module;
+    subgraph analysis_clustering_scratch_check_add_button_js_82836206["scratch/check-add-button.js"]
+        scratch_check_add_button_sendkimicommand_7f984830("sendKimiCommand()<br/><small>scratch/check-add-button.js</small>")
+        scratch_check_add_button_checkui_1b59f21f("checkUI()<br/><small>scratch/check-add-button.js</small>")
+    end
+    hermes_whatsapp_agent_on_google_cloud_vm_chatmem_61299837 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_chatmem_51440b8d -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_index_w_06200d01 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_index_b_9b7d54e0 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_index_s_7e83ee84 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_97edbf9f -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_index_r_ee93ba9b -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_b8c629c9
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_22cb5627
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_a893f718
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_b0764586 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_b8c629c9
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_b0764586 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_22cb5627
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_b0764586 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_b8c629c9 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_22cb5627 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf
+    hermes_whatsapp_agent_on_google_cloud_vm_publish_a893f718 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf
+    scratch_check_add_button_sendkimicommand_7f984830 -->|calls| scratch_check_add_button_checkui_1b59f21f
+    %% Omitted for readability: 119 nodes, 0 edges
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_h_9028b72e function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_w_06200d01 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_b_9b7d54e0 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_s_7e83ee84 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_97edbf9f function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_r_ee93ba9b function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_17bd9a26 entry;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_b0764586 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_b8c629c9 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_22cb5627 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_a893f718 entry;
+    class hermes_whatsapp_agent_on_google_cloud_vm_publish_270b23bf function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_51440b8d function;
     class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_61299837 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_9818c46f function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_0ea91cdb function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_116ad6b1 function;
+    class chatmemory_js_b87419ba module;
+    class hermes_whatsapp_agent_on_google_cloud_vm_chatmem_1aa55334 function;
+    class scratch_check_add_button_sendkimicommand_7f984830 entry;
+    class scratch_check_add_button_checkui_1b59f21f function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -581,7 +590,7 @@ flowchart LR
   <td>1</td>
   <td><code>index.js</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-class">Module</span></td>
-  <td><code>chatMemory.js</code><br><small style="color:var(--muted)">chatMemory.js</small><br><code>queryChatMemory()</code><br><small style="color:var(--muted)">chatMemory.js</small></td>
+  <td><code>chatMemory.js</code><br><small style="color:var(--muted)">chatMemory.js</small><br><code>createSequentialQueue()</code><br><small style="color:var(--muted)">chatMemory.js</small><br><code>findRecentEmail()</code><br><small style="color:var(--muted)">chatMemory.js</small><br>+1 more</td>
   <td>No direct outbound edge</td>
   <td>index.js node in index.js.</td>
 </tr>
@@ -643,7 +652,7 @@ flowchart LR
 </tr>
 <tr>
   <td>9</td>
-  <td><code>{ queryChatMemory }</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>{ queryChatMemory, findRecentEmail, createSequentialQueue }</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
@@ -675,22 +684,6 @@ flowchart LR
 </tr>
 <tr>
   <td>13</td>
-  <td><code>getCurrentISTContext()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>getCurrentISTContext() node in index.js.</td>
-</tr>
-<tr>
-  <td>14</td>
-  <td><code>robustDownloadMedia()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>robustDownloadMedia() node in index.js.</td>
-</tr>
-<tr>
-  <td>15</td>
   <td><code>sessionDir</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -698,7 +691,7 @@ flowchart LR
   <td>sessionDir node in index.js.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>14</td>
   <td><code>p</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -706,7 +699,7 @@ flowchart LR
   <td>p node in index.js.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>15</td>
   <td><code>client</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-cmd">Entry</span></td>
   <td>External entry / no inbound edge</td>
@@ -714,7 +707,7 @@ flowchart LR
   <td>client node in index.js.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>16</td>
   <td><code>activePage</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -722,7 +715,7 @@ flowchart LR
   <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>17</td>
   <td><code>pendingBuffers</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -730,7 +723,7 @@ flowchart LR
   <td>pendingBuffers node in index.js.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>18</td>
   <td><code>lastMediaStore</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -738,7 +731,7 @@ flowchart LR
   <td>lastMediaStore node in index.js.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>19</td>
   <td><code>pendingEmailDrafts</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -746,7 +739,39 @@ flowchart LR
   <td>pendingEmailDrafts node in index.js.</td>
 </tr>
 <tr>
+  <td>20</td>
+  <td><code>enqueueChatTask</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>seenMessageIds</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>seenMessageIds node in index.js.</td>
+</tr>
+<tr>
   <td>22</td>
+  <td><code>server</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>server node in index.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>{ queryChatMemory }</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
+</tr>
+<tr>
+  <td>24</td>
   <td><code>hasMedia</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -754,7 +779,7 @@ flowchart LR
   <td>hasMedia node in index.js.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>25</td>
   <td><code>incomingText</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -762,7 +787,7 @@ flowchart LR
   <td>incomingText node in index.js.</td>
 </tr>
 <tr>
-  <td>24</td>
+  <td>26</td>
   <td><code>allowedLIDs</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -770,7 +795,7 @@ flowchart LR
   <td>allowedLIDs node in index.js.</td>
 </tr>
 <tr>
-  <td>25</td>
+  <td>27</td>
   <td><code>allowedNumbers</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -778,7 +803,7 @@ flowchart LR
   <td>allowedNumbers node in index.js.</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>28</td>
   <td><code>mime</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -786,7 +811,7 @@ flowchart LR
   <td>mime node in index.js.</td>
 </tr>
 <tr>
-  <td>27</td>
+  <td>29</td>
   <td><code>isImage</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -794,28 +819,12 @@ flowchart LR
   <td>isImage node in index.js.</td>
 </tr>
 <tr>
-  <td>28</td>
+  <td>30</td>
   <td><code>cached</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>Caches analysis results or computes cache keys.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>draft</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>draft node in index.js.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>matchEmail</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>matchEmail node in index.js.</td>
 </tr>
 </table>
 
@@ -824,29 +833,47 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>index.js</code></td><td>58 nodes</td></tr>
+      <tr><td><code>index.js</code></td><td>65 nodes</td></tr>
+<tr><td><code>publish-10-posts.js</code></td><td>10 nodes</td></tr>
 <tr><td><code>scripts/patch-wwebjs.js</code></td><td>9 nodes</td></tr>
-<tr><td><code>chatMemory.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>chatMemory.js</code></td><td>7 nodes</td></tr>
+<tr><td><code>scratch/check-composer.js</code></td><td>6 nodes</td></tr>
+<tr><td><code>scratch/check-add-button.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/check-profile.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/check-x.js</code></td><td>5 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x69, imports x1, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x124, calls x25, imports x3, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 4. CLI & Skill Installers ====== -->
 <h2 id="cli-skills">4. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around hermes, agent, whatsapp, package, mostly in package.json, README.md. This section covers 2 nodes and 1 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>CLI &amp; Skill Installers groups implementation around claudemd, hermes, agent, architecture, mostly in CLAUDE.md, package.json, README.md. This section covers 6 nodes and 4 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (2 nodes, 1 edges)
+    %% Section: CLI &amp; Skill Installers (6 nodes, 4 edges)
+    subgraph cli_skills_CLAUDE_md_27387765["CLAUDE.md"]
+        hermes_whatsapp_agent_on_google_cloud_vm_claude_74ef14b6("Hermes WhatsApp AI Agent - Architecture...<br/><small>CLAUDE.md</small>")
+        claude_md_c26df1fa("CLAUDE.md")
+        hermes_whatsapp_agent_on_google_cloud_vm_claude_8a52e242("Core System Architecture &amp; God Nodes<br/><small>CLAUDE.md</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_claude_f3dcd1b3("Critical Guidelines<br/><small>CLAUDE.md</small>")
+    end
     readme_architecture_overview_1fa6bbb9("Hermes Agent Architecture<br/><small>README.md</small>")
     package_hermes_whatsapp_agent_0dacfb26("Hermes WhatsApp Agent Package<br/><small>package.json</small>")
     package_hermes_whatsapp_agent_0dacfb26 -->|cites| readme_architecture_overview_1fa6bbb9
+    claude_md_c26df1fa -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_claude_74ef14b6
+    hermes_whatsapp_agent_on_google_cloud_vm_claude_74ef14b6 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_claude_8a52e242
+    hermes_whatsapp_agent_on_google_cloud_vm_claude_74ef14b6 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_claude_f3dcd1b3
+    class hermes_whatsapp_agent_on_google_cloud_vm_claude_74ef14b6 concept;
+    class claude_md_c26df1fa concept;
+    class hermes_whatsapp_agent_on_google_cloud_vm_claude_8a52e242 concept;
+    class hermes_whatsapp_agent_on_google_cloud_vm_claude_f3dcd1b3 concept;
     class readme_architecture_overview_1fa6bbb9 concept;
     class package_hermes_whatsapp_agent_0dacfb26 klass;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
@@ -872,6 +899,38 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
+  <td><code>CLAUDE.md</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing CLAUDE.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Hermes WhatsApp AI Agent - Architecture &amp; System Guide</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Hermes WhatsApp AI Agent - Architecture &amp; System Guide.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Core System Architecture &amp; God Nodes</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Core System Architecture &amp; God Nodes.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Critical Guidelines</code><br><small style="color:var(--muted)">CLAUDE.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Critical Guidelines.</td>
+</tr>
+<tr>
+  <td>5</td>
   <td><code>Hermes WhatsApp Agent Package</code><br><small style="color:var(--muted)">package.json</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -879,7 +938,7 @@ flowchart LR
   <td>Hermes WhatsApp Agent Package node in package.json.</td>
 </tr>
 <tr>
-  <td>2</td>
+  <td>6</td>
   <td><code>Hermes Agent Architecture</code><br><small style="color:var(--muted)">README.md</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -893,25 +952,26 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>README.md</code></td><td>1 nodes</td></tr>
+      <tr><td><code>CLAUDE.md</code></td><td>4 nodes</td></tr>
+<tr><td><code>README.md</code></td><td>1 nodes</td></tr>
 <tr><td><code>package.json</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: cites x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x3, cites x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 5. Ingestion & Updates ====== -->
 <h2 id="ingest-cache-update">5. Ingestion &amp; Updates</h2>
-<p>Ingestion &amp; Updates groups implementation around google, keyjson, readmemd, drive, mostly in README.md, google-drive-key.json, google-gmail-key.json. This section covers 42 nodes and 38 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Ingestion &amp; Updates groups implementation around google, keyjson, drive, gmail, mostly in google-drive-key.json, google-gmail-key.json, README.md. This section covers 35 nodes and 32 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Ingestion &amp; Updates (42 nodes, 38 edges)
+    %% Section: Ingestion &amp; Updates (35 nodes, 32 edges)
     subgraph ingest_cache_update_google_drive_key_json_d66fc730["google-drive-key.json"]
         google_drive_key_json_06ddb801("google-drive-key.json")
         hermes_whatsapp_agent_on_google_cloud_vm_google_676517b7("type<br/><small>google-drive-key.json</small>")
@@ -928,9 +988,9 @@ flowchart LR
     end
     subgraph ingest_cache_update_README_md_9befc232["README.md"]
         hermes_whatsapp_agent_on_google_cloud_vm_readme_40235810("🛠️ Step-by-Step Deployment &amp; Setup Guide<br/><small>README.md</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_readme_e3ea7415("📲 WhatsApp Multi-Device Linking Protocol<br/><small>README.md</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_readme_d977ea1a("3. Connect via SSH &amp; Install Dependencies<br/><small>README.md</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_readme_7d4fe452("4. Clone Repository &amp; Setup Environment<br/><small>README.md</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_readme_f12f00d0("1. Provision the Google Cloud Compute E...<br/><small>README.md</small>")
     end
     subgraph ingest_cache_update_google_gmail_key_json_a0c7052d["google-gmail-key.json"]
         google_gmail_key_json_e27c8764("google-gmail-key.json")
@@ -948,9 +1008,10 @@ flowchart LR
     google_drive_key_json_06ddb801 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_google_d178f86e
     google_drive_key_json_06ddb801 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_google_a9d3a2bb
     google_gmail_key_json_e27c8764 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_google_8bfaa4bd
+    hermes_whatsapp_agent_on_google_cloud_vm_readme_40235810 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_readme_f12f00d0
     hermes_whatsapp_agent_on_google_cloud_vm_readme_40235810 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_readme_d977ea1a
     hermes_whatsapp_agent_on_google_cloud_vm_readme_40235810 -->|contains| hermes_whatsapp_agent_on_google_cloud_vm_readme_7d4fe452
-    %% Omitted for readability: 24 nodes, 0 edges
+    %% Omitted for readability: 17 nodes, 0 edges
     class google_drive_key_json_06ddb801 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_google_676517b7 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_google_f90246df function;
@@ -964,9 +1025,9 @@ flowchart LR
     class hermes_whatsapp_agent_on_google_cloud_vm_google_d178f86e entry;
     class hermes_whatsapp_agent_on_google_cloud_vm_google_a9d3a2bb function;
     class hermes_whatsapp_agent_on_google_cloud_vm_readme_40235810 concept;
-    class hermes_whatsapp_agent_on_google_cloud_vm_readme_e3ea7415 concept;
     class hermes_whatsapp_agent_on_google_cloud_vm_readme_d977ea1a concept;
     class hermes_whatsapp_agent_on_google_cloud_vm_readme_7d4fe452 concept;
+    class hermes_whatsapp_agent_on_google_cloud_vm_readme_f12f00d0 concept;
     class google_gmail_key_json_e27c8764 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_google_8bfaa4bd function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
@@ -1237,14 +1298,14 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>README.md</code></td><td>18 nodes</td></tr>
-<tr><td><code>google-drive-key.json</code></td><td>12 nodes</td></tr>
+      <tr><td><code>google-drive-key.json</code></td><td>12 nodes</td></tr>
 <tr><td><code>google-gmail-key.json</code></td><td>12 nodes</td></tr>
+<tr><td><code>README.md</code></td><td>11 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x38. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x32. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -1410,48 +1471,75 @@ flowchart LR
 
 <!-- ====== 7. Tests & Fixtures ====== -->
 <h2 id="tests-fixtures">7. Tests &amp; Fixtures</h2>
-<p>Tests &amp; Fixtures groups implementation around test, kimimailjs, gmailjs, scratch, mostly in kimiMail.js, scratch/test-gmail.js, test-kimi-send.js. This section covers 13 nodes and 14 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Tests &amp; Fixtures groups implementation around test, scratch, path, sendkimicommand, mostly in kimiMail.js, scratch/test-gmail.js, scratch/test-cdp-click.js. This section covers 43 nodes and 44 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Tests &amp; Fixtures (13 nodes, 14 edges)
+    %% Section: Tests &amp; Fixtures (43 nodes, 44 edges)
     subgraph tests_fixtures_kimiMail_js_522d1e56["kimiMail.js"]
         hermes_whatsapp_agent_on_google_cloud_vm_kimimai_64c66ff1("sendEmailViaKimi()<br/><small>kimiMail.js</small>")
         hermes_whatsapp_agent_on_google_cloud_vm_kimimai_00e2048d("sendKimiCommand()<br/><small>kimiMail.js</small>")
         kimimail_js_5ead6524("kimiMail.js")
         hermes_whatsapp_agent_on_google_cloud_vm_kimimai_a5d17f08("fs<br/><small>kimiMail.js</small>")
-        hermes_whatsapp_agent_on_google_cloud_vm_kimimai_8f9540e4("path<br/><small>kimiMail.js</small>")
     end
-    subgraph tests_fixtures_scratch_test_gmail_js_f5a292b5["scratch/test-gmail.js"]
-        scratch_test_gmail_crypto_6def484c("crypto<br/><small>scratch/test-gmail.js</small>")
-        scratch_test_gmail_fs_84233d79("fs<br/><small>scratch/test-gmail.js</small>")
-        scratch_test_gmail_path_636d8dc1("path<br/><small>scratch/test-gmail.js</small>")
-        scratch_test_gmail_js_8d1772fa("test-gmail.js")
-        scratch_test_gmail_testgmailapi_70c9bb63("testGmailApi()<br/><small>scratch/test-gmail.js</small>")
+    subgraph tests_fixtures_scratch_test_cdp_click_js_5fe3857a["scratch/test-cdp-click.js"]
+        scratch_test_cdp_click_sendkimicommand_03d1a611("sendKimiCommand()<br/><small>scratch/test-cdp-click.js</small>")
+        scratch_test_cdp_click_testtrustedclick_e7fce33e("testTrustedClick()<br/><small>scratch/test-cdp-click.js</small>")
+    end
+    subgraph tests_fixtures_scratch_test_click_add_js_8e46193c["scratch/test-click-add.js"]
+        scratch_test_click_add_sendkimicommand_d66f46d1("sendKimiCommand()<br/><small>scratch/test-click-add.js</small>")
+        scratch_test_click_add_testclickadd_ce2527e6("testClickAdd()<br/><small>scratch/test-click-add.js</small>")
+    end
+    subgraph tests_fixtures_scratch_test_fill_js_000fb84b["scratch/test-fill.js"]
+        scratch_test_fill_sendkimicommand_0f139469("sendKimiCommand()<br/><small>scratch/test-fill.js</small>")
+        scratch_test_fill_testfill_ad43a60d("testFill()<br/><small>scratch/test-fill.js</small>")
+    end
+    subgraph tests_fixtures_scratch_test_multiline_input_js_7135c4f1["scratch/test-multiline-input.js"]
+        scratch_test_multiline_input_sendkimicommand_5baea06f("sendKimiCommand()<br/><small>scratch/test-multiline-input.js</small>")
+        scratch_test_multiline_input_testmultiline_bb9aaa87("testMultiline()<br/><small>scratch/test-multiline-input.js</small>")
+    end
+    subgraph tests_fixtures_scratch_test_post_btn_js_add8d201["scratch/test-post-btn.js"]
+        scratch_test_post_btn_sendkimicommand_c5ab4c8c("sendKimiCommand()<br/><small>scratch/test-post-btn.js</small>")
+        scratch_test_post_btn_testfillandcheckbutton_291378e3("testFillAndCheckButton()<br/><small>scratch/test-post-btn.js</small>")
+    end
+    subgraph tests_fixtures_scratch_test_thread_js_5edd1050["scratch/test-thread.js"]
+        scratch_test_thread_sendkimicommand_d9c998fe("sendKimiCommand()<br/><small>scratch/test-thread.js</small>")
+        scratch_test_thread_testthreadbuilding_207d57b2("testThreadBuilding()<br/><small>scratch/test-thread.js</small>")
     end
     subgraph tests_fixtures_test_kimi_send_js_b8de6c66["test-kimi-send.js"]
         hermes_whatsapp_agent_on_google_cloud_vm_test_ki_f50e12a9("test()<br/><small>test-kimi-send.js</small>")
         test_kimi_send_js_3307fd4f("test-kimi-send.js")
-        hermes_whatsapp_agent_on_google_cloud_vm_test_ki_e71921c4("sendEmailViaKimi<br/><small>test-kimi-send.js</small>")
     end
     hermes_whatsapp_agent_on_google_cloud_vm_kimimai_00e2048d -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_kimimai_64c66ff1
     hermes_whatsapp_agent_on_google_cloud_vm_kimimai_64c66ff1 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_test_ki_f50e12a9
+    scratch_test_cdp_click_sendkimicommand_03d1a611 -->|calls| scratch_test_cdp_click_testtrustedclick_e7fce33e
+    scratch_test_click_add_sendkimicommand_d66f46d1 -->|calls| scratch_test_click_add_testclickadd_ce2527e6
+    scratch_test_fill_sendkimicommand_0f139469 -->|calls| scratch_test_fill_testfill_ad43a60d
+    scratch_test_multiline_input_sendkimicommand_5baea06f -->|calls| scratch_test_multiline_input_testmultiline_bb9aaa87
+    scratch_test_post_btn_sendkimicommand_c5ab4c8c -->|calls| scratch_test_post_btn_testfillandcheckbutton_291378e3
+    scratch_test_thread_sendkimicommand_d9c998fe -->|calls| scratch_test_thread_testthreadbuilding_207d57b2
     kimimail_js_5ead6524 -->|imports| test_kimi_send_js_3307fd4f
     hermes_whatsapp_agent_on_google_cloud_vm_kimimai_64c66ff1 -->|imports| test_kimi_send_js_3307fd4f
+    %% Omitted for readability: 25 nodes, 0 edges
     class hermes_whatsapp_agent_on_google_cloud_vm_kimimai_64c66ff1 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_kimimai_00e2048d entry;
     class kimimail_js_5ead6524 module;
     class hermes_whatsapp_agent_on_google_cloud_vm_kimimai_a5d17f08 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_kimimai_8f9540e4 function;
-    class scratch_test_gmail_crypto_6def484c test;
-    class scratch_test_gmail_fs_84233d79 test;
-    class scratch_test_gmail_path_636d8dc1 test;
-    class scratch_test_gmail_js_8d1772fa test;
-    class scratch_test_gmail_testgmailapi_70c9bb63 test;
+    class scratch_test_cdp_click_sendkimicommand_03d1a611 test;
+    class scratch_test_cdp_click_testtrustedclick_e7fce33e test;
+    class scratch_test_click_add_sendkimicommand_d66f46d1 test;
+    class scratch_test_click_add_testclickadd_ce2527e6 test;
+    class scratch_test_fill_sendkimicommand_0f139469 test;
+    class scratch_test_fill_testfill_ad43a60d test;
+    class scratch_test_multiline_input_sendkimicommand_5baea06f test;
+    class scratch_test_multiline_input_testmultiline_bb9aaa87 test;
+    class scratch_test_post_btn_sendkimicommand_c5ab4c8c test;
+    class scratch_test_post_btn_testfillandcheckbutton_291378e3 test;
+    class scratch_test_thread_sendkimicommand_d9c998fe test;
+    class scratch_test_thread_testthreadbuilding_207d57b2 test;
     class hermes_whatsapp_agent_on_google_cloud_vm_test_ki_f50e12a9 test;
     class test_kimi_send_js_3307fd4f test;
-    class hermes_whatsapp_agent_on_google_cloud_vm_test_ki_e71921c4 test;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1577,6 +1665,142 @@ flowchart LR
   <td>No direct outbound edge</td>
   <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
+<tr>
+  <td>14</td>
+  <td><code>test-cdp-click.js</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>fs</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>fs node in scratch/test-cdp-click.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>path</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>path node in scratch/test-cdp-click.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>testTrustedClick()</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td>sendKimiCommand() node in scratch/test-cdp-click.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>testTrustedClick()</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-cdp-click.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>test-click-add.js</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>fs</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>fs node in scratch/test-click-add.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>path</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>path node in scratch/test-click-add.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>testClickAdd()</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td>sendKimiCommand() node in scratch/test-click-add.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>testClickAdd()</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-click-add.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>test-fill.js</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>fs</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>fs node in scratch/test-fill.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>path</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>path node in scratch/test-fill.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>testFill()</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td>sendKimiCommand() node in scratch/test-fill.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>testFill()</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>sendKimiCommand()</code><br><small style="color:var(--muted)">scratch/test-fill.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>test-multiline-input.js</code><br><small style="color:var(--muted)">scratch/test-multiline-input.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>fs</code><br><small style="color:var(--muted)">scratch/test-multiline-input.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>fs node in scratch/test-multiline-input.js.</td>
+</tr>
 </table>
 
 <div class="grid">
@@ -1585,19 +1809,193 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>kimiMail.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/test-cdp-click.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/test-click-add.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/test-fill.js</code></td><td>5 nodes</td></tr>
 <tr><td><code>scratch/test-gmail.js</code></td><td>5 nodes</td></tr>
-<tr><td><code>test-kimi-send.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>scratch/test-multiline-input.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/test-post-btn.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>scratch/test-thread.js</code></td><td>5 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x10, calls x2, imports x1, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x34, calls x8, imports x1, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 8. Community 2 ====== -->
-<h2 id="community-2">8. Community 2</h2>
+<!-- ====== 8. Community 12 ====== -->
+<h2 id="community-12">8. Community 12</h2>
+<p>Community 12 groups implementation around indexjs, getgcpaccesstoken, cleanocrtext, analyzeimagewithvision, mostly in index.js. This section covers 11 nodes and 13 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 12 (11 nodes, 13 edges)
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66("getGCPAccessToken()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_c58d1eb9("cleanOcrText()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b("getGoogleDriveAccessToken()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0("transcribeAudioWithGemini()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08("analyzeImageWithVision()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46("analyzeImageWithGemini()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f("transcribeAudioWithSpeech()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726("saveMediaToCloudStorage()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5("getImageVisionDescription()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb("getAudioTranscription()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9("uploadToGoogleDrive()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_c58d1eb9 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_c58d1eb9 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46
+    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b
+    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5
+    hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5
+    hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb
+    hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9
+    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
+    hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_c_c58d1eb9 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small><br><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small><br><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>getGCPAccessToken() node in index.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>cleanOcrText()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>analyzeImageWithGemini()</code><br><small style="color:var(--muted)">index.js</small><br><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>cleanOcrText() node in index.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>cleanOcrText()</code><br><small style="color:var(--muted)">index.js</small><br><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>analyzeImageWithGemini()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>cleanOcrText()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>analyzeImageWithGemini()</code><br><small style="color:var(--muted)">index.js</small><br><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getImageVisionDescription() node in index.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>transcribeAudioWithSpeech() node in index.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>transcribeAudioWithGemini()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>transcribeAudioWithGemini() node in index.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>transcribeAudioWithGemini()</code><br><small style="color:var(--muted)">index.js</small><br><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>getAudioTranscription() node in index.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small><br><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>getGoogleDriveAccessToken() node in index.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>uploadToGoogleDrive() node in index.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>index.js</code></td><td>11 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x13. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 9. Community 2 ====== -->
+<h2 id="community-2">9. Community 2</h2>
 <p>Community 2 groups implementation around patch, scripts, wwebjsjs, indexjs, mostly in scripts/patch-wwebjs.js, index.js, README.md. This section covers 11 nodes and 11 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -1758,163 +2156,6 @@ flowchart LR
   <div class="card">
     <h4>Design Notes</h4>
     <p>This section comes from graphify community clustering. Relationship summary: explains x3, implements x3, references x2, relates x2. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
-  </div>
-</div>
-<hr>
-
-<!-- ====== 9. Community 12 ====== -->
-<h2 id="community-12">9. Community 12</h2>
-<p>Community 12 groups implementation around indexjs, getgcpaccesstoken, analyzeimagewithvision, analyzeimagewithgemini, mostly in index.js. This section covers 10 nodes and 11 internal edges; the diagram shows only representative relationships to stay readable.</p>
-
-<div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
-flowchart LR
-    %% Section: Community 12 (10 nodes, 11 edges)
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66("getGCPAccessToken()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08("analyzeImageWithVision()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b("getGoogleDriveAccessToken()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46("analyzeImageWithGemini()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0("transcribeAudioWithGemini()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f("transcribeAudioWithSpeech()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726("saveMediaToCloudStorage()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5("getImageVisionDescription()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb("getAudioTranscription()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9("uploadToGoogleDrive()<br/><small>index.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
-    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b
-    hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5
-    hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5
-    hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb
-    hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9
-    hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
-    hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_1435bd66 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_7b218f08 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_8d59357b function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_a_fc0a4c46 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_t_7a830dc0 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_t_e3219d2f function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_s_c248d726 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_ae6f7cd5 function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_g_97e4dadb function;
-    class hermes_whatsapp_agent_on_google_cloud_vm_index_u_635558e9 function;
-    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
-    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
-    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
-    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
-    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
-    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
-    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
-    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
-    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
-</div>
-
-<h3>Call Details</h3>
-<table class="call-table">
-<tr>
-  <th style="width:5%">#</th>
-  <th style="width:28%">Node</th>
-  <th style="width:10%">Type</th>
-  <th style="width:17%">Caller</th>
-  <th style="width:20%">Callees</th>
-  <th style="width:20%">Description</th>
-</tr>
-<tr>
-  <td>1</td>
-  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small><br><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small><br><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>getGCPAccessToken() node in index.js.</td>
-</tr>
-<tr>
-  <td>2</td>
-  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>Orchestrates analysis and returns structured documentation data.</td>
-</tr>
-<tr>
-  <td>3</td>
-  <td><code>analyzeImageWithGemini()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>Orchestrates analysis and returns structured documentation data.</td>
-</tr>
-<tr>
-  <td>4</td>
-  <td><code>getImageVisionDescription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>analyzeImageWithGemini()</code><br><small style="color:var(--muted)">index.js</small><br><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>No direct outbound edge</td>
-  <td>getImageVisionDescription() node in index.js.</td>
-</tr>
-<tr>
-  <td>5</td>
-  <td><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>transcribeAudioWithSpeech() node in index.js.</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>transcribeAudioWithGemini()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>transcribeAudioWithGemini() node in index.js.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>getAudioTranscription()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>transcribeAudioWithGemini()</code><br><small style="color:var(--muted)">index.js</small><br><code>transcribeAudioWithSpeech()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>No direct outbound edge</td>
-  <td>getAudioTranscription() node in index.js.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>analyzeImageWithVision()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small><br><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>getGoogleDriveAccessToken() node in index.js.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>uploadToGoogleDrive() node in index.js.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>saveMediaToCloudStorage()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>getGCPAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>getGoogleDriveAccessToken()</code><br><small style="color:var(--muted)">index.js</small><br><code>uploadToGoogleDrive()</code><br><small style="color:var(--muted)">index.js</small></td>
-  <td>No direct outbound edge</td>
-  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
-</tr>
-</table>
-
-<div class="grid">
-  <div class="card">
-    <h4>Key Files</h4>
-    <table style="width:100%;font-size:0.85rem;">
-      <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>index.js</code></td><td>10 nodes</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: calls x11. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -2212,21 +2453,36 @@ flowchart LR
 
 <!-- ====== 12. Community 21 ====== -->
 <h2 id="community-21">12. Community 21</h2>
-<p>Community 21 groups implementation around emailservicejs, nodemailer, gettransporter, sendemail, mostly in emailService.js. This section covers 4 nodes and 4 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Community 21 groups implementation around emailservicejs, send, qualitiesjs, sendemail, mostly in emailService.js, send-30-qualities.js. This section covers 8 nodes and 10 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 21 (4 nodes, 4 edges)
-    hermes_whatsapp_agent_on_google_cloud_vm_emailse_deadec1f("getTransporter()<br/><small>emailService.js</small>")
-    hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e("sendEmail()<br/><small>emailService.js</small>")
-    emailservice_js_7720fb29("emailService.js")
-    hermes_whatsapp_agent_on_google_cloud_vm_emailse_6236da83("nodemailer<br/><small>emailService.js</small>")
+    %% Section: Community 21 (8 nodes, 10 edges)
+    subgraph community_21_emailService_js_b3c50a27["emailService.js"]
+        hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e("sendEmail()<br/><small>emailService.js</small>")
+        emailservice_js_7720fb29("emailService.js")
+        hermes_whatsapp_agent_on_google_cloud_vm_emailse_deadec1f("getTransporter()<br/><small>emailService.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_emailse_6236da83("nodemailer<br/><small>emailService.js</small>")
+    end
+    subgraph community_21_send_30_qualities_js_5a6c1243["send-30-qualities.js"]
+        hermes_whatsapp_agent_on_google_cloud_vm_send_30_07dbc7e6("sendSequence()<br/><small>send-30-qualities.js</small>")
+        send_30_qualities_js_8f88f410("send-30-qualities.js")
+        hermes_whatsapp_agent_on_google_cloud_vm_send_30_a8c8e979("qualities<br/><small>send-30-qualities.js</small>")
+        hermes_whatsapp_agent_on_google_cloud_vm_send_30_e6c126c7("sendEmail<br/><small>send-30-qualities.js</small>")
+    end
     hermes_whatsapp_agent_on_google_cloud_vm_emailse_deadec1f -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e
-    class hermes_whatsapp_agent_on_google_cloud_vm_emailse_deadec1f function;
+    hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_send_30_07dbc7e6
+    emailservice_js_7720fb29 -->|imports| send_30_qualities_js_8f88f410
+    hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e -->|imports| send_30_qualities_js_8f88f410
     class hermes_whatsapp_agent_on_google_cloud_vm_emailse_1e0f7b4e function;
     class emailservice_js_7720fb29 module;
+    class hermes_whatsapp_agent_on_google_cloud_vm_emailse_deadec1f function;
     class hermes_whatsapp_agent_on_google_cloud_vm_emailse_6236da83 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_send_30_07dbc7e6 function;
+    class send_30_qualities_js_8f88f410 module;
+    class hermes_whatsapp_agent_on_google_cloud_vm_send_30_a8c8e979 function;
+    class hermes_whatsapp_agent_on_google_cloud_vm_send_30_e6c126c7 function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -2253,7 +2509,7 @@ flowchart LR
   <td><code>emailService.js</code><br><small style="color:var(--muted)">emailService.js</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
+  <td><code>send-30-qualities.js</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
   <td>emailService.js node in emailService.js.</td>
 </tr>
 <tr>
@@ -2277,8 +2533,40 @@ flowchart LR
   <td><code>sendEmail()</code><br><small style="color:var(--muted)">emailService.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>getTransporter()</code><br><small style="color:var(--muted)">emailService.js</small></td>
-  <td>No direct outbound edge</td>
+  <td><code>send-30-qualities.js</code><br><small style="color:var(--muted)">send-30-qualities.js</small><br><code>sendSequence()</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
   <td>sendEmail() node in emailService.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>send-30-qualities.js</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>emailService.js</code><br><small style="color:var(--muted)">emailService.js</small><br><code>sendEmail()</code><br><small style="color:var(--muted)">emailService.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>send-30-qualities.js node in send-30-qualities.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>{ sendEmail }</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>{ sendEmail } node in send-30-qualities.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>qualities</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>qualities node in send-30-qualities.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>sendSequence()</code><br><small style="color:var(--muted)">send-30-qualities.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>sendEmail()</code><br><small style="color:var(--muted)">emailService.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>sendSequence() node in send-30-qualities.js.</td>
 </tr>
 </table>
 
@@ -2288,30 +2576,36 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>emailService.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>send-30-qualities.js</code></td><td>4 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x3, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x6, calls x2, imports x1, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 13. Community 6 ====== -->
 <h2 id="community-6">13. Community 6</h2>
-<p>Community 6 groups implementation around indexjs, getdeepseekreply, getgeminireply, gethermesreply, mostly in index.js. This section covers 4 nodes and 3 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Community 6 groups implementation around indexjs, compactforhistory, getdeepseekreply, getgeminireply, mostly in index.js. This section covers 5 nodes and 6 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 6 (4 nodes, 3 edges)
+    %% Section: Community 6 (5 nodes, 6 edges)
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_49ee4274("compactForHistory()<br/><small>index.js</small>")
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_826b36f7("getDeepSeekReply()<br/><small>index.js</small>")
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_3dab2d3c("getGeminiReply()<br/><small>index.js</small>")
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_862b58fd("getHermesReply()<br/><small>index.js</small>")
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_6edeb1a5("generateAIReply()<br/><small>index.js</small>")
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_49ee4274 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_826b36f7
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_49ee4274 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_3dab2d3c
+    hermes_whatsapp_agent_on_google_cloud_vm_index_c_49ee4274 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_862b58fd
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_826b36f7 -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_6edeb1a5
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_3dab2d3c -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_6edeb1a5
     hermes_whatsapp_agent_on_google_cloud_vm_index_g_862b58fd -->|calls| hermes_whatsapp_agent_on_google_cloud_vm_index_g_6edeb1a5
+    class hermes_whatsapp_agent_on_google_cloud_vm_index_c_49ee4274 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_index_g_826b36f7 function;
     class hermes_whatsapp_agent_on_google_cloud_vm_index_g_3dab2d3c function;
     class hermes_whatsapp_agent_on_google_cloud_vm_index_g_862b58fd function;
@@ -2339,30 +2633,38 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>getDeepSeekReply()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><code>compactForHistory()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
+  <td><code>getDeepSeekReply()</code><br><small style="color:var(--muted)">index.js</small><br><code>getGeminiReply()</code><br><small style="color:var(--muted)">index.js</small><br><code>getHermesReply()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td>compactForHistory() node in index.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>getDeepSeekReply()</code><br><small style="color:var(--muted)">index.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>compactForHistory()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><code>generateAIReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td>getDeepSeekReply() node in index.js.</td>
 </tr>
 <tr>
-  <td>2</td>
+  <td>3</td>
   <td><code>getGeminiReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>compactForHistory()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><code>generateAIReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td>getGeminiReply() node in index.js.</td>
 </tr>
 <tr>
-  <td>3</td>
+  <td>4</td>
   <td><code>getHermesReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>compactForHistory()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><code>generateAIReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td>getHermesReply() node in index.js.</td>
 </tr>
 <tr>
-  <td>4</td>
+  <td>5</td>
   <td><code>generateAIReply()</code><br><small style="color:var(--muted)">index.js</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>getDeepSeekReply()</code><br><small style="color:var(--muted)">index.js</small><br><code>getGeminiReply()</code><br><small style="color:var(--muted)">index.js</small><br><code>getHermesReply()</code><br><small style="color:var(--muted)">index.js</small></td>
@@ -2376,12 +2678,12 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>index.js</code></td><td>4 nodes</td></tr>
+      <tr><td><code>index.js</code></td><td>5 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: calls x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x6. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -2574,17 +2876,17 @@ flowchart LR
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>228</td></tr>
-      <tr><td>Edges</td><td>249</td></tr>
+      <tr><td>Nodes</td><td>340</td></tr>
+      <tr><td>Edges</td><td>390</td></tr>
       <tr><td>Hyperedges</td><td>3</td></tr>
-      <tr><td>Communities</td><td>22</td></tr>
+      <tr><td>Communities</td><td>39</td></tr>
       <tr><td>Documented Sections</td><td>14</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>239</td></tr>
+      <tr><td>EXTRACTED</td><td>380</td></tr>
       <tr><td>INFERRED</td><td>10</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
@@ -2593,7 +2895,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>Hermes-WhatsApp-Agent-on-Google-Cloud-VM — Architecture Documentation</p>
-  <p>Generated: 2026-09-29 10:43 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-09-29 18:02 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->
