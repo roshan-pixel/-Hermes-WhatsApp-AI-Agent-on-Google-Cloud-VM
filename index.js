@@ -578,6 +578,117 @@ async function generateAIReply(chatId, userMessage, customSystemPrompt = null) {
     }
 }
 
+/**
+ * Robust media downloader that bypasses wwebjs downloadMedia() failures.
+ * Strategy:
+ *  1. Try wwebjs msg.downloadMedia() (standard path)
+ *  2. If that throws / returns empty — use pupPage.evaluate to read the
+ *     already-decrypted blob from WhatsApp Web's MediaBlobCache or render URL
+ *  3. If blob read also fails, return null (graceful degradation)
+ */
+async function robustDownloadMedia(client, msg) {
+    // Ensure _serialized exists before first attempt
+    if (msg.id && !msg.id._serialized) {
+        const r = msg.id.remote;
+        const remoteStr = (r && typeof r === 'object')
+            ? (r._serialized || r.$1 || String(r))
+            : (r || '');
+        msg.id._serialized = msg.id.$1
+            || (remoteStr ? `${msg.id.fromMe ? 'true' : 'false'}_${remoteStr}_${msg.id.id}` : undefined);
+    }
+
+    // --- Attempt 1: Standard wwebjs downloadMedia() ---
+    try {
+        const media = await msg.downloadMedia();
+        if (media && media.data) {
+            console.log('[MEDIA] Standard downloadMedia() succeeded.');
+            return media;
+        }
+    } catch (e1) {
+        console.warn('[MEDIA] Standard downloadMedia() failed:', e1 && (e1.message || String(e1)));
+    }
+
+    // --- Attempt 2: Browser-side blob extraction via pupPage.evaluate ---
+    // WhatsApp Web keeps decrypted media blobs in memory; try reading them directly.
+    console.log('[MEDIA] Attempting browser-side blob extraction fallback...');
+    try {
+        const blobResult = await client.pupPage.evaluate(async (msgId) => {
+            try {
+                const WA = window.require;
+                const Store = WA('WAWebCollections');
+                const MediaDecrypt = WA('WAWebMediaDecryptors') || WA('WAWebDownloadManager');
+
+                // Try multiple ways to find the message
+                let waMsg = Store.Msg.get(msgId);
+                if (!waMsg) {
+                    waMsg = Store.Msg.models && Store.Msg.models.find(m =>
+                        m && m.id && (m.id._serialized === msgId || m.id.$1 === msgId || m.id.id === msgId)
+                    );
+                }
+                if (!waMsg) {
+                    const res = await Store.Msg.getMessagesById([msgId]);
+                    waMsg = res && res.messages && res.messages[0];
+                }
+                if (!waMsg) return { error: 'msg_not_found', msgId };
+
+                // Try to get the media URL already loaded in the browser
+                const mediaData = waMsg.mediaData || waMsg.clientUrl || waMsg.thumbnailDirectPath;
+
+                // Check if there's a blob URL already in the renderer
+                let blobUrl = null;
+                if (waMsg.mediaData && waMsg.mediaData.mediaBlob) {
+                    blobUrl = URL.createObjectURL(waMsg.mediaData.mediaBlob);
+                } else if (waMsg.clientUrl && waMsg.clientUrl.startsWith('blob:')) {
+                    blobUrl = waMsg.clientUrl;
+                }
+
+                if (blobUrl) {
+                    const resp = await fetch(blobUrl);
+                    const arrayBuf = await resp.arrayBuffer();
+                    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuf)));
+                    return {
+                        data: base64,
+                        mimetype: waMsg.mimetype || 'application/octet-stream',
+                        filename: waMsg.filename || null
+                    };
+                }
+
+                // Try WAWebDownloadManager to trigger download and get blob
+                const DownloadManager = (() => {
+                    try { return WA('WAWebDownloadManager'); } catch(e) { return null; }
+                })();
+                if (DownloadManager && DownloadManager.downloadAndMaybeDecrypt) {
+                    const blob = await DownloadManager.downloadAndMaybeDecrypt({ msg: waMsg, signal: null });
+                    if (blob) {
+                        const arrayBuf = await blob.arrayBuffer();
+                        const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuf)));
+                        return {
+                            data: base64,
+                            mimetype: waMsg.mimetype || 'application/octet-stream',
+                            filename: waMsg.filename || null
+                        };
+                    }
+                }
+
+                return { error: 'no_blob_available', directPath: waMsg.directPath };
+            } catch (err) {
+                return { error: String(err), stack: err && err.stack };
+            }
+        }, msg.id._serialized || msg.id.$1 || msg.id.id);
+
+        if (blobResult && blobResult.data) {
+            console.log('[MEDIA] Browser blob extraction succeeded.');
+            return blobResult;
+        } else {
+            console.warn('[MEDIA] Browser blob extraction failed:', blobResult);
+        }
+    } catch (e2) {
+        console.warn('[MEDIA] Browser blob evaluation failed:', e2 && (e2.message || String(e2)));
+    }
+
+    return null;
+}
+
 console.log('--------------------------------------------------');
 console.log(`Starting ${BOT_NAME} on WhatsApp Web (Multi-Device)...`);
 console.log(`Active Brain: ${AI_PROVIDER.toUpperCase()} (${AI_PROVIDER === 'deepseek' ? DEEPSEEK_MODEL : (AI_PROVIDER === 'gemini' ? GEMINI_MODEL : HERMES_MODEL)})`);
@@ -810,10 +921,7 @@ CRITICAL INSTRUCTIONS:
     if (hasMedia) {
         try {
             console.log(`[MEDIA] Downloading media attachment from ${sender}...`);
-            if (msg.id && !msg.id._serialized) {
-                msg.id._serialized = msg.id.$1 || (msg.id.remote ? `${msg.id.fromMe ? 'true' : 'false'}_${msg.id.remote._serialized || msg.id.remote.$1 || msg.id.remote}_${msg.id.id}` : undefined);
-            }
-            const media = await msg.downloadMedia();
+            const media = await robustDownloadMedia(client, msg);
             if (media && media.data) {
                 const mime = (media.mimetype || '').toLowerCase();
                 const isImage = mime.startsWith('image/');
