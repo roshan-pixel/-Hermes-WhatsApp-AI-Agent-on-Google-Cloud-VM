@@ -28,6 +28,7 @@ The agent operates with **zero phone dependency** (runs 24/7 without the physica
 | **`v1.1.0`** | **Production Resilience** | Engineered automatic D-Bus isolation, Chromium stale singleton lock auto-cleaning, subframe framenavigated crash guards, 10-strike connection watchdog, phone pairing code API, and 24/7 long-term multi-device persistence (`pm2 save` + systemd). |
 | **`HEAD`** | **Graphify Integration** | Full knowledge graph compilation (75 nodes, 76 edges across 12 functional communities) with interactive visualization, callflow diagrams, and agent wiki. |
 | **`v1.2.0`** | **Vision Engine (GCP Vision API)** | Added Google Cloud Vision API integration (OCR, label detection, object localization, web entities) with automatic fallback to Gemini Multimodal. Empowers the text-based DeepSeek brain with native vision understanding on incoming WhatsApp media. |
+| **`v1.3.0`** | **Tri-Cloud Engine (Vision + Speech + Cloud Vault)** | Unblocked & configured Google Cloud Vision API, integrated Google Cloud Speech-to-Text API for WhatsApp voice notes (Hindi/Hinglish/English support), and connected Google Cloud Storage Vault (`hermes-whatsapp-vault-390608`) for automatic media persistence. |
 
 ---
 

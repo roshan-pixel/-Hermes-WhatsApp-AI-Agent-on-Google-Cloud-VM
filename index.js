@@ -25,8 +25,10 @@ const HERMES_API_KEY = process.env.HERMES_API_KEY || '';
 const HERMES_BASE_URL = process.env.HERMES_BASE_URL || 'https://openrouter.ai/api/v1';
 const HERMES_MODEL = process.env.HERMES_MODEL || 'nousresearch/hermes-3-llama-3.1-8b';
 
-// Google Cloud Vision Settings (Vision layer for DeepSeek / Hermes)
-const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || process.env.GEMINI_API_KEY || '';
+// Google Cloud Platform Settings (Vision, Speech-to-Text & Cloud Storage)
+const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV3SMllSsMvdALP81zmQlrV_9w7k0';
+const GOOGLE_SPEECH_API_KEY = process.env.GOOGLE_SPEECH_API_KEY || process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV3SMllSsMvdALP81zmQlrV_9w7k0';
+const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'hermes-whatsapp-vault-390608';
 
 /**
  * Attempts to retrieve Google Cloud OAuth token from GCE metadata server if running on GCP VM
@@ -55,14 +57,16 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
         let apiUrl = 'https://vision.googleapis.com/v1/images:annotate';
         const headers = { 'Content-Type': 'application/json' };
 
-        const accessToken = await getGCPAccessToken();
-        if (accessToken) {
-            headers['Authorization'] = `Bearer ${accessToken}`;
-        } else if (GOOGLE_VISION_API_KEY) {
+        if (GOOGLE_VISION_API_KEY) {
             apiUrl += `?key=${GOOGLE_VISION_API_KEY}`;
         } else {
-            console.warn('[Vision API] No Google Cloud Vision API key or GCE metadata token available.');
-            return null;
+            const accessToken = await getGCPAccessToken();
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            } else {
+                console.warn('[Vision API] No Google Cloud Vision API key or GCE metadata token available.');
+                return null;
+            }
         }
 
         const requestBody = {
@@ -176,6 +180,203 @@ async function getImageVisionDescription(base64Data, mimeType = 'image/jpeg') {
     if (geminiResult) return geminiResult;
 
     return '[IMAGE RECEIVED]: An image file was received, but automated vision analysis was unavailable.';
+}
+
+/**
+ * Calls Google Cloud Speech-to-Text API to transcribe incoming voice notes and audio.
+ * Handles WhatsApp Opus (.ogg) and AAC/MP3 audio formats, configured for Hindi (hi-IN) and English (en-IN/en-US).
+ */
+async function transcribeAudioWithSpeech(base64Data, mimeType = 'audio/ogg') {
+    try {
+        let apiUrl = 'https://speech.googleapis.com/v1/speech:recognize';
+        const headers = { 'Content-Type': 'application/json' };
+
+        if (GOOGLE_SPEECH_API_KEY) {
+            apiUrl += `?key=${GOOGLE_SPEECH_API_KEY}`;
+        } else {
+            const accessToken = await getGCPAccessToken();
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            } else {
+                console.warn('[Speech API] No Google Cloud Speech-to-Text API key or GCE metadata token available.');
+                return null;
+            }
+        }
+
+        let encoding = 'OGG_OPUS';
+        let sampleRateHertz = 16000;
+
+        const cleanMime = (mimeType || '').toLowerCase();
+        if (cleanMime.includes('mp4') || cleanMime.includes('m4a') || cleanMime.includes('aac')) {
+            encoding = 'MP3';
+        }
+
+        const requestBody = {
+            config: {
+                encoding: encoding,
+                sampleRateHertz: sampleRateHertz,
+                languageCode: 'hi-IN',
+                alternativeLanguageCodes: ['en-IN', 'en-US'],
+                enableAutomaticPunctuation: true,
+                model: 'default'
+            },
+            audio: {
+                content: base64Data
+            }
+        };
+
+        const resp = await fetch(apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestBody),
+            signal: AbortSignal.timeout(20000)
+        });
+
+        if (!resp.ok) {
+            const errText = await resp.text();
+            console.error(`[Speech API Error ${resp.status}]:`, errText);
+            return null;
+        }
+
+        const data = await resp.json();
+        const results = data.results || [];
+        if (results.length === 0) {
+            console.log('[Speech API] Voice note processed, but no speech transcript detected.');
+            return '[VOICE NOTE RECEIVED]: A voice message was received, but speech was unintelligible or silent.';
+        }
+
+        const transcript = results
+            .map(r => r.alternatives?.[0]?.transcript || '')
+            .filter(Boolean)
+            .join(' ')
+            .trim();
+
+        if (!transcript) return null;
+
+        return `[VOICE NOTE / AUDIO RECEIVED - TRANSCRIBED BY GOOGLE CLOUD SPEECH-TO-TEXT]: "${transcript}"`;
+    } catch (err) {
+        console.error('[Speech API Exception]:', err.message);
+        return null;
+    }
+}
+
+/**
+ * Fallback audio transcription using Gemini Multimodal if Google Cloud Speech API fails
+ */
+async function transcribeAudioWithGemini(base64Data, mimeType = 'audio/ogg') {
+    if (!GEMINI_API_KEY) return null;
+    try {
+        const cleanMime = mimeType.split(';')[0].trim();
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [
+                        { text: "Accurately transcribe what is spoken in this audio voice note verbatim in Hindi, Hinglish, or English. Return only the transcript." },
+                        { inline_data: { mime_type: cleanMime, data: base64Data } }
+                    ]
+                }],
+                generationConfig: { maxOutputTokens: 300 }
+            }),
+            signal: AbortSignal.timeout(15000)
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            const desc = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+            if (desc) {
+                return `[VOICE NOTE / AUDIO RECEIVED - TRANSCRIBED BY GEMINI MULTIMODAL]: "${desc}"`;
+            }
+        }
+    } catch (e) {
+        console.error('[Gemini Audio Fallback Error]:', e.message);
+    }
+    return null;
+}
+
+/**
+ * Multi-layer Audio Engine: Prioritizes Google Cloud Speech-to-Text API, falls back to Gemini Multimodal
+ */
+async function getAudioTranscription(base64Data, mimeType = 'audio/ogg') {
+    console.log('[Audio Engine] Transcribing voice note with Google Cloud Speech-to-Text API...');
+    const speechResult = await transcribeAudioWithSpeech(base64Data, mimeType);
+    if (speechResult) return speechResult;
+
+    console.log('[Audio Engine] Cloud Speech API unavailable or returned empty. Falling back to Gemini Multimodal...');
+    const geminiResult = await transcribeAudioWithGemini(base64Data, mimeType);
+    if (geminiResult) return geminiResult;
+
+    return '[VOICE NOTE / AUDIO RECEIVED]: A voice message was received, but automated transcription was unavailable.';
+}
+
+/**
+ * Google Cloud Storage Vault: Automatically archives incoming media (images, audio, docs) to persistent disk and Google Cloud Storage bucket
+ */
+async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFilename = null) {
+    try {
+        const now = new Date();
+        const dateFolder = now.toISOString().split('T')[0];
+        const timestamp = now.getTime();
+
+        let ext = 'bin';
+        const cleanMime = (mimeType || '').toLowerCase();
+        if (cleanMime.includes('jpeg') || cleanMime.includes('jpg')) ext = 'jpg';
+        else if (cleanMime.includes('png')) ext = 'png';
+        else if (cleanMime.includes('webp')) ext = 'webp';
+        else if (cleanMime.includes('ogg')) ext = 'ogg';
+        else if (cleanMime.includes('mp4') || cleanMime.includes('m4a')) ext = 'mp4';
+        else if (cleanMime.includes('pdf')) ext = 'pdf';
+
+        const cleanSender = String(sender).replace(/[^\w]/g, '_');
+        const fileName = `${dateFolder}/${cleanSender}_${timestamp}.${ext}`;
+        const localDir = path.join(__dirname, 'saved-media', dateFolder);
+
+        if (!fs.existsSync(localDir)) {
+            fs.mkdirSync(localDir, { recursive: true });
+        }
+
+        const localFilePath = path.join(__dirname, 'saved-media', fileName);
+        const buffer = Buffer.from(base64Data, 'base64');
+        fs.writeFileSync(localFilePath, buffer);
+        console.log(`[CLOUD VAULT] Saved local archive: ${localFilePath} (~${Math.round(buffer.length / 1024)} KB)`);
+
+        // Upload to Google Cloud Storage Bucket if GCE token or auth available
+        if (GCS_BUCKET_NAME) {
+            const accessToken = await getGCPAccessToken();
+            if (accessToken) {
+                const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${GCS_BUCKET_NAME}/o?uploadType=media&name=${encodeURIComponent(fileName)}`;
+                const uploadResp = await fetch(uploadUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': cleanMime.split(';')[0]
+                    },
+                    body: buffer,
+                    signal: AbortSignal.timeout(30000)
+                });
+
+                if (uploadResp.ok) {
+                    console.log(`[CLOUD STORAGE] Successfully uploaded to gs://${GCS_BUCKET_NAME}/${fileName}`);
+                    return {
+                        saved: true,
+                        gcsUrl: `https://storage.googleapis.com/${GCS_BUCKET_NAME}/${fileName}`,
+                        fileName: fileName,
+                        localPath: localFilePath
+                    };
+                } else {
+                    const errText = await uploadResp.text();
+                    console.warn(`[CLOUD STORAGE] Upload response status ${uploadResp.status}:`, errText);
+                }
+            } else {
+                console.log(`[CLOUD VAULT] GCE metadata token not present (local dev). Local copy stored safely at ${localFilePath}`);
+            }
+        }
+
+        return { saved: true, fileName: fileName, localPath: localFilePath };
+    } catch (e) {
+        console.error('[CLOUD VAULT ERROR]:', e.message);
+        return null;
+    }
 }
 
 const OWNER_NAME = process.env.OWNER_NAME || 'My Owner';
@@ -602,28 +803,64 @@ CRITICAL INSTRUCTIONS:
 4. WhatsApp Length: 1 to 2 short warm sentences maximum.`;
     }
 
-    // ─── VISION ENGINE: Process image media attachments ───
-    let visionContext = '';
+    // ─── MULTI-MEDIA ENGINE: Vision, Speech-to-Text & Cloud Storage Vault ───
+    let mediaContext = '';
+    let storageInfo = null;
+
     if (hasMedia) {
         try {
             console.log(`[MEDIA] Downloading media attachment from ${sender}...`);
+            if (msg.id && !msg.id._serialized) {
+                msg.id._serialized = msg.id.$1 || (msg.id.remote ? `${msg.id.fromMe ? 'true' : 'false'}_${msg.id.remote._serialized || msg.id.remote.$1 || msg.id.remote}_${msg.id.id}` : undefined);
+            }
             const media = await msg.downloadMedia();
-            if (media && media.data && media.mimetype && media.mimetype.startsWith('image/')) {
-                console.log(`[VISION] Analyzing image (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Vision Engine...`);
-                visionContext = await getImageVisionDescription(media.data, media.mimetype);
-                console.log(`[VISION RESULT]:\n${visionContext}`);
+            if (media && media.data) {
+                const mime = (media.mimetype || '').toLowerCase();
+                const isImage = mime.startsWith('image/');
+                const isAudio = mime.startsWith('audio/') || msg.type === 'ptt' || msg.type === 'audio';
+                const isDoc = !isImage && !isAudio;
+
+                // 1. Google Cloud Storage Vault: Save backup
+                storageInfo = await saveMediaToCloudStorage(media.data, media.mimetype, sender, media.filename);
+
+                // 2. Intelligent Multimodal Processing
+                if (isImage) {
+                    console.log(`[VISION] Analyzing image (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Vision Engine...`);
+                    mediaContext = await getImageVisionDescription(media.data, media.mimetype);
+                    console.log(`[VISION RESULT]:\n${mediaContext}`);
+                } else if (isAudio) {
+                    console.log(`[SPEECH] Transcribing voice note (${media.mimetype}, ~${Math.round(media.data.length / 1024)} KB) with Speech-to-Text API...`);
+                    mediaContext = await getAudioTranscription(media.data, media.mimetype);
+                    console.log(`[SPEECH RESULT]:\n${mediaContext}`);
+                } else if (isDoc) {
+                    const docName = media.filename || 'Document';
+                    console.log(`[DOCUMENT] Received document/file: "${docName}" (${media.mimetype}).`);
+                    mediaContext = `[DOCUMENT RECEIVED]: A document named "${docName}" was received and securely archived in Google Cloud Storage.`;
+                }
+
+                if (storageInfo && storageInfo.gcsUrl) {
+                    mediaContext += `\n[CLOUD STORAGE LINK]: ${storageInfo.gcsUrl}`;
+                }
+            } else {
+                console.warn('[MEDIA WARNING]: downloadMedia() returned empty or undefined media.');
             }
         } catch (mediaErr) {
-            console.error('[MEDIA/VISION ERROR]:', mediaErr.message);
+            console.error('[MEDIA/STORAGE ERROR]:', mediaErr && (mediaErr.stack || mediaErr.message || mediaErr));
         }
     }
 
     let finalPrompt = incomingText;
-    if (visionContext) {
+    if (mediaContext) {
         if (incomingText) {
-            finalPrompt = `${visionContext}\n\nUser text accompanying the photo: "${incomingText}"`;
+            finalPrompt = `${mediaContext}\n\nUser text accompanying the media: "${incomingText}"`;
         } else {
-            finalPrompt = `${visionContext}\n\n(Note: User sent this image without any text. Acknowledge and react to what is in the photo naturally in character.)`;
+            finalPrompt = `${mediaContext}\n\n(Note: User sent this media without any text caption. Acknowledge and react naturally in character.)`;
+        }
+    } else if (hasMedia) {
+        if (incomingText) {
+            finalPrompt = `[MEDIA RECEIVED (Image/Audio)]: User sent a media file with caption: "${incomingText}".`;
+        } else {
+            finalPrompt = `[MEDIA RECEIVED (Image/Audio)]: User sent a media file (photo/voice note). Please respond naturally acknowledging that they shared media.`;
         }
     }
 

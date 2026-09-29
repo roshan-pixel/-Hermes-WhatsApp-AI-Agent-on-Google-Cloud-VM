@@ -5,6 +5,7 @@
  * 1. Prevents unhandled rejections on internal subframe navigations in pupPage.on('framenavigated').
  * 2. Adds .catch() error guards on polling evaluation loops (window.Debug?.VERSION and window.WWebJS).
  * 3. Adds transient error retries to initial Client.inject().
+ * 4. Fixes WhatsApp Web July 2026 $1 / _serialized message ID property rename in Message.js & Injected/Utils.js to enable reliable downloadMedia().
  */
 
 const fs = require('fs');
@@ -145,7 +146,105 @@ if (code.includes(badInject)) {
 
 if (modified) {
     fs.writeFileSync(clientPath, code, 'utf8');
-    console.log('[patch-wwebjs] whatsapp-web.js successfully patched for production stability!');
+    console.log('[patch-wwebjs] Client.js successfully patched for production stability!');
 } else {
-    console.log('[patch-wwebjs] whatsapp-web.js is already patched.');
+    console.log('[patch-wwebjs] Client.js is already patched.');
+}
+
+// 5. Patch Message.js for $1 and _serialized
+const messagePath = path.join(__dirname, '..', 'node_modules', 'whatsapp-web.js', 'src', 'structures', 'Message.js');
+if (fs.existsSync(messagePath)) {
+    let msgCode = fs.readFileSync(messagePath, 'utf8');
+    let msgModified = false;
+
+    // A. Fix constructor this.id assignment
+    const oldId = '        this.id = data.id;';
+    const newId = `        this.id = data.id;
+        if (this.id && !this.id._serialized) {
+            this.id._serialized = this.id.$1 || (this.id.remote ? \`\${this.id.fromMe ? 'true' : 'false'}_\${this.id.remote._serialized || this.id.remote.$1 || this.id.remote}_\${this.id.id}\` : undefined);
+        }`;
+    if (msgCode.includes(oldId) && !msgCode.includes('this.id.$1')) {
+        msgCode = msgCode.replace(oldId, newId);
+        msgModified = true;
+        console.log('[patch-wwebjs] Patched Message.js this.id initialization');
+    }
+
+    // B. Fix downloadMedia evaluate call argument
+    const oldDownloadArg = '        }, this.id._serialized);';
+    const newDownloadArg = `        }, this.id?._serialized || this.id?.$1 || (this.id && typeof this.id === 'object' ? \`\${this.id.fromMe ? 'true' : 'false'}_\${this.id.remote?._serialized || this.id.remote?.$1 || this.id.remote}_\${this.id.id}\` : this.id));`;
+    if (msgCode.includes(oldDownloadArg)) {
+        msgCode = msgCode.replace(oldDownloadArg, newDownloadArg);
+        msgModified = true;
+        console.log('[patch-wwebjs] Patched Message.js downloadMedia ID argument');
+    }
+
+    // C. Fix downloadMedia Msg.get in browser evaluate
+    const oldMsgGet = `            const msg =
+                window.require('WAWebCollections').Msg.get(msgId) ||
+                (
+                    await window
+                        .require('WAWebCollections')
+                        .Msg.getMessagesById([msgId])
+                )?.messages?.[0];`;
+    const newMsgGet = `            let msg =
+                window.require('WAWebCollections').Msg.get(msgId) ||
+                (
+                    await window
+                        .require('WAWebCollections')
+                        .Msg.getMessagesById([msgId])
+                        .catch(() => null)
+                )?.messages?.[0];
+
+            if (!msg && window.require('WAWebCollections').Msg?.models) {
+                msg = window.require('WAWebCollections').Msg.models.find(m => 
+                    m.id && (m.id._serialized === msgId || m.id.$1 === msgId || m.id.id === msgId)
+                );
+            }`;
+    if (msgCode.includes(oldMsgGet)) {
+        msgCode = msgCode.replace(oldMsgGet, newMsgGet);
+        msgModified = true;
+        console.log('[patch-wwebjs] Patched Message.js Msg.get evaluate fallback');
+    }
+
+    if (msgModified) {
+        fs.writeFileSync(messagePath, msgCode, 'utf8');
+        console.log('[patch-wwebjs] Message.js successfully patched!');
+    } else {
+        console.log('[patch-wwebjs] Message.js is already patched.');
+    }
+}
+
+// 6. Patch Injected/Utils.js for $1 and _serialized
+const utilsPath = path.join(__dirname, '..', 'node_modules', 'whatsapp-web.js', 'src', 'util', 'Injected', 'Utils.js');
+if (fs.existsSync(utilsPath)) {
+    let utilsCode = fs.readFileSync(utilsPath, 'utf8');
+    let utilsModified = false;
+
+    const oldRemote = `        if (typeof msg.id.remote === 'object') {
+            msg.id = Object.assign({}, msg.id, {
+                remote: msg.id.remote._serialized,
+            });
+        }`;
+    const newRemote = `        if (msg.id) {
+            if (!msg.id._serialized && msg.id.$1) {
+                msg.id._serialized = msg.id.$1;
+            }
+            if (typeof msg.id.remote === 'object') {
+                msg.id = Object.assign({}, msg.id, {
+                    remote: msg.id.remote._serialized || msg.id.remote.$1,
+                });
+            }
+        }`;
+    if (utilsCode.includes(oldRemote)) {
+        utilsCode = utilsCode.replace(oldRemote, newRemote);
+        utilsModified = true;
+        console.log('[patch-wwebjs] Patched Injected/Utils.js remote & $1 backfill');
+    }
+
+    if (utilsModified) {
+        fs.writeFileSync(utilsPath, utilsCode, 'utf8');
+        console.log('[patch-wwebjs] Injected/Utils.js successfully patched!');
+    } else {
+        console.log('[patch-wwebjs] Injected/Utils.js is already patched.');
+    }
 }

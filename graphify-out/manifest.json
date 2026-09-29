@@ -1,7 +1,7 @@
 {
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\index.js": {
-    "mtime": 1790580553.5314014,
-    "ast_hash": "df04adfa9c9b578569946c189606b3b8",
+    "mtime": 1790660243.821551,
+    "ast_hash": "83218dd7e2a219e463bed886437665a7",
     "semantic_hash": ""
   },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\package.json": {
@@ -10,8 +10,8 @@
     "semantic_hash": "d7aaef6be9b9217a764f20e75a431489"
   },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\README.md": {
-    "mtime": 1790580586.1004846,
-    "ast_hash": "8282c2a6a49d90b7877f5dbac1b1d8ca",
+    "mtime": 1790658387.5051374,
+    "ast_hash": "700901131edf353cd5d8220ab75dabd3",
     "semantic_hash": ""
   },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\chatMemory.js": {
@@ -20,8 +20,8 @@
     "semantic_hash": "67dec0f31db8c110d963ad955f6a12a9"
   },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scripts\\patch-wwebjs.js": {
-    "mtime": 1790506151.6289783,
-    "ast_hash": "88a4948437acbc4bc14bc984a9e98698",
-    "semantic_hash": "88a4948437acbc4bc14bc984a9e98698"
+    "mtime": 1790660201.333349,
+    "ast_hash": "65ff1295c50213bda133f5ad82eef7c4",
+    "semantic_hash": ""
   }
 }
