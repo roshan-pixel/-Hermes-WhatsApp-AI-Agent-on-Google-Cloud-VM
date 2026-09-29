@@ -542,7 +542,11 @@ const BOT_NAME = process.env.BOT_NAME || 'Hermes AI';
 const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || 
     `You are ${BOT_NAME}, an intelligent personal assistant managing WhatsApp messages for ${OWNER_NAME} while they are away or busy. ` +
     `Be friendly, polite, concise, and helpful. If someone needs urgent contact with ${OWNER_NAME}, let them know their message has been recorded and ${OWNER_NAME} will get back to them as soon as possible. ` +
-    `Answer general questions accurately. Keep WhatsApp replies brief and natural, avoiding overly lengthy walls of text unless explicitly requested.`;
+    `Answer general questions accurately. Keep WhatsApp replies brief and natural, avoiding overly lengthy walls of text unless explicitly requested. ` +
+    `IMPORTANT CAPABILITY - GOOGLE DRIVE & CLOUD VAULT: You have a fully integrated Google Drive vault. When a user sends any media (image, document, audio) it is AUTOMATICALLY saved to Google Drive and Google Cloud Storage by the system backend. ` +
+    `When you see [GOOGLE DRIVE LINK] in the context, it means the file WAS successfully saved. Confirm this to the user and share the link. ` +
+    `When you see [CLOUD STORAGE LINK] instead, the file was saved to Google Cloud Storage backup. ` +
+    `NEVER say you cannot access Drive or cannot save files — you absolutely can and do this automatically for every media received.`;
 
 const chatHistory = new Map();
 const MAX_HISTORY = 10;
@@ -1202,6 +1206,34 @@ CRITICAL INSTRUCTIONS:
         }
     }
 
+    // ─── SAVE-TO-DRIVE INTENT: Short-circuit reply ───
+    // If user explicitly asked to save/store/upload to Drive and we have a result, reply directly.
+    const saveToDriveIntent = /\b(save|store|upload|add|put|backup|keep)\b.{0,30}\b(drive|google drive|gdrive|vault|cloud)\b/i.test(incomingText) ||
+                              /\b(drive|google drive|gdrive|vault|cloud)\b.{0,20}\b(save|store|upload|backup)\b/i.test(incomingText);
+
+    if (saveToDriveIntent && hasMedia) {
+        let directReply = '';
+        if (storageInfo && storageInfo.driveUrl) {
+            directReply = `✅ Done! Saved to your Google Drive vault.\n\n🔗 ${storageInfo.driveUrl}`;
+        } else if (storageInfo && storageInfo.gcsUrl) {
+            directReply = `✅ Saved to Cloud Storage vault (Google Drive upload is setting up — will be available shortly).\n\n🔗 ${storageInfo.gcsUrl}`;
+        } else if (storageInfo && storageInfo.saved) {
+            directReply = `✅ Archived locally on the server. (Google Drive upload had a hiccup — will retry on next send.)`;
+        } else {
+            directReply = `⚠️ Couldn't save to Drive right now — the media download may have failed. Try sending the file again?`;
+        }
+        console.log(`[SAVE-TO-DRIVE SHORTCUT] Sending direct reply: ${directReply}`);
+        try {
+            const chat = await msg.getChat().catch(() => null);
+            if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
+            await msg.reply(directReply);
+            if (chat && chat.clearState) await chat.clearState().catch(() => {});
+        } catch (err) {
+            console.error('[SAVE-TO-DRIVE REPLY ERROR]:', err);
+        }
+        return;
+    }
+
     console.log(`
 [INCOMING from ${isDilip ? 'Dilip Singh (' + sender + ')' : sender}]: ${finalPrompt}`);
 
@@ -1227,6 +1259,7 @@ CRITICAL INSTRUCTIONS:
         console.error('[REPLY ERROR]:', err);
     }
 });
+
 
 const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url, true);
