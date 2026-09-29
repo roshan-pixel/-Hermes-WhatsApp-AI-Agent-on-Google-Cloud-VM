@@ -74,7 +74,7 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
         if (GOOGLE_VISION_API_KEY) {
             apiUrl += `?key=${GOOGLE_VISION_API_KEY}`;
         } else {
-            const accessToken = await getGCPAccessToken();
+            const accessToken = (googleDriveKey ? await getGoogleDriveAccessToken() : null) || await getGCPAccessToken();
             if (accessToken) {
                 headers['Authorization'] = `Bearer ${accessToken}`;
             } else {
@@ -354,7 +354,7 @@ async function getGoogleDriveAccessToken() {
         const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
         const claim = Buffer.from(JSON.stringify({
             iss: googleDriveKey.client_email,
-            scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file',
+            scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/devstorage.full_control',
             aud: 'https://oauth2.googleapis.com/token',
             exp: now + 3600,
             iat: now
@@ -498,7 +498,8 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
 
         // 2. Google Cloud Storage Bucket Upload
         if (GCS_BUCKET_NAME) {
-            const accessToken = await getGCPAccessToken();
+            // Prefer service account key token (has Storage Admin); fall back to GCE metadata token
+            const accessToken = (googleDriveKey ? await getGoogleDriveAccessToken() : null) || await getGCPAccessToken();
             if (accessToken) {
                 const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${GCS_BUCKET_NAME}/o?uploadType=media&name=${encodeURIComponent(fileName)}`;
                 const uploadResp = await fetch(uploadUrl, {
