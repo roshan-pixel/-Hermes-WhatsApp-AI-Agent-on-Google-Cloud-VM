@@ -1,16 +1,16 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-09-29)
 
 ## Corpus Check
-- 8 files · ~12,469 words
+- 13 files · ~14,086 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 189 nodes · 208 edges · 18 communities (16 shown, 2 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
+- 228 nodes · 249 edges · 22 communities (20 shown, 2 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `00bc9c7a`
+- Built from commit: `ba040d7a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,6 +33,10 @@
 - [[_COMMUNITY_Community 15|Community 15]]
 - [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
@@ -63,15 +67,15 @@
 - **Chromium Runtime Crash Defense System** — index_watchdog, patch_wwebjs_script, patch_framenavigated_guard, patch_evaluate_loop_guards, patch_inject_retry_loop [INFERRED 0.95]
 - **Multi-Factor Whitelist & Persona Isolation Framework** — index_message_handler, readme_whitelist_isolation_matrix, readme_reactive_architecture [INFERRED 0.95]
 
-## Communities (18 total, 2 thin omitted)
+## Communities (22 total, 2 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.04
-Nodes (45): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, cached, chatHistory, client, { Client, LocalAuth } (+37 more)
+Cohesion: 0.03
+Nodes (54): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, cached, chatHistory, cleanJson, client (+46 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.13
-Nodes (14): dependencies, dotenv, qrcode, qrcode-terminal, whatsapp-web.js, description, main, name (+6 more)
+Cohesion: 0.12
+Nodes (15): dependencies, dotenv, nodemailer, qrcode, qrcode-terminal, whatsapp-web.js, description, main (+7 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.20
@@ -129,8 +133,24 @@ Nodes (3): crypto, fs, path
 Cohesion: 0.40
 Nodes (3): crypto, fs, path
 
+### Community 18 - "Community 18"
+Cohesion: 0.17
+Nodes (11): auth_provider_x509_cert_url, auth_uri, client_email, client_id, client_x509_cert_url, private_key, private_key_id, project_id (+3 more)
+
+### Community 19 - "Community 19"
+Cohesion: 0.36
+Nodes (6): fs, path, sendEmailViaKimi(), sendKimiCommand(), { sendEmailViaKimi }, test()
+
+### Community 20 - "Community 20"
+Cohesion: 0.40
+Nodes (3): crypto, fs, path
+
+### Community 21 - "Community 21"
+Cohesion: 0.67
+Nodes (3): getTransporter(), nodemailer, sendEmail()
+
 ## Knowledge Gaps
-- **117 isolated node(s):** `fs`, `path`, `graphPath`, `type`, `project_id` (+112 more)
+- **145 isolated node(s):** `fs`, `path`, `graphPath`, `nodemailer`, `type` (+140 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -138,16 +158,16 @@ Nodes (3): crypto, fs, path
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` connect `Community 10` to `Community 11`, `Community 13`, `Community 14`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Why does `client` connect `Community 2` to `Community 0`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `generateAIReply()` connect `Community 3` to `Community 0`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `wwebjs Monkey Patch Script` (e.g. with `client` and `Watchdog Resilience Pattern`) actually correct?**
   _`wwebjs Monkey Patch Script` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `fs`, `path`, `graphPath` to the rest of the system?**
-  _125 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _153 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.034482758620689655 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.125 - nodes in this community are weakly interconnected._

@@ -29,6 +29,7 @@ The agent operates with **zero phone dependency** (runs 24/7 without the physica
 | **`HEAD`** | **Graphify Integration** | Full knowledge graph compilation (75 nodes, 76 edges across 12 functional communities) with interactive visualization, callflow diagrams, and agent wiki. |
 | **`v1.2.0`** | **Vision Engine (GCP Vision API)** | Added Google Cloud Vision API integration (OCR, label detection, object localization, web entities) with automatic fallback to Gemini Multimodal. Empowers the text-based DeepSeek brain with native vision understanding on incoming WhatsApp media. |
 | **`v1.3.0`** | **Tri-Cloud Engine (Vision + Speech + Cloud Vault)** | Unblocked & configured Google Cloud Vision API, integrated Google Cloud Speech-to-Text API for WhatsApp voice notes (Hindi/Hinglish/English support), and connected Google Cloud Storage Vault (`hermes-whatsapp-vault-390608`) for automatic media persistence. |
+| **`v1.4.0`** | **Autonomous WhatsApp Email Dispatch & AI Polishing** | Integrated 24/7 autonomous email sending from WhatsApp via Gmail SMTP (`sgarmy200@gmail.com`), intelligent AI message polishing (translates rough Hindi/Hinglish/English notes into professional executive emails), multi-turn draft state (asks for recipient email if missing and remembers draft across messages), and Cloud Vault attachment linking. |
 
 ---
 

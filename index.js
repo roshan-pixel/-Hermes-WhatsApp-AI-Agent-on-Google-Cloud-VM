@@ -8,6 +8,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
 const { queryChatMemory } = require('./chatMemory');
+const { sendEmail } = require('./emailService');
 
 const AI_PROVIDER = (process.env.AI_PROVIDER || 'deepseek').toLowerCase();
 
@@ -1047,6 +1048,7 @@ client.on('disconnected', (reason) => {
 
 const pendingBuffers = new Map(); // sender -> { timeout, texts: [], lastMsg }
 const lastMediaStore = new Map();  // sender -> { storageInfo, timestamp } — remembers last upload for 10 minutes
+const pendingEmailDrafts = new Map(); // sender -> { subject, body, effectiveStorageInfo, timestamp } — multi-turn email drafts
 
 client.on('message', async (msg) => {
     if (msg.from === 'status@broadcast') return;
@@ -1249,6 +1251,139 @@ CRITICAL INSTRUCTIONS:
             if (chat && chat.clearState) await chat.clearState().catch(() => {});
         } catch (err) {
             console.error('[SAVE-TO-DRIVE REPLY ERROR]:', err);
+        }
+        return;
+    }
+
+    // ─── MULTI-TURN EMAIL DRAFT RESOLUTION ───
+    // If user previously asked to send an email without providing an address, and is now replying:
+    if (pendingEmailDrafts.has(sender)) {
+        const draft = pendingEmailDrafts.get(sender);
+        // Expire draft after 15 minutes
+        if (Date.now() - draft.timestamp > 15 * 60 * 1000) {
+            pendingEmailDrafts.delete(sender);
+        } else {
+            // Check if user wants to cancel
+            if (/^(cancel|discard|radd|nahi|chhoro|stop|rehne do)\b/i.test(incomingText.trim())) {
+                pendingEmailDrafts.delete(sender);
+                console.log(`[MULTI-TURN EMAIL] Draft cancelled by ${sender}`);
+                await msg.reply('❌ *Email draft cancelled.* Let me know if you need anything else.');
+                return;
+            }
+
+            // Check if the reply contains an email address
+            const matchEmail = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
+            if (matchEmail) {
+                const targetEmail = matchEmail[1];
+                pendingEmailDrafts.delete(sender);
+
+                try {
+                    const chat = await msg.getChat().catch(() => null);
+                    if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
+
+                    console.log(`[MULTI-TURN EMAIL] Dispatching pending draft to ${targetEmail}...`);
+                    await sendEmail({
+                        to: targetEmail,
+                        subject: draft.subject,
+                        text: draft.body
+                    });
+
+                    const sentConfirm = `✅ *Email Sent Successfully!*\n\n📨 *To:* ${targetEmail}\n📌 *Subject:* ${draft.subject}\n\n📝 *Polished Message:*\n${draft.body}\n\n_Sent from sgarmy200@gmail.com_`;
+                    await msg.reply(sentConfirm);
+                    if (chat && chat.clearState) await chat.clearState().catch(() => {});
+                } catch (sendErr) {
+                    console.error('[MULTI-TURN EMAIL SEND ERROR]:', sendErr);
+                    await msg.reply(`⚠️ Failed to send email to ${targetEmail}: ${sendErr.message || 'SMTP error'}. Please try again.`);
+                }
+                return;
+            }
+        }
+    }
+
+    // ─── EMAIL INTENT: Send email directly from WhatsApp ───
+    const hasEmailAddress = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i.test(incomingText);
+    const hasEmailKeyword = /\b(email|mail|gmail|send email|send mail|mail kar|email kar|mail bhej|email bhej|isko mail|ise mail|mail pe bhej|email pe bhej|forward to email)\b/i.test(incomingText);
+
+    if (hasEmailKeyword || (hasEmailAddress && /\b(send|bhej|to|ko|forward|share|deliver)\b/i.test(incomingText))) {
+        console.log(`[EMAIL INTENT DETECTED from ${sender}]: "${incomingText}"`);
+
+        const emailMatch = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
+        const recipientEmail = emailMatch ? emailMatch[1] : null;
+
+        let emailSubject = 'Message from Roshan';
+        let emailBody = incomingText;
+
+        try {
+            const chat = await msg.getChat().catch(() => null);
+            if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
+
+            // AI Polishing Prompt: Turn rough notes/instructions into an articulate, executive email
+            const polishPrompt = `You are an expert executive email writer. The user sent this raw WhatsApp request to compose an email:
+"${incomingText}"
+
+Task:
+1. Polish the message into a professional, articulate, polite, and well-structured email body.
+   - If written in Hindi, Hinglish, or shorthand notes, translate and polish into clear, fluent business English (unless the user explicitly instructed to write in Hindi).
+   - Include a courteous greeting (e.g., "Hi," or "Dear Team,"), a clear and concise body with proper formatting, and a professional closing ("Best regards,\\nRoshan").
+   - Strip out voice-to-text artifacts, WhatsApp meta-commands (like "mail kar do", "tell him that", "send email to..."), and informal conversational filler.
+2. Formulate a crisp, professional subject line (maximum 6-8 words).
+
+Return ONLY a valid JSON object with keys "subject" and "body". Do not use markdown backticks:
+{"subject": "...", "body": "..."}`;
+
+            const aiResponse = await generateAIReply(sender, polishPrompt, 'You are an email polishing assistant. Return ONLY valid JSON.');
+            const cleanJson = aiResponse.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(cleanJson);
+            if (parsed.subject) emailSubject = parsed.subject;
+            if (parsed.body) emailBody = parsed.body;
+        } catch (parseErr) {
+            console.warn('[EMAIL POLISH AI WARNING]: Using fallback extraction:', parseErr.message);
+            emailBody = incomingText
+                .replace(emailMatch ? emailMatch[0] : '', '')
+                .replace(/\b(send|email|mail|gmail|bhej|kar do|kar dena|to|ko|ki|please|isko|ise)\b/gi, '')
+                .trim();
+            if (!emailBody) emailBody = incomingText;
+            emailSubject = `Message from Roshan via Hermes Assistant`;
+        }
+
+        // If media was uploaded or cached, append the Cloud Vault link
+        if (effectiveStorageInfo?.driveUrl || effectiveStorageInfo?.gcsUrl) {
+            const vaultUrl = effectiveStorageInfo.driveUrl || effectiveStorageInfo.gcsUrl;
+            emailBody += `\n\n---\n📎 Shared Cloud File / Document:\n${vaultUrl}`;
+        }
+
+        // Case 1: Recipient email is missing -> Save draft & ask user!
+        if (!recipientEmail) {
+            pendingEmailDrafts.set(sender, {
+                subject: emailSubject,
+                body: emailBody,
+                effectiveStorageInfo,
+                timestamp: Date.now()
+            });
+
+            const askEmailReply = `✍️ *Email Polished & Ready to Send!*\n\n📌 *Subject:* ${emailSubject}\n\n📝 *Message Preview:*\n"${emailBody}"\n\n--------------------------------------\n👉 *Who should I send this to?*\nPlease reply with the recipient's email address (e.g. \`client@example.com\`), or reply *Cancel* to discard.`;
+            try {
+                await msg.reply(askEmailReply);
+            } catch (err) {
+                console.error('[EMAIL ASK REPLY ERROR]:', err);
+            }
+            return;
+        }
+
+        // Case 2: Recipient email is provided -> Send immediately!
+        try {
+            await sendEmail({
+                to: recipientEmail,
+                subject: emailSubject,
+                text: emailBody
+            });
+
+            const successReply = `✅ *Email Sent Successfully!*\n\n📨 *To:* ${recipientEmail}\n📌 *Subject:* ${emailSubject}\n\n📝 *Polished Message:*\n${emailBody}\n\n_Sent from sgarmy200@gmail.com_`;
+            console.log(`[EMAIL DISPATCH SUCCESS to ${recipientEmail}]`);
+            await msg.reply(successReply);
+        } catch (sendErr) {
+            console.error('[EMAIL DISPATCH ERROR]:', sendErr);
+            await msg.reply(`⚠️ Failed to send email: ${sendErr.message || 'SMTP transmission error'}. Please try again.`);
         }
         return;
     }

@@ -96,6 +96,42 @@
       "norm_label": "querychatmemory()"
     },
     {
+      "label": "emailService.js",
+      "file_type": "code",
+      "source_file": "emailService.js",
+      "source_location": "L1",
+      "id": "emailservice_js",
+      "community": 21,
+      "norm_label": "emailservice.js"
+    },
+    {
+      "label": "nodemailer",
+      "file_type": "code",
+      "source_file": "emailService.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_nodemailer",
+      "community": 21,
+      "norm_label": "nodemailer"
+    },
+    {
+      "label": "getTransporter()",
+      "file_type": "code",
+      "source_file": "emailService.js",
+      "source_location": "L9",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter",
+      "community": 21,
+      "norm_label": "gettransporter()"
+    },
+    {
+      "label": "sendEmail()",
+      "file_type": "code",
+      "source_file": "emailService.js",
+      "source_location": "L34",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
+      "community": 21,
+      "norm_label": "sendemail()"
+    },
+    {
       "label": "google-drive-key.json",
       "file_type": "code",
       "source_file": "google-drive-key.json",
@@ -204,6 +240,114 @@
       "norm_label": "universe_domain"
     },
     {
+      "label": "google-gmail-key.json",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L1",
+      "id": "google_gmail_key_json",
+      "community": 18,
+      "norm_label": "google-gmail-key.json"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L2",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_type",
+      "community": 18,
+      "norm_label": "type"
+    },
+    {
+      "label": "project_id",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L3",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_project_id",
+      "community": 18,
+      "norm_label": "project_id"
+    },
+    {
+      "label": "private_key_id",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L4",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key_id",
+      "community": 18,
+      "norm_label": "private_key_id"
+    },
+    {
+      "label": "private_key",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L5",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key",
+      "community": 18,
+      "norm_label": "private_key"
+    },
+    {
+      "label": "client_email",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L6",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_email",
+      "community": 18,
+      "norm_label": "client_email"
+    },
+    {
+      "label": "client_id",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L7",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_id",
+      "community": 18,
+      "norm_label": "client_id"
+    },
+    {
+      "label": "auth_uri",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L8",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_uri",
+      "community": 18,
+      "norm_label": "auth_uri"
+    },
+    {
+      "label": "token_uri",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L9",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_token_uri",
+      "community": 18,
+      "norm_label": "token_uri"
+    },
+    {
+      "label": "auth_provider_x509_cert_url",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L10",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_provider_x509_cert_url",
+      "community": 18,
+      "norm_label": "auth_provider_x509_cert_url"
+    },
+    {
+      "label": "client_x509_cert_url",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L11",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_x509_cert_url",
+      "community": 18,
+      "norm_label": "client_x509_cert_url"
+    },
+    {
+      "label": "universe_domain",
+      "file_type": "code",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L12",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_universe_domain",
+      "community": 18,
+      "norm_label": "universe_domain"
+    },
+    {
       "label": "index.js",
       "file_type": "code",
       "source_file": "index.js",
@@ -285,10 +429,19 @@
       "norm_label": "{ querychatmemory }"
     },
     {
+      "label": "{ sendEmail }",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L11",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sendemail",
+      "community": 0,
+      "norm_label": "{ sendemail }"
+    },
+    {
       "label": "AI_PROVIDER",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L12",
+      "source_location": "L13",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_ai_provider",
       "community": 0,
       "norm_label": "ai_provider"
@@ -297,7 +450,7 @@
       "label": "getGCPAccessToken()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L50",
+      "source_location": "L51",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgcpaccesstoken",
       "community": 12,
       "norm_label": "getgcpaccesstoken()"
@@ -306,7 +459,7 @@
       "label": "analyzeImageWithVision()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L69",
+      "source_location": "L70",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithvision",
       "community": 12,
       "norm_label": "analyzeimagewithvision()"
@@ -315,7 +468,7 @@
       "label": "analyzeImageWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L154",
+      "source_location": "L155",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithgemini",
       "community": 12,
       "norm_label": "analyzeimagewithgemini()"
@@ -324,7 +477,7 @@
       "label": "getImageVisionDescription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L187",
+      "source_location": "L188",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getimagevisiondescription",
       "community": 12,
       "norm_label": "getimagevisiondescription()"
@@ -333,7 +486,7 @@
       "label": "transcribeAudioWithSpeech()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L203",
+      "source_location": "L204",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithspeech",
       "community": 12,
       "norm_label": "transcribeaudiowithspeech()"
@@ -342,7 +495,7 @@
       "label": "transcribeAudioWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L282",
+      "source_location": "L283",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithgemini",
       "community": 12,
       "norm_label": "transcribeaudiowithgemini()"
@@ -351,7 +504,7 @@
       "label": "getAudioTranscription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L332",
+      "source_location": "L333",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getaudiotranscription",
       "community": 12,
       "norm_label": "getaudiotranscription()"
@@ -360,7 +513,7 @@
       "label": "getGoogleDriveAccessToken()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L349",
+      "source_location": "L350",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
       "community": 12,
       "norm_label": "getgoogledriveaccesstoken()"
@@ -369,7 +522,7 @@
       "label": "uploadToGoogleDrive()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L385",
+      "source_location": "L386",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
       "community": 12,
       "norm_label": "uploadtogoogledrive()"
@@ -378,7 +531,7 @@
       "label": "saveMediaToCloudStorage()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L458",
+      "source_location": "L459",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
       "community": 12,
       "norm_label": "savemediatocloudstorage()"
@@ -387,7 +540,7 @@
       "label": "chatHistory",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L551",
+      "source_location": "L552",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_chathistory",
       "community": 0,
       "norm_label": "chathistory"
@@ -396,7 +549,7 @@
       "label": "getCurrentISTContext()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L559",
+      "source_location": "L560",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getcurrentistcontext",
       "community": 0,
       "norm_label": "getcurrentistcontext()"
@@ -405,7 +558,7 @@
       "label": "getDeepSeekReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L588",
+      "source_location": "L589",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getdeepseekreply",
       "community": 6,
       "norm_label": "getdeepseekreply()"
@@ -414,7 +567,7 @@
       "label": "getGeminiReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L636",
+      "source_location": "L637",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgeminireply",
       "community": 6,
       "norm_label": "getgeminireply()"
@@ -423,7 +576,7 @@
       "label": "getHermesReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L685",
+      "source_location": "L686",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_gethermesreply",
       "community": 6,
       "norm_label": "gethermesreply()"
@@ -432,7 +585,7 @@
       "label": "generateAIReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L733",
+      "source_location": "L734",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply",
       "community": 6,
       "norm_label": "generateaireply()"
@@ -441,7 +594,7 @@
       "label": "robustDownloadMedia()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L751",
+      "source_location": "L752",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia",
       "community": 0,
       "norm_label": "robustdownloadmedia()"
@@ -450,7 +603,7 @@
       "label": "sessionDir",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L930",
+      "source_location": "L931",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sessiondir",
       "community": 0,
       "norm_label": "sessiondir"
@@ -459,7 +612,7 @@
       "label": "p",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L933",
+      "source_location": "L934",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_p",
       "community": 0,
       "norm_label": "p"
@@ -468,7 +621,7 @@
       "label": "client",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L941",
+      "source_location": "L942",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_client",
       "community": 0,
       "norm_label": "client"
@@ -477,7 +630,7 @@
       "label": "activePage",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1008",
+      "source_location": "L1009",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_activepage",
       "community": 0,
       "norm_label": "activepage"
@@ -486,7 +639,7 @@
       "label": "pendingBuffers",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1048",
+      "source_location": "L1049",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingbuffers",
       "community": 0,
       "norm_label": "pendingbuffers"
@@ -495,16 +648,25 @@
       "label": "lastMediaStore",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1049",
+      "source_location": "L1050",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_lastmediastore",
       "community": 0,
       "norm_label": "lastmediastore"
     },
     {
+      "label": "pendingEmailDrafts",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1051",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts",
+      "community": 0,
+      "norm_label": "pendingemaildrafts"
+    },
+    {
       "label": "hasMedia",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1056",
+      "source_location": "L1058",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasmedia",
       "community": 0,
       "norm_label": "hasmedia"
@@ -513,7 +675,7 @@
       "label": "incomingText",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1057",
+      "source_location": "L1059",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_incomingtext",
       "community": 0,
       "norm_label": "incomingtext"
@@ -522,7 +684,7 @@
       "label": "allowedLIDs",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1063",
+      "source_location": "L1065",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowedlids",
       "community": 0,
       "norm_label": "allowedlids"
@@ -531,7 +693,7 @@
       "label": "allowedNumbers",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1068",
+      "source_location": "L1070",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_allowednumbers",
       "community": 0,
       "norm_label": "allowednumbers"
@@ -540,7 +702,7 @@
       "label": "mime",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1155",
+      "source_location": "L1157",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_mime",
       "community": 0,
       "norm_label": "mime"
@@ -549,7 +711,7 @@
       "label": "isImage",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1156",
+      "source_location": "L1158",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_isimage",
       "community": 0,
       "norm_label": "isimage"
@@ -558,16 +720,79 @@
       "label": "cached",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1227",
+      "source_location": "L1229",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cached",
       "community": 0,
       "norm_label": "cached"
     },
     {
+      "label": "draft",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1261",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft",
+      "community": 0,
+      "norm_label": "draft"
+    },
+    {
+      "label": "matchEmail",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1275",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail",
+      "community": 0,
+      "norm_label": "matchemail"
+    },
+    {
+      "label": "hasEmailAddress",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1304",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress",
+      "community": 0,
+      "norm_label": "hasemailaddress"
+    },
+    {
+      "label": "hasEmailKeyword",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1305",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword",
+      "community": 0,
+      "norm_label": "hasemailkeyword"
+    },
+    {
+      "label": "emailMatch",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1310",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch",
+      "community": 0,
+      "norm_label": "emailmatch"
+    },
+    {
+      "label": "cleanJson",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1335",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson",
+      "community": 0,
+      "norm_label": "cleanjson"
+    },
+    {
+      "label": "parsed",
+      "file_type": "code",
+      "source_file": "index.js",
+      "source_location": "L1336",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed",
+      "community": 0,
+      "norm_label": "parsed"
+    },
+    {
       "label": "timeContext",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1260",
+      "source_location": "L1395",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_timecontext",
       "community": 0,
       "norm_label": "timecontext"
@@ -576,7 +801,7 @@
       "label": "memoryContext",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1261",
+      "source_location": "L1396",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_memorycontext",
       "community": 0,
       "norm_label": "memorycontext"
@@ -585,10 +810,55 @@
       "label": "server",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1283",
+      "source_location": "L1418",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_server",
       "community": 0,
       "norm_label": "server"
+    },
+    {
+      "label": "kimiMail.js",
+      "file_type": "code",
+      "source_file": "kimiMail.js",
+      "source_location": "L1",
+      "id": "kimimail_js",
+      "community": 19,
+      "norm_label": "kimimail.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "kimiMail.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_fs",
+      "community": 19,
+      "norm_label": "fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "kimiMail.js",
+      "source_location": "L2",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_path",
+      "community": 19,
+      "norm_label": "path"
+    },
+    {
+      "label": "sendKimiCommand()",
+      "file_type": "code",
+      "source_file": "kimiMail.js",
+      "source_location": "L6",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand",
+      "community": 19,
+      "norm_label": "sendkimicommand()"
+    },
+    {
+      "label": "sendEmailViaKimi()",
+      "file_type": "code",
+      "source_file": "kimiMail.js",
+      "source_location": "L26",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
+      "community": 19,
+      "norm_label": "sendemailviakimi()"
     },
     {
       "label": "package.json",
@@ -699,10 +969,19 @@
       "norm_label": "dotenv"
     },
     {
-      "label": "qrcode",
+      "label": "nodemailer",
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L14",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_nodemailer",
+      "community": 1,
+      "norm_label": "nodemailer"
+    },
+    {
+      "label": "qrcode",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_qrcode",
       "community": 1,
       "norm_label": "qrcode"
@@ -711,7 +990,7 @@
       "label": "qrcode-terminal",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_qrcode_terminal",
       "community": 1,
       "norm_label": "qrcode-terminal"
@@ -720,7 +999,7 @@
       "label": "whatsapp-web.js",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_whatsapp_web_js",
       "community": 1,
       "norm_label": "whatsapp-web.js"
@@ -771,6 +1050,33 @@
       "norm_label": "testdrive()"
     },
     {
+      "label": "test-kimi-send.js",
+      "file_type": "code",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L1",
+      "id": "test_kimi_send_js",
+      "community": 19,
+      "norm_label": "test-kimi-send.js"
+    },
+    {
+      "label": "{ sendEmailViaKimi }",
+      "file_type": "code",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L1",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_sendemailviakimi",
+      "community": 19,
+      "norm_label": "{ sendemailviakimi }"
+    },
+    {
+      "label": "test()",
+      "file_type": "code",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L3",
+      "id": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_test",
+      "community": 19,
+      "norm_label": "test()"
+    },
+    {
       "label": "test-upload-folder.js",
       "file_type": "code",
       "source_file": "test-upload-folder.js",
@@ -814,6 +1120,51 @@
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_testuploadtofolder",
       "community": 17,
       "norm_label": "testuploadtofolder()"
+    },
+    {
+      "label": "test-gmail.js",
+      "file_type": "code",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L1",
+      "id": "scratch_test_gmail_js",
+      "community": 20,
+      "norm_label": "test-gmail.js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L1",
+      "id": "scratch_test_gmail_fs",
+      "community": 20,
+      "norm_label": "fs"
+    },
+    {
+      "label": "crypto",
+      "file_type": "code",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L2",
+      "id": "scratch_test_gmail_crypto",
+      "community": 20,
+      "norm_label": "crypto"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L3",
+      "id": "scratch_test_gmail_path",
+      "community": 20,
+      "norm_label": "path"
+    },
+    {
+      "label": "testGmailApi()",
+      "file_type": "code",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L5",
+      "id": "scratch_test_gmail_testgmailapi",
+      "community": 20,
+      "norm_label": "testgmailapi()"
     },
     {
       "label": "patch-wwebjs.js",
@@ -927,7 +1278,7 @@
       "label": "\ud83d\udcd0 System Architecture Diagram",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L35",
+      "source_location": "L36",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_system_architecture_diagram",
       "community": 10,
       "norm_label": "\ud83d\udcd0 system architecture diagram"
@@ -936,7 +1287,7 @@
       "label": "code:block1 (+\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L37",
+      "source_location": "L38",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_1",
       "community": 10,
       "norm_label": "code:block1 (+\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500)"
@@ -945,7 +1296,7 @@
       "label": "\ud83c\udfad Contact Routing & Isolation Matrix",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L118",
+      "source_location": "L119",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_contact_routing_isolation_matrix",
       "community": 10,
       "norm_label": "\ud83c\udfad contact routing & isolation matrix"
@@ -954,7 +1305,7 @@
       "label": "\ud83d\udee0\ufe0f Core Engineering Highlights",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L132",
+      "source_location": "L133",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_core_engineering_highlights",
       "community": 13,
       "norm_label": "\ud83d\udee0\ufe0f core engineering highlights"
@@ -963,7 +1314,7 @@
       "label": "1. 100% Purely Reactive Architecture",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L134",
+      "source_location": "L135",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_1_100_purely_reactive_architecture",
       "community": 13,
       "norm_label": "1. 100% purely reactive architecture"
@@ -972,7 +1323,7 @@
       "label": "2. High-Resilience 3-Strike Grace Watchdog",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L140",
+      "source_location": "L141",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_2_high_resilience_3_strike_grace_watchdog",
       "community": 13,
       "norm_label": "2. high-resilience 3-strike grace watchdog"
@@ -981,7 +1332,7 @@
       "label": "code:javascript (// Health check watchdog: evaluates active page DOM title ev)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L144",
+      "source_location": "L145",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_2",
       "community": 13,
       "norm_label": "code:javascript (// health check watchdog: evaluates active page dom title ev)"
@@ -990,7 +1341,7 @@
       "label": "3. Rapid Debouncer & Real-Time Typing Simulation",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L176",
+      "source_location": "L177",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_3_rapid_debouncer_real_time_typing_simulation",
       "community": 13,
       "norm_label": "3. rapid debouncer & real-time typing simulation"
@@ -999,7 +1350,7 @@
       "label": "code:block3 (Himanshi: Sun)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L178",
+      "source_location": "L179",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_3",
       "community": 13,
       "norm_label": "code:block3 (himanshi: sun)"
@@ -1008,7 +1359,7 @@
       "label": "4. 24/7 Presence Engine & Synthetic Focus Simulation",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L189",
+      "source_location": "L190",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_4_24_7_presence_engine_synthetic_focus_simulation",
       "community": 13,
       "norm_label": "4. 24/7 presence engine & synthetic focus simulation"
@@ -1017,7 +1368,7 @@
       "label": "5. Multi-Device Phone Pairing Code API",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L195",
+      "source_location": "L196",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_5_multi_device_phone_pairing_code_api",
       "community": 13,
       "norm_label": "5. multi-device phone pairing code api"
@@ -1026,7 +1377,7 @@
       "label": "\ud83c\udf10 HTTP Management & Diagnostic API Reference",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L203",
+      "source_location": "L204",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_http_management_diagnostic_api_reference",
       "community": 10,
       "norm_label": "\ud83c\udf10 http management & diagnostic api reference"
@@ -1035,7 +1386,7 @@
       "label": "\ud83d\udd04 End-to-End Sequence Flow",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L220",
+      "source_location": "L221",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_end_to_end_sequence_flow",
       "community": 10,
       "norm_label": "\ud83d\udd04 end-to-end sequence flow"
@@ -1044,7 +1395,7 @@
       "label": "code:mermaid (sequenceDiagram)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L222",
+      "source_location": "L223",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_4",
       "community": 10,
       "norm_label": "code:mermaid (sequencediagram)"
@@ -1053,7 +1404,7 @@
       "label": "\ud83d\udd78\ufe0f Graphify Knowledge Graph & Codebase Navigation",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L267",
+      "source_location": "L268",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_graphify_knowledge_graph_codebase_navigation",
       "community": 10,
       "norm_label": "\ud83d\udd78\ufe0f graphify knowledge graph & codebase navigation"
@@ -1062,7 +1413,7 @@
       "label": "Graph Architecture Metrics",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L271",
+      "source_location": "L272",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_graph_architecture_metrics",
       "community": 10,
       "norm_label": "graph architecture metrics"
@@ -1071,7 +1422,7 @@
       "label": "Interactive Graph Artifacts",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L277",
+      "source_location": "L278",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_interactive_graph_artifacts",
       "community": 10,
       "norm_label": "interactive graph artifacts"
@@ -1080,7 +1431,7 @@
       "label": "Navigating Communities",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L284",
+      "source_location": "L285",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_navigating_communities",
       "community": 10,
       "norm_label": "navigating communities"
@@ -1089,7 +1440,7 @@
       "label": "Graphify CLI Query Cheat Sheet",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L296",
+      "source_location": "L297",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_graphify_cli_query_cheat_sheet",
       "community": 10,
       "norm_label": "graphify cli query cheat sheet"
@@ -1098,7 +1449,7 @@
       "label": "code:powershell (# Re-extract and update graph after making code modification)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L297",
+      "source_location": "L298",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_5",
       "community": 10,
       "norm_label": "code:powershell (# re-extract and update graph after making code modification)"
@@ -1107,7 +1458,7 @@
       "label": "\ud83d\udda5\ufe0f Compute Engine Hardware & Kernel Performance Topology",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L313",
+      "source_location": "L314",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_compute_engine_hardware_kernel_performance_topology",
       "community": 10,
       "norm_label": "\ud83d\udda5\ufe0f compute engine hardware & kernel performance topology"
@@ -1116,7 +1467,7 @@
       "label": "code:block6 (+\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L315",
+      "source_location": "L316",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_6",
       "community": 10,
       "norm_label": "code:block6 (+\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500)"
@@ -1125,7 +1476,7 @@
       "label": "\ud83d\udee0\ufe0f Step-by-Step Deployment & Setup Guide",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L347",
+      "source_location": "L348",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_step_by_step_deployment_setup_guide",
       "community": 11,
       "norm_label": "\ud83d\udee0\ufe0f step-by-step deployment & setup guide"
@@ -1134,7 +1485,7 @@
       "label": "1. Provision the Google Cloud Compute Engine VM",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L349",
+      "source_location": "L350",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_1_provision_the_google_cloud_compute_engine_vm",
       "community": 11,
       "norm_label": "1. provision the google cloud compute engine vm"
@@ -1143,7 +1494,7 @@
       "label": "code:bash (gcloud compute instances create hermes-whatsapp-agent \\)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L351",
+      "source_location": "L352",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_7",
       "community": 11,
       "norm_label": "code:bash (gcloud compute instances create hermes-whatsapp-agent \\)"
@@ -1152,7 +1503,7 @@
       "label": "2. Static External IP Reservation",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L363",
+      "source_location": "L364",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_2_static_external_ip_reservation",
       "community": 11,
       "norm_label": "2. static external ip reservation"
@@ -1161,7 +1512,7 @@
       "label": "code:bash (gcloud compute addresses create hermes-static-ip \\)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L365",
+      "source_location": "L366",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_8",
       "community": 11,
       "norm_label": "code:bash (gcloud compute addresses create hermes-static-ip \\)"
@@ -1170,7 +1521,7 @@
       "label": "3. Connect via SSH & Install Dependencies",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L371",
+      "source_location": "L372",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_3_connect_via_ssh_install_dependencies",
       "community": 11,
       "norm_label": "3. connect via ssh & install dependencies"
@@ -1179,7 +1530,7 @@
       "label": "code:powershell (ssh -i \"$env:USERPROFILE\\.ssh\\google_compute_engine\" sgarm@1)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L373",
+      "source_location": "L374",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_9",
       "community": 11,
       "norm_label": "code:powershell (ssh -i \"$env:userprofile\\.ssh\\google_compute_engine\" sgarm@1)"
@@ -1188,7 +1539,7 @@
       "label": "code:bash (sudo apt update && sudo apt upgrade -y)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L378",
+      "source_location": "L379",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_10",
       "community": 11,
       "norm_label": "code:bash (sudo apt update && sudo apt upgrade -y)"
@@ -1197,7 +1548,7 @@
       "label": "4. Clone Repository & Setup Environment",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L399",
+      "source_location": "L400",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_4_clone_repository_setup_environment",
       "community": 11,
       "norm_label": "4. clone repository & setup environment"
@@ -1206,7 +1557,7 @@
       "label": "code:bash (git clone https://github.com/roshan-pixel/Hermes-WhatsApp-Ag)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L400",
+      "source_location": "L401",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_11",
       "community": 11,
       "norm_label": "code:bash (git clone https://github.com/roshan-pixel/hermes-whatsapp-ag)"
@@ -1215,7 +1566,7 @@
       "label": "code:env (# Primary AI Provider: 'deepseek', 'gemini', or 'hermes')",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L407",
+      "source_location": "L408",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_12",
       "community": 11,
       "norm_label": "code:env (# primary ai provider: 'deepseek', 'gemini', or 'hermes')"
@@ -1224,7 +1575,7 @@
       "label": "\ud83d\udcf2 WhatsApp Multi-Device Linking Protocol",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L432",
+      "source_location": "L433",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_whatsapp_multi_device_linking_protocol",
       "community": 14,
       "norm_label": "\ud83d\udcf2 whatsapp multi-device linking protocol"
@@ -1233,7 +1584,7 @@
       "label": "Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L434",
+      "source_location": "L435",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_a_8_digit_pairing_code_recommended_zero_camera_scanning",
       "community": 14,
       "norm_label": "option a: 8-digit pairing code (recommended - zero camera scanning)"
@@ -1242,7 +1593,7 @@
       "label": "code:powershell (ssh -i \"$env:USERPROFILE\\.ssh\\google_compute_engine\" -L 3000)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L438",
+      "source_location": "L439",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_13",
       "community": 14,
       "norm_label": "code:powershell (ssh -i \"$env:userprofile\\.ssh\\google_compute_engine\" -l 3000)"
@@ -1251,7 +1602,7 @@
       "label": "code:block14 (http://localhost:3000/pair-code?phone=918058363027)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L442",
+      "source_location": "L443",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_14",
       "community": 14,
       "norm_label": "code:block14 (http://localhost:3000/pair-code?phone=918058363027)"
@@ -1260,7 +1611,7 @@
       "label": "Option B: Terminal ASCII QR Code",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L447",
+      "source_location": "L448",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_b_terminal_ascii_qr_code",
       "community": 14,
       "norm_label": "option b: terminal ascii qr code"
@@ -1269,7 +1620,7 @@
       "label": "code:powershell (ssh -i \"$env:USERPROFILE\\.ssh\\google_compute_engine\" sgarm@1)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L449",
+      "source_location": "L450",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_15",
       "community": 14,
       "norm_label": "code:powershell (ssh -i \"$env:userprofile\\.ssh\\google_compute_engine\" sgarm@1)"
@@ -1278,7 +1629,7 @@
       "label": "Option C: Browser Visual QR",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L453",
+      "source_location": "L454",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_option_c_browser_visual_qr",
       "community": 14,
       "norm_label": "option c: browser visual qr"
@@ -1287,7 +1638,7 @@
       "label": "\ud83d\udd79\ufe0f Operations & Diagnostic Cheatsheet",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L458",
+      "source_location": "L459",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_operations_diagnostic_cheatsheet",
       "community": 10,
       "norm_label": "\ud83d\udd79\ufe0f operations & diagnostic cheatsheet"
@@ -1296,7 +1647,7 @@
       "label": "code:powershell (# 1. Check live agent status, memory usage, and uptime)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L460",
+      "source_location": "L461",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_16",
       "community": 10,
       "norm_label": "code:powershell (# 1. check live agent status, memory usage, and uptime)"
@@ -1305,7 +1656,7 @@
       "label": "\ud83d\udd12 Security & Data Privacy",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L485",
+      "source_location": "L486",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_security_data_privacy",
       "community": 10,
       "norm_label": "\ud83d\udd12 security & data privacy"
@@ -1314,7 +1665,7 @@
       "label": "\ud83d\udcc4 License",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L494",
+      "source_location": "L495",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_license",
       "community": 10,
       "norm_label": "\ud83d\udcc4 license"
@@ -1943,12 +2294,75 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "emailService.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "emailservice_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_nodemailer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "emailService.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "emailservice_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "emailService.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "emailservice_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "emailservice_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "emailService.js",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_gettransporter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_emailservice_sendemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "google-drive-key.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_type",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_type"
     },
     {
       "relation": "contains",
@@ -1956,9 +2370,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_project_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_project_id"
     },
     {
       "relation": "contains",
@@ -1966,9 +2380,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_private_key_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_private_key_id"
     },
     {
       "relation": "contains",
@@ -1976,9 +2390,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_private_key",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_private_key"
     },
     {
       "relation": "contains",
@@ -1986,9 +2400,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_email",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_email"
     },
     {
       "relation": "contains",
@@ -1996,9 +2410,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_id",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_id"
     },
     {
       "relation": "contains",
@@ -2006,9 +2420,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_auth_uri",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_auth_uri"
     },
     {
       "relation": "contains",
@@ -2016,9 +2430,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_token_uri",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_token_uri"
     },
     {
       "relation": "contains",
@@ -2026,9 +2440,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_auth_provider_x509_cert_url",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_auth_provider_x509_cert_url"
     },
     {
       "relation": "contains",
@@ -2036,9 +2450,9 @@
       "source_file": "google-drive-key.json",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_x509_cert_url",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_client_x509_cert_url"
     },
     {
       "relation": "contains",
@@ -2046,8 +2460,118 @@
       "source_file": "google-drive-key.json",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "google_drive_key_json",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_universe_domain",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_drive_key_universe_domain"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_project_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_private_key",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_email",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_uri",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_token_uri",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_auth_provider_x509_cert_url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_client_x509_cert_url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "google-gmail-key.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "google_gmail_key_json",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_google_gmail_key_universe_domain",
       "confidence_score": 1.0
     },
     {
@@ -2129,6 +2653,16 @@
       "confidence_score": 1.0,
       "source": "index_js",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_querychatmemory"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_sendemail",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -2216,9 +2750,9 @@
       "source_file": "index.js",
       "source_location": "L349",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken"
     },
     {
       "relation": "contains",
@@ -2226,9 +2760,9 @@
       "source_file": "index.js",
       "source_location": "L385",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive"
     },
     {
       "relation": "contains",
@@ -2306,9 +2840,9 @@
       "source_file": "index.js",
       "source_location": "L751",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia"
     },
     {
       "relation": "contains",
@@ -2366,8 +2900,18 @@
       "source_file": "index.js",
       "source_location": "L1049",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_lastmediastore",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_lastmediastore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1051",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts",
       "confidence_score": 1.0
     },
     {
@@ -2436,8 +2980,78 @@
       "source_file": "index.js",
       "source_location": "L1227",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "index_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cached",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cached"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1261",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_draft",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1275",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_matchemail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1304",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailaddress",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1305",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_hasemailkeyword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1310",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_emailmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1335",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_cleanjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.js",
+      "source_location": "L1336",
+      "weight": 1.0,
+      "source": "index_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_parsed",
       "confidence_score": 1.0
     },
     {
@@ -2820,9 +3434,9 @@
       "source_file": "index.js",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithvision",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken"
     },
     {
       "relation": "calls",
@@ -2875,9 +3489,9 @@
       "source_file": "index.js",
       "source_location": "L386",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken"
     },
     {
       "relation": "calls",
@@ -2886,9 +3500,9 @@
       "source_file": "index.js",
       "source_location": "L502",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken"
     },
     {
       "relation": "calls",
@@ -2897,9 +3511,9 @@
       "source_file": "index.js",
       "source_location": "L492",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive"
     },
     {
       "relation": "calls",
@@ -2933,6 +3547,90 @@
       "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_index_gethermesreply",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "kimiMail.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "kimimail_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "kimiMail.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "kimimail_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "kimiMail.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "kimimail_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "kimiMail.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "kimimail_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "test_kimi_send_js",
+      "target": "kimimail_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "kimiMail.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendkimicommand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "test_kimi_send_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test-kimi-send.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_test",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_kimimail_sendemailviakimi"
     },
     {
       "relation": "contains",
@@ -3050,6 +3748,16 @@
       "source_file": "package.json",
       "source_location": "L14",
       "weight": 1.0,
+      "source": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_nodemailer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
       "confidence_score": 1.0,
       "source": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies",
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_package_dependencies_qrcode"
@@ -3080,9 +3788,9 @@
       "source_file": "test-drive-upload.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_drive_upload_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_fs",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_fs"
     },
     {
       "relation": "contains",
@@ -3090,9 +3798,9 @@
       "source_file": "test-drive-upload.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_drive_upload_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_crypto",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_crypto"
     },
     {
       "relation": "contains",
@@ -3100,9 +3808,9 @@
       "source_file": "test-drive-upload.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_drive_upload_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_path",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_path"
     },
     {
       "relation": "contains",
@@ -3110,8 +3818,28 @@
       "source_file": "test-drive-upload.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_drive_upload_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_testdrive",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_drive_upload_testdrive"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "test_kimi_send_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_sendemailviakimi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test-kimi-send.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "test_kimi_send_js",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_kimi_send_test",
       "confidence_score": 1.0
     },
     {
@@ -3120,9 +3848,9 @@
       "source_file": "test-upload-folder.js",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_upload_folder_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_fs",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_fs"
     },
     {
       "relation": "contains",
@@ -3130,9 +3858,9 @@
       "source_file": "test-upload-folder.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_upload_folder_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_crypto",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_crypto"
     },
     {
       "relation": "contains",
@@ -3140,9 +3868,9 @@
       "source_file": "test-upload-folder.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_upload_folder_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_path",
-      "confidence_score": 1.0
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_path"
     },
     {
       "relation": "contains",
@@ -3150,8 +3878,48 @@
       "source_file": "test-upload-folder.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_upload_folder_js",
-      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_testuploadtofolder",
+      "target": "hermes_whatsapp_agent_on_google_cloud_vm_test_upload_folder_testuploadtofolder"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scratch_test_gmail_js",
+      "target": "scratch_test_gmail_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "scratch_test_gmail_js",
+      "target": "scratch_test_gmail_crypto",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "scratch_test_gmail_js",
+      "target": "scratch_test_gmail_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/test-gmail.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "scratch_test_gmail_js",
+      "target": "scratch_test_gmail_testgmailapi",
       "confidence_score": 1.0
     },
     {
@@ -4027,5 +4795,5 @@
       "source_file": "index.js"
     }
   ],
-  "built_at_commit": "00bc9c7aee0e654a95b8dbccac38d7e8e69d01f5"
+  "built_at_commit": "ba040d7a292ffcd9cbe96dbada85194e2aca6cb0"
 }

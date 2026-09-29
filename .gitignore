@@ -6,5 +6,8 @@ node_modules/
 graphify-out/.graphify_python
 graphify-out/cost.json
 google-drive-key.json
+google-gmail-key.json
+*-key.json
 *.json.key
 saved-media/
+scratch/
