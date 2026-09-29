@@ -670,7 +670,7 @@ async function robustDownloadMedia(client, msg) {
                     }
                 }
 
-                return { error: 'no_blob_available', directPath: waMsg.directPath };
+                return { needsDecrypt: true, directPath: waMsg.directPath, mediaKey: waMsg.mediaKey, mimetype: waMsg.mimetype || 'image/jpeg', filename: waMsg.filename || null, type: waMsg.type || 'image' };
             } catch (err) {
                 return { error: String(err), stack: err && err.stack };
             }
@@ -679,9 +679,75 @@ async function robustDownloadMedia(client, msg) {
         if (blobResult && blobResult.data) {
             console.log('[MEDIA] Browser blob extraction succeeded.');
             return blobResult;
-        } else {
-            console.warn('[MEDIA] Browser blob extraction failed:', blobResult);
         }
+
+        // --- Attempt 3: Node.js CDN fetch + AES-256-CBC decrypt ---
+        if (blobResult && blobResult.needsDecrypt && blobResult.directPath && blobResult.mediaKey) {
+            console.log('[MEDIA] Attempting Node.js CDN fetch + AES decrypt...');
+            try {
+                const crypto = require('crypto');
+                const https = require('https');
+
+                const cdnUrl = blobResult.directPath.startsWith('http')
+                    ? blobResult.directPath
+                    : 'https://mmg.whatsapp.net' + blobResult.directPath;
+
+                console.log('[MEDIA] CDN URL:', cdnUrl.substring(0, 100) + '...');
+
+                const encryptedBuf = await new Promise((resolve, reject) => {
+                    const chunks = [];
+                    const req = https.get(cdnUrl, { timeout: 30000 }, (res) => {
+                        if (res.statusCode !== 200) { reject(new Error(`CDN HTTP ${res.statusCode}`)); return; }
+                        res.on('data', c => chunks.push(c));
+                        res.on('end', () => resolve(Buffer.concat(chunks)));
+                        res.on('error', reject);
+                    });
+                    req.on('error', reject);
+                    req.on('timeout', () => { req.destroy(); reject(new Error('CDN timeout')); });
+                });
+
+                console.log(`[MEDIA] CDN fetch OK: ${encryptedBuf.length} bytes. Decrypting...`);
+
+                const infoMap = {
+                    image: 'WhatsApp Image Keys', video: 'WhatsApp Video Keys',
+                    audio: 'WhatsApp Audio Keys', ptt: 'WhatsApp Audio Keys',
+                    document: 'WhatsApp Document Keys', sticker: 'WhatsApp Image Keys'
+                };
+                const mType = blobResult.type || (blobResult.mimetype || '').split('/')[0] || 'image';
+                const infoStr = infoMap[mType] || 'WhatsApp Image Keys';
+                const mediaKeyBuf = Buffer.from(blobResult.mediaKey, 'base64');
+
+                let hkdfKey;
+                if (crypto.hkdfSync) {
+                    hkdfKey = Buffer.from(crypto.hkdfSync('sha256', mediaKeyBuf, Buffer.alloc(32), Buffer.from(infoStr), 112));
+                } else {
+                    hkdfKey = await new Promise((res, rej) =>
+                        crypto.hkdf('sha256', mediaKeyBuf, Buffer.alloc(32), Buffer.from(infoStr), 112,
+                            (e, k) => e ? rej(e) : res(Buffer.from(k)))
+                    );
+                }
+
+                const iv = hkdfKey.slice(0, 16);
+                const cipherKey = hkdfKey.slice(16, 48);
+                const ciphertext = encryptedBuf.slice(0, encryptedBuf.length - 10);
+
+                const decipher = crypto.createDecipheriv('aes-256-cbc', cipherKey, iv);
+                decipher.setAutoPadding(true);
+                const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+
+                console.log(`[MEDIA] AES decrypt OK: ${decrypted.length} bytes.`);
+                return {
+                    data: decrypted.toString('base64'),
+                    mimetype: blobResult.mimetype || 'image/jpeg',
+                    filename: blobResult.filename || null
+                };
+            } catch (e3) {
+                console.error('[MEDIA] CDN fetch/decrypt failed:', e3 && (e3.message || String(e3)));
+            }
+        } else if (blobResult) {
+            console.warn('[MEDIA] Browser returned:', JSON.stringify(blobResult));
+        }
+
     } catch (e2) {
         console.warn('[MEDIA] Browser blob evaluation failed:', e2 && (e2.message || String(e2)));
     }
