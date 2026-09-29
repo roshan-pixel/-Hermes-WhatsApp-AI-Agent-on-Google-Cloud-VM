@@ -1,16 +1,16 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-09-29)
 
 ## Corpus Check
-- 32 files · ~22,971 words
+- 32 files · ~23,463 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 341 nodes · 392 edges · 39 communities (37 shown, 2 thin omitted)
+- 344 nodes · 399 edges · 39 communities (37 shown, 2 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c2c9de0a`
+- Built from commit: `6588461d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -59,13 +59,13 @@
 1. `handleIncomingMessage()` - 14 edges
 2. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
 3. `sendEmail()` - 6 edges
-4. `publishAllPosts()` - 6 edges
-5. `🛠️ Core Engineering Highlights` - 6 edges
-6. `wwebjs Monkey Patch Script` - 6 edges
-7. `analyzeImageWithVision()` - 5 edges
-8. `saveMediaToCloudStorage()` - 5 edges
-9. `generateAIReply()` - 5 edges
-10. `scripts` - 5 edges
+4. `saveMediaToCloudStorage()` - 6 edges
+5. `publishAllPosts()` - 6 edges
+6. `🛠️ Core Engineering Highlights` - 6 edges
+7. `wwebjs Monkey Patch Script` - 6 edges
+8. `analyzeImageWithVision()` - 5 edges
+9. `getImageVisionDescription()` - 5 edges
+10. `generateAIReply()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `wwebjs Monkey Patch Script` --conceptually_related_to--> `Watchdog Resilience Pattern`  [INFERRED]
@@ -88,7 +88,7 @@
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
-Nodes (57): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, cached, chatHistory, cleanJson, client (+49 more)
+Nodes (58): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, cached, chatHistory, cleanJson, client (+50 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.12
@@ -103,8 +103,8 @@ Cohesion: 0.29
 Nodes (10): Memory Graph Loader, queryChatMemory Function, chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply(), Inbound Message Handler (+2 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.15
-Nodes (13): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory(), buildEmailConfirmation(), buildEmailPreviewCard() (+5 more)
+Cohesion: 0.29
+Nodes (6): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory()
 
 ### Community 5 - "Community 5"
 Cohesion: 0.22
@@ -119,16 +119,16 @@ Cohesion: 0.50
 Nodes (4): analyzeImageWithGemini(), analyzeImageWithVision(), getGCPAccessToken(), getImageVisionDescription()
 
 ### Community 10 - "Community 10"
-Cohesion: 0.07
-Nodes (27): code:block1 (+───────────────────────────────────────────────────────────), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" -L 3000), code:block14 (http://localhost:3000/pair-code?phone=918058363027), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" sgarm@1), code:powershell (# 1. Check live agent status, memory usage, and uptime), code:mermaid (sequenceDiagram), code:powershell (# Re-extract and update graph after making code modification), code:block6 (+───────────────────────────────────────────────────────────) (+19 more)
+Cohesion: 0.06
+Nodes (31): 1. Provision the Google Cloud Compute Engine VM, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 4. Clone Repository & Setup Environment, code:block1 (+───────────────────────────────────────────────────────────), code:bash (sudo apt update && sudo apt upgrade -y), code:bash (git clone https://github.com/roshan-pixel/Hermes-WhatsApp-Ag), code:env (# Primary AI Provider: 'deepseek', 'gemini', or 'hermes') (+23 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.18
-Nodes (11): 1. Provision the Google Cloud Compute Engine VM, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 4. Clone Repository & Setup Environment, code:bash (sudo apt update && sudo apt upgrade -y), code:bash (git clone https://github.com/roshan-pixel/Hermes-WhatsApp-Ag), code:env (# Primary AI Provider: 'deepseek', 'gemini', or 'hermes'), code:bash (gcloud compute instances create hermes-whatsapp-agent \) (+3 more)
+Cohesion: 0.29
+Nodes (7): code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" -L 3000), code:block14 (http://localhost:3000/pair-code?phone=918058363027), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" sgarm@1), Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning), Option B: Terminal ASCII QR Code, Option C: Browser Visual QR, 📲 WhatsApp Multi-Device Linking Protocol
 
 ### Community 12 - "Community 12"
-Cohesion: 0.24
-Nodes (11): analyzeImageWithGemini(), analyzeImageWithVision(), cleanOcrText(), getAudioTranscription(), getGCPAccessToken(), getGoogleDriveAccessToken(), getImageVisionDescription(), saveMediaToCloudStorage() (+3 more)
+Cohesion: 0.15
+Nodes (19): analyzeImageWithGemini(), analyzeImageWithVision(), buildEmailConfirmation(), buildEmailPreviewCard(), cleanOcrText(), getAudioTranscription(), getCurrentISTContext(), getGCPAccessToken() (+11 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.25
@@ -235,7 +235,7 @@ Cohesion: 0.50
 Nodes (3): Core System Architecture & God Nodes, Critical Guidelines, Hermes WhatsApp AI Agent - Architecture & System Guide
 
 ## Knowledge Gaps
-- **190 isolated node(s):** `fs`, `path`, `posts`, `fs`, `path` (+185 more)
+- **191 isolated node(s):** `fs`, `path`, `posts`, `fs`, `path` (+186 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -249,10 +249,10 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `generateAIReply()` connect `Community 3` to `Community 0`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **What connects `fs`, `path`, `posts` to the rest of the system?**
-  _198 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _199 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.03389830508474576 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.03278688524590164 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Community 10` be split into smaller, more focused modules?**
-  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._

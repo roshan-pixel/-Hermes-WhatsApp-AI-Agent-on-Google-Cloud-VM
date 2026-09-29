@@ -97,6 +97,8 @@ function cleanOcrText(raw) {
  */
 function compactForHistory(msg) {
     const text = String(msg || '');
+    const burstCount = (text.match(/^\[MEDIA BURST: (\d+) /) || [])[1];
+    if (burstCount) return `[User sent ${burstCount} photos/documents at once. One combined summary was given.]`;
     if (text.startsWith('[IMAGE RECEIVED')) {
         const caption = (text.match(/User text accompanying the media: "([\s\S]*?)"$/) || [])[1];
         const scene = (text.match(/- Labels \/ Scene: (.*)/) || [])[1];
@@ -1192,12 +1194,62 @@ client.on('message', (msg) => {
         seenMessageIds.add(msgId);
         if (seenMessageIds.size > 500) seenMessageIds.delete(seenMessageIds.values().next().value);
     }
+    // Photos/documents are buffered per sender so a burst gets ONE combined reply.
+    if (!msg.fromMe && msg.hasMedia && ['image', 'document'].includes(msg.type)) {
+        bufferMediaBurst(msg);
+        return;
+    }
     enqueueChatTask(msg.from, () => handleIncomingMessage(msg)).catch(err => {
         console.error('[QUEUE] Message handler failed:', err && (err.stack || err.message || err));
     });
 });
 
-async function handleIncomingMessage(msg) {
+// ─── MEDIA BURST DEBOUNCER: sender -> { msgs, timer } ───
+const MEDIA_BURST_DEBOUNCE_MS = 2500;
+const mediaBursts = new Map();
+
+function bufferMediaBurst(msg) {
+    const sender = msg.from;
+    let burst = mediaBursts.get(sender);
+    if (!burst) {
+        burst = { msgs: [], timer: null };
+        mediaBursts.set(sender, burst);
+    }
+    burst.msgs.push(msg);
+    clearTimeout(burst.timer);
+    burst.timer = setTimeout(() => {
+        mediaBursts.delete(sender);
+        const msgs = burst.msgs;
+        const task = msgs.length === 1
+            ? () => handleIncomingMessage(msgs[0])
+            : () => handleIncomingMessage(msgs[msgs.length - 1], { burst: msgs });
+        enqueueChatTask(sender, task).catch(err => {
+            console.error('[QUEUE] Media burst handler failed:', err && (err.stack || err.message || err));
+        });
+    }, MEDIA_BURST_DEBOUNCE_MS);
+}
+
+// Downloads, vaults and analyzes one burst item; never throws so Promise.all can't fail the whole burst.
+async function processBurstItem(m, sender) {
+    try {
+        const media = await withTimeout(robustDownloadMedia(client, m), 45000, 'Media download', null);
+        if (!media || !media.data) return { desc: '[media could not be downloaded]', storageInfo: null };
+        const storageInfo = await withTimeout(saveMediaToCloudStorage(media.data, media.mimetype, sender, media.filename), 30000, 'Cloud vault save', null);
+        let desc;
+        if ((media.mimetype || '').toLowerCase().startsWith('image/')) {
+            desc = await withTimeout(getImageVisionDescription(media.data, media.mimetype), 35000, 'Vision analysis',
+                '[IMAGE RECEIVED]: vision analysis timed out.');
+        } else {
+            desc = `[DOCUMENT]: "${media.filename || 'Document'}" (${media.mimetype}) received and archived.`;
+        }
+        return { desc, storageInfo };
+    } catch (err) {
+        console.error('[BURST ITEM ERROR]:', err && (err.message || err));
+        return { desc: '[media processing failed]', storageInfo: null };
+    }
+}
+
+async function handleIncomingMessage(msg, opts = {}) {
     if (msg.from === 'status@broadcast') return;
     if (msg.from.endsWith('@g.us')) return;
     if (msg.fromMe) return;
@@ -1273,6 +1325,15 @@ async function handleIncomingMessage(msg) {
         return;
     }
 
+    // ─── INSTANT RESET: zero LLM, zero media processing ───
+    if (/^\s*(\/reset|reset|clear|clear chat|restart|clean|forget|new chat|nayi shuruat|bhool jao)\s*$/i.test(incomingText)) {
+        chatHistory.delete(sender);
+        pendingEmailDrafts.delete(sender);
+        lastMediaStore.delete(sender);
+        await msg.reply('🧹');
+        return;
+    }
+
     let customPrompt = null;
     if (isRoshan) {
         customPrompt = OWNER_PROMPT;
@@ -1292,6 +1353,38 @@ CRITICAL INSTRUCTIONS:
 2. Never use informal slang, teasing, or casual banter. Be gentle, polite, and affectionate like a good son.
 3. Content: Keep replies concise, kind, and helpful. If she is asking about Roshan or something he needs to handle, let her know the message has been noted and Roshan will call or respond to her soon.
 4. WhatsApp Length: 1 to 2 short warm sentences maximum.`;
+    }
+
+    // ─── MULTI-PHOTO BURST: analyze all in parallel, reply ONCE with a combined card ───
+    if (opts.burst && opts.burst.length > 1) {
+        const burst = opts.burst;
+        console.log(`[BURST] Aggregating ${burst.length} media items from ${sender}...`);
+        const results = await Promise.all(burst.map(m => processBurstItem(m, sender)));
+
+        const lastStored = [...results].reverse().find(r => r.storageInfo);
+        if (lastStored) lastMediaStore.set(sender, { storageInfo: lastStored.storageInfo, timestamp: Date.now() });
+
+        const itemsText = results.map((r, i) => `--- ITEM ${i + 1} ---\n${r.desc}`).join('\n\n');
+        const burstPrompt = `[MEDIA BURST: ${burst.length} photos/documents received at once]\n${itemsText}\n\n` +
+            `Reply with ONE combined WhatsApp card covering all ${burst.length} items (max ~200 words, never paste raw OCR, *single asterisks* only):\n` +
+            `📸 *Received ${burst.length} Photos / Documents*\n` +
+            `• *Item 1:* <key details/figures>\n` +
+            `• *Item 2:* <key details/figures>\n` +
+            `... one line per item through Item ${burst.length}\n\n` +
+            `👉 *Combined Takeaway:* <one consolidated conclusion or action>`;
+
+        try {
+            const chat = await msg.getChat().catch(() => null);
+            if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
+            const timeContext = getCurrentISTContext();
+            const reply = sanitizeWhatsAppReply(await generateAIReply(sender, burstPrompt, (customPrompt || SYSTEM_PROMPT) + timeContext, 500));
+            console.log(`[BURST REPLY to ${sender}]: ${reply}`);
+            await msg.reply(reply);
+            if (chat && chat.clearState) await chat.clearState().catch(() => {});
+        } catch (err) {
+            console.error('[BURST REPLY ERROR]:', err);
+        }
+        return;
     }
 
     // ─── MULTI-MEDIA ENGINE: Vision, Speech-to-Text & Cloud Storage Vault ───
