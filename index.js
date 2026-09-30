@@ -115,6 +115,14 @@ function compactForHistory(msg) {
         const hasOcr = /Detected Text \(OCR/.test(text);
         return `[User sent a photo${scene ? ` (${scene.split(',').slice(0, 4).join(',').trim()})` : ''}${hasOcr ? ' containing text' : ''}${caption ? `; caption: "${caption.slice(0, 120)}"` : ''}. Summary was given.]`;
     }
+    if (text.startsWith('[REPLIED-TO / QUOTED MESSAGE')) {
+        const quotedPreview = (text.match(/Content: """([\s\S]*?)"""/) || [])[1] || '';
+        const userReply = (text.match(/\[USER REPLY TO THE QUOTED MESSAGE ABOVE\]:\s*"?([\s\S]*?)"?(?:\n\n\((?:IMPORTANT|NOTE):|$)/) || [])[1] || '';
+        const cleanQuoted = quotedPreview.trim().slice(0, 140).replace(/\r?\n+/g, ' ');
+        const quoteDisp = quotedPreview.trim().length > 140 ? cleanQuoted + '…' : cleanQuoted;
+        const cleanUser = userReply.trim().slice(0, 160).replace(/\r?\n+/g, ' ');
+        return `[User replied to: "${quoteDisp}"]: "${cleanUser || text.slice(0, 100)}"`;
+    }
     if (text.length <= HISTORY_MSG_MAX_CHARS) return text;
     // Keep any email addresses that truncation would otherwise drop (needed for recipient recall)
     const dropped = (text.slice(HISTORY_MSG_MAX_CHARS).match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g) || []).slice(0, 2);
@@ -1446,6 +1454,33 @@ async function handleIncomingMessage(msg, opts = {}) {
         return;
     }
 
+    // ─── QUOTED / REPLIED MESSAGE CONTEXT (User slid/swiped right on a previous message) ───
+    let quotedContext = '';
+    let quotedBody = '';
+    if (msg.hasQuotedMsg) {
+        try {
+            const quoted = await withTimeout(msg.getQuotedMessage(), 6000, 'Quoted message fetch', null);
+            if (quoted) {
+                const isBot = quoted.fromMe;
+                const senderLabel = isBot ? (BOT_NAME || 'Hermes AI') : (isRoshan ? 'Roshan' : 'User');
+                quotedBody = (quoted.body || '').trim();
+                if (quoted.hasMedia && !quotedBody) {
+                    quotedBody = `[${quoted.type || 'media'} attachment]`;
+                }
+                if (quotedBody) {
+                    const cleanQuoted = quotedBody.replace(/"""/g, "'''");
+                    const truncatedQuoted = cleanQuoted.length > 1500 ? cleanQuoted.slice(0, 1500) + '… [truncated]' : cleanQuoted;
+                    quotedContext = `[REPLIED-TO / QUOTED MESSAGE (The user specifically slid/replied to this message)]:\n` +
+                        `From: ${senderLabel}\n` +
+                        `Content: """\n${truncatedQuoted}\n"""`;
+                    console.log(`[QUOTED MESSAGE] Attached quoted context from ${senderLabel} (~${truncatedQuoted.length} chars)`);
+                }
+            }
+        } catch (quotedErr) {
+            console.warn('[QUOTED MESSAGE WARN]:', quotedErr && (quotedErr.message || quotedErr));
+        }
+    }
+
     let customPrompt = null;
     if (isRoshan) {
         customPrompt = OWNER_PROMPT;
@@ -1481,7 +1516,8 @@ CRITICAL INSTRUCTIONS:
             ? `\nThe user also asked: "${incomingText}" — answer it directly about these items in the Combined Takeaway.\n`
             : '';
         const itemsText = results.map((r, i) => `--- ITEM ${i + 1} ---\n${r.desc}`).join('\n\n');
-        const burstPrompt = `[MEDIA BURST: ${burst.length} photos/documents received at once]\n${itemsText}\n${userQuestion}\n` +
+        const burstPrompt = (quotedContext ? `${quotedContext}\n(Note: The user specifically replied/slid on the above message along with these new items. Answer in reference to both!)\n\n` : '') +
+            `[MEDIA BURST: ${burst.length} photos/documents received at once]\n${itemsText}\n${userQuestion}\n` +
             `Reply with ONE combined WhatsApp card covering all ${burst.length} items (max ~200 words, never paste raw OCR, *single asterisks* only):\n` +
             `📸 *Received ${burst.length} Photos / Documents*\n` +
             `• *Item 1:* <key details/figures>\n` +
@@ -1579,6 +1615,10 @@ CRITICAL INSTRUCTIONS:
         } else {
             finalPrompt = `[MEDIA RECEIVED (Image/Audio)]: User sent a media file (photo/voice note). Please respond naturally acknowledging that they shared media.`;
         }
+    }
+
+    if (quotedContext) {
+        finalPrompt = `${quotedContext}\n\n[USER REPLY TO THE QUOTED MESSAGE ABOVE]:\n"${finalPrompt}"\n\n(IMPORTANT: The user specifically slid on / quoted the message above to reply directly to it. Answer their question or fulfill their request directly in reference to that quoted message!)`;
     }
 
     // ─── SAVE-TO-DRIVE / CLOUD VAULT INTENT: Short-circuit reply ───
@@ -1718,7 +1758,16 @@ CRITICAL INSTRUCTIONS:
         let emailSubject = 'Message from Roshan';
         let emailBody = incomingText;
         const lastReply = getLastAssistantReply(sender);
-        const recentContext = lastReply ? `\nRecent Context / Conversation Reference (what "it" or "this" refers to):\n"""\n${lastReply.substring(0, 1500)}\n"""` : '';
+        const hasSubstantiveQuoted = quotedBody && !/^\[.+ attachment\]$/i.test(quotedBody);
+        let refSource = '';
+        if (hasSubstantiveQuoted && lastReply) {
+            refSource = `Quoted Message Reference (user specifically replied to this):\n"""\n${quotedBody.substring(0, 1500)}\n"""\n\nRecent Assistant Reply Context:\n"""\n${lastReply.substring(0, 1000)}\n"""`;
+        } else if (hasSubstantiveQuoted) {
+            refSource = `Quoted Message Reference (user specifically replied to this):\n"""\n${quotedBody.substring(0, 1500)}\n"""`;
+        } else if (lastReply) {
+            refSource = `Recent Context / Conversation Reference (what "it" or "this" refers to):\n"""\n${lastReply.substring(0, 1500)}\n"""`;
+        }
+        const recentContext = refSource ? `\n${refSource}` : '';
 
         try {
             const chat = await msg.getChat().catch(() => null);
