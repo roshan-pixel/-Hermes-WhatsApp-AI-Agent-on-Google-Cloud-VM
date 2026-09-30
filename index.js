@@ -76,16 +76,26 @@ function cleanOcrText(raw) {
     if (!raw) return '';
     const seen = new Set();
     const lines = [];
-    for (const line of String(raw).split(/\r?\n/)) {
-        const l = line.replace(/[^\S\n]+/g, ' ').replace(/[|_~=\-]{4,}/g, ' ').trim();
-        if (l.length < 2) continue;
-        // Drop noise: lines with no letters/digits, or mostly symbols (OCR garbage from textures/borders)
-        const alnum = (l.match(/[\p{L}\p{N}]/gu) || []).length;
-        if (alnum === 0 || (l.length > 4 && alnum / l.length < 0.4)) continue;
-        const key = l.toLowerCase();
+    const rawLines = String(raw).split(/\r?\n/);
+
+    // Pass 1: Collapse standalone currency symbols (e.g. "₹", "$") onto the next line if it starts with numbers
+    for (let i = 0; i < rawLines.length; i++) {
+        let cur = rawLines[i].replace(/[^\S\n]+/g, ' ').replace(/[|_~=\-]{4,}/g, ' ').trim();
+        if (/^[₹$€£¥]$/.test(cur) && i + 1 < rawLines.length) {
+            const next = rawLines[i + 1].trim();
+            if (/^\d/.test(next)) {
+                rawLines[i + 1] = cur + next;
+                continue;
+            }
+        }
+        if (cur.length < 2) continue;
+        // Keep lines with letters, digits, or currency symbols (\p{Sc}); drop noise
+        const meaningful = (cur.match(/[\p{L}\p{N}\p{Sc}]/gu) || []).length;
+        if (meaningful === 0 || (cur.length > 4 && meaningful / cur.length < 0.35)) continue;
+        const key = cur.toLowerCase();
         if (seen.has(key)) continue;
         seen.add(key);
-        lines.push(l);
+        lines.push(cur);
     }
     const joined = lines.join('\n');
     return joined.length > OCR_MAX_CHARS ? joined.slice(0, OCR_MAX_CHARS).trimEnd() + ' …[truncated]' : joined;
@@ -137,11 +147,15 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
                     image: { content: base64Data },
                     features: [
                         { type: 'LABEL_DETECTION', maxResults: 10 },
-                        { type: 'TEXT_DETECTION' },
+                        { type: 'DOCUMENT_TEXT_DETECTION' },
                         { type: 'OBJECT_LOCALIZATION', maxResults: 10 },
                         { type: 'SAFE_SEARCH_DETECTION' },
                         { type: 'WEB_DETECTION', maxResults: 5 }
-                    ]
+                    ],
+                    imageContext: {
+                        // Hint Indian English and Hindi so currency symbols like ₹ (U+20B9) and local number formats are recognized accurately rather than misinterpreted as digits like '3'
+                        languageHints: ['en-IN', 'hi', 'en']
+                    }
                 }
             ]
         };
@@ -164,7 +178,7 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
         if (!annotation) return null;
 
         const labels = (annotation.labelAnnotations || []).map(l => l.description).join(', ');
-        const text = cleanOcrText(annotation.fullTextAnnotation?.text || '');
+        const text = cleanOcrText(annotation.fullTextAnnotation?.text || annotation.textAnnotations?.[0]?.description || '');
         const objects = (annotation.localizedObjectAnnotations || []).map(o => o.name).join(', ');
         const webBestGuess = (annotation.webDetection?.bestGuessLabels || []).map(b => b.label).join(', ');
         const webEntities = (annotation.webDetection?.webEntities || []).filter(e => e.description).slice(0, 5).map(e => e.description).join(', ');
@@ -208,7 +222,7 @@ async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
             body: JSON.stringify({
                 contents: [{
                     parts: [
-                        { text: "Describe what is in this image concisely in 2-3 sentences. If there is text or handwriting, transcribe it accurately. Be specific about key objects, people, scenes, or actions." },
+                        { text: "Describe what is in this image concisely in 2-3 sentences. If there is text, handwriting, or payment/financial figures (especially Indian Rupee ₹ amounts, recipient names, or UPI IDs), transcribe them accurately without confusing currency symbols." },
                         { inline_data: { mime_type: mimeType, data: base64Data } }
                     ]
                 }],
@@ -601,7 +615,8 @@ const PHOTO_CARD_FORMAT = `PHOTO CARD FORMAT (use exactly, max ~120 words, never
     `• *Key Information:*\n` +
     `  • <extracted figure, date, name, or key item>\n` +
     `  • <2-5 clean bullets total>\n\n` +
-    `👉 *Takeaway/Action:* <one-line conclusion or next step>`;
+    `👉 *Takeaway/Action:* <one-line conclusion or next step>\n\n` +
+    `ACCURACY RULE FOR FINANCIAL TRANSACTIONS: For receipts, invoices, or UPI/bank payment screenshots, transcribe currency amounts with exact precision. Note that '₹' represents Indian Rupees; never confuse or prefix '₹' with digits (e.g. ₹269 is ₹269, never 3269).`;
 
 // Rejects if a slow call exceeds ms so one stuck image can't freeze the per-chat queue.
 function withTimeout(promise, ms, label, fallback) {
