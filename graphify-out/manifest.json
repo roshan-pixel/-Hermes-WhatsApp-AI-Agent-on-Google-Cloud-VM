@@ -1,7 +1,7 @@
 {
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\index.js": {
-    "mtime": 1792159169.8546166,
-    "ast_hash": "ee68baa4f0eff90308b7ceda4a8acad5",
+    "mtime": 1792161016.6134882,
+    "ast_hash": "407e1061c59868b20ab8b98f5650b5e3",
     "semantic_hash": ""
   },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\package.json": {
@@ -267,6 +267,11 @@
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\.wwebjs_auth\\session\\Subresource Filter\\Unindexed Rules\\9.72.0\\LICENSE.txt": {
     "mtime": 1789389904.0,
     "ast_hash": "d33aaa5246e1ce0a94fa15ba0c407ae2",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\test_vision.js": {
+    "mtime": 1792159721.815761,
+    "ast_hash": "de5cd51a21742c04c483c80c29b72f0b",
     "semantic_hash": ""
   }
 }

@@ -4,6 +4,10 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const { execFile } = require('child_process');
+const util = require('util');
+const execFileAsync = util.promisify(execFile);
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
@@ -112,8 +116,10 @@ function compactForHistory(msg) {
     if (text.startsWith('[IMAGE RECEIVED')) {
         const caption = (text.match(/User text accompanying the media: "([\s\S]*?)"$/) || [])[1];
         const scene = (text.match(/- Labels \/ Scene: (.*)/) || [])[1];
-        const ocrMatch = text.match(/Detected Text \(OCR[^)]*\):\s*"([\s\S]*?)"/) || text.match(/\[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS\]:\s*([\s\S]*?)(?:\n\n|\n\[|\(No caption|$)/);
-        const ocrSnippet = ocrMatch && ocrMatch[1] ? ocrMatch[1].replace(/\s+/g, ' ').trim().slice(0, 250) : '';
+        const ocrMatch = text.match(/Detected Text \(OCR[^)]*\):\s*"([\s\S]*?)"/) ||
+                         text.match(/\[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS[^\]]*\]:\s*([\s\S]*?)(?:\n\n|\n\[|\(No caption|$)/) ||
+                         text.match(/\[IMAGE RECEIVED - LOCAL HIGH-ACCURACY OCR TRANSCRIPTION[^\]]*\]:\s*([\s\S]*?)(?:\n\n|\n\[|\(No caption|$)/);
+        const ocrSnippet = ocrMatch && ocrMatch[1] ? ocrMatch[1].replace(/\s+/g, ' ').trim().slice(0, 300) : '';
         return `[User sent a photo${scene ? ` (${scene.split(',').slice(0, 4).join(',').trim()})` : ''}${ocrSnippet ? `; text: "${ocrSnippet}…"` : ''}${caption ? `; caption: "${caption.slice(0, 120)}"` : ''}.]`;
     }
     if (text.startsWith('[REPLIED-TO / QUOTED MESSAGE')) {
@@ -220,57 +226,106 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
 }
 
 /**
- * Multimodal Vision & OCR Engine powered by Google Gemini Vision
+ * Local Offline OCR Engine powered by Tesseract
+ * Bulletproof fallback when cloud vision APIs hit high demand or network spikes.
  */
-async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
-    if (!GEMINI_API_KEY) return null;
+async function analyzeImageWithTesseract(base64Data) {
+    let tmpPath = null;
     try {
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [
-                        { text: "Thoroughly analyze and transcribe this image. If it contains slides, presentations, documents, forms, receipts, or screenshots, extract all visible text verbatim, including main titles, headings, speaker/presenter names, slide bullets, rules, legal acts, dates, and amounts (especially Indian Rupee ₹ figures). Structure the output clearly." },
-                        { inline_data: { mime_type: mimeType, data: base64Data } }
-                    ]
-                }],
-                generationConfig: {
-                    maxOutputTokens: 2048,
-                    thinkingConfig: { thinkingBudget: 0 }
-                }
-            }),
-            signal: AbortSignal.timeout(20000)
-        });
-        if (resp.ok) {
-            const data = await resp.json();
-            const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
-            if (text) {
-                const cleaned = text.length > 3500 ? text.slice(0, 3500) + ' …[truncated]' : text;
-                return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${cleaned}`;
-            }
+        const buffer = Buffer.from(base64Data, 'base64');
+        tmpPath = path.join(os.tmpdir(), `ocr_${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`);
+        await fs.promises.writeFile(tmpPath, buffer);
+        const { stdout } = await execFileAsync('tesseract', [tmpPath, 'stdout', '--oem', '1', '-l', 'eng+hin'], { timeout: 10000 });
+        const text = (stdout || '').trim();
+        if (text && text.length > 10) {
+            return `[IMAGE RECEIVED - LOCAL HIGH-ACCURACY OCR TRANSCRIPTION]:\n${cleanOcrText(text)}`;
         }
-    } catch (e) {
-        console.error('[Gemini Vision Fallback Error]:', e.message);
+    } catch (err) {
+        console.warn('[Tesseract OCR Warn]:', err.message);
+    } finally {
+        if (tmpPath) {
+            fs.promises.unlink(tmpPath).catch(() => {});
+        }
     }
     return null;
 }
 
 /**
- * Multi-layer Vision Engine: Prioritizes Gemini Multimodal Vision (fastest & richest context), falls back to Google Cloud Vision API
+ * Multimodal Vision & OCR Engine powered by Google Gemini Vision
+ * Features multi-model resilience (gemini-3.5-flash -> gemini-3-flash-preview) against 503 high demand spikes.
+ */
+async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
+    if (!GEMINI_API_KEY) return null;
+    const candidateModels = [GEMINI_MODEL, 'gemini-3-flash-preview'].filter(Boolean);
+    const uniqueModels = [...new Set(candidateModels)];
+
+    for (const model of uniqueModels) {
+        try {
+            console.log(`[Vision Engine] Trying Gemini model: ${model}...`);
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: "Thoroughly analyze and transcribe this image. If it contains slides, presentations, documents, forms, receipts, or screenshots, extract all visible text verbatim, including main titles, headings, speaker/presenter names, slide bullets, rules, legal acts, dates, and amounts (especially Indian Rupee ₹ figures). Structure the output clearly." },
+                            { inline_data: { mime_type: mimeType, data: base64Data } }
+                        ]
+                    }],
+                    generationConfig: {
+                        maxOutputTokens: 2048,
+                        thinkingConfig: { thinkingBudget: 0 }
+                    }
+                }),
+                signal: AbortSignal.timeout(15000)
+            });
+
+            if (resp.ok) {
+                const data = await resp.json();
+                const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
+                if (text) {
+                    const cleaned = text.length > 3500 ? text.slice(0, 3500) + ' …[truncated]' : text;
+                    return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${cleaned}`;
+                }
+            } else {
+                const errText = await resp.text();
+                console.warn(`[Gemini Vision ${model} Status ${resp.status}]:`, errText.slice(0, 160));
+                if (resp.status === 503 || resp.status === 429 || resp.status === 404) {
+                    continue; // try next candidate model
+                }
+            }
+        } catch (e) {
+            console.warn(`[Gemini Vision ${model} Error]:`, e.message);
+        }
+    }
+    return null;
+}
+
+/**
+ * Multi-layer Vision Engine:
+ * 1. Gemini Multimodal Vision (rich multimodal comprehension + OCR)
+ * 2. Local Tesseract OCR (100% offline, zero network failure, high accuracy text/receipt extraction)
+ * 3. Google Cloud Vision API fallback
  */
 async function getImageVisionDescription(base64Data, mimeType = 'image/jpeg') {
     if (GEMINI_API_KEY) {
-        console.log('[Vision Engine] Processing image with Gemini Multimodal Vision (gemini-3.5-flash)...');
+        console.log('[Vision Engine] Processing image with Gemini Multimodal Vision...');
         const geminiResult = await analyzeImageWithGemini(base64Data, mimeType);
         if (geminiResult) return geminiResult;
+    }
+
+    console.log('[Vision Engine] Gemini busy or unavailable. Falling back to Local Tesseract OCR...');
+    const tesseractResult = await analyzeImageWithTesseract(base64Data);
+    if (tesseractResult) {
+        console.log('[Vision Engine] Local Tesseract OCR successfully extracted text.');
+        return tesseractResult;
     }
 
     console.log('[Vision Engine] Trying Google Cloud Vision API fallback...');
     const visionResult = await analyzeImageWithVision(base64Data, mimeType);
     if (visionResult) return visionResult;
 
-    return '[IMAGE RECEIVED]: An image file was received, but automated vision analysis was unavailable.';
+    return '[IMAGE RECEIVED]: An image file was received, but automated text extraction could not detect distinct characters.';
 }
 
 /**
