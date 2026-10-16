@@ -558,7 +558,7 @@
       "label": "analyzeImageWithVision()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L135",
+      "source_location": "L136",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithvision",
       "community": 12,
       "norm_label": "analyzeimagewithvision()"
@@ -567,7 +567,7 @@
       "label": "analyzeImageWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L224",
+      "source_location": "L225",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_analyzeimagewithgemini",
       "community": 12,
       "norm_label": "analyzeimagewithgemini()"
@@ -576,7 +576,7 @@
       "label": "getImageVisionDescription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L257",
+      "source_location": "L262",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getimagevisiondescription",
       "community": 12,
       "norm_label": "getimagevisiondescription()"
@@ -585,7 +585,7 @@
       "label": "transcribeAudioWithSpeech()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L273",
+      "source_location": "L280",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithspeech",
       "community": 12,
       "norm_label": "transcribeaudiowithspeech()"
@@ -594,7 +594,7 @@
       "label": "transcribeAudioWithGemini()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L352",
+      "source_location": "L359",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_transcribeaudiowithgemini",
       "community": 12,
       "norm_label": "transcribeaudiowithgemini()"
@@ -603,7 +603,7 @@
       "label": "getAudioTranscription()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L402",
+      "source_location": "L409",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getaudiotranscription",
       "community": 12,
       "norm_label": "getaudiotranscription()"
@@ -612,7 +612,7 @@
       "label": "getGoogleDriveAccessToken()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L419",
+      "source_location": "L426",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgoogledriveaccesstoken",
       "community": 12,
       "norm_label": "getgoogledriveaccesstoken()"
@@ -621,7 +621,7 @@
       "label": "uploadToGoogleDrive()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L455",
+      "source_location": "L462",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_uploadtogoogledrive",
       "community": 12,
       "norm_label": "uploadtogoogledrive()"
@@ -630,7 +630,7 @@
       "label": "saveMediaToCloudStorage()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L528",
+      "source_location": "L535",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_savemediatocloudstorage",
       "community": 12,
       "norm_label": "savemediatocloudstorage()"
@@ -639,7 +639,7 @@
       "label": "withTimeout()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L630",
+      "source_location": "L640",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_withtimeout",
       "community": 21,
       "norm_label": "withtimeout()"
@@ -648,7 +648,7 @@
       "label": "buildEmailConfirmation()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L641",
+      "source_location": "L651",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_buildemailconfirmation",
       "community": 21,
       "norm_label": "buildemailconfirmation()"
@@ -657,7 +657,7 @@
       "label": "buildEmailPreviewCard()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L648",
+      "source_location": "L658",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_buildemailpreviewcard",
       "community": 21,
       "norm_label": "buildemailpreviewcard()"
@@ -666,7 +666,7 @@
       "label": "sanitizeWhatsAppReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L659",
+      "source_location": "L669",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sanitizewhatsappreply",
       "community": 21,
       "norm_label": "sanitizewhatsappreply()"
@@ -675,7 +675,7 @@
       "label": "chatHistory",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L706",
+      "source_location": "L718",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_chathistory",
       "community": 0,
       "norm_label": "chathistory"
@@ -684,7 +684,7 @@
       "label": "getLastAssistantReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L709",
+      "source_location": "L721",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getlastassistantreply",
       "community": 21,
       "norm_label": "getlastassistantreply()"
@@ -693,7 +693,7 @@
       "label": "getCurrentISTContext()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L724",
+      "source_location": "L736",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getcurrentistcontext",
       "community": 21,
       "norm_label": "getcurrentistcontext()"
@@ -702,7 +702,7 @@
       "label": "getDeepSeekReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L753",
+      "source_location": "L765",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getdeepseekreply",
       "community": 6,
       "norm_label": "getdeepseekreply()"
@@ -711,7 +711,7 @@
       "label": "getGeminiReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L802",
+      "source_location": "L814",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_getgeminireply",
       "community": 6,
       "norm_label": "getgeminireply()"
@@ -720,7 +720,7 @@
       "label": "getHermesReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L852",
+      "source_location": "L865",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_gethermesreply",
       "community": 6,
       "norm_label": "gethermesreply()"
@@ -729,7 +729,7 @@
       "label": "generateAIReply()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L901",
+      "source_location": "L914",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_generateaireply",
       "community": 6,
       "norm_label": "generateaireply()"
@@ -738,7 +738,7 @@
       "label": "robustDownloadMedia()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L919",
+      "source_location": "L946",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_robustdownloadmedia",
       "community": 21,
       "norm_label": "robustdownloadmedia()"
@@ -747,7 +747,7 @@
       "label": "sessionDir",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1098",
+      "source_location": "L1125",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_sessiondir",
       "community": 0,
       "norm_label": "sessiondir"
@@ -756,7 +756,7 @@
       "label": "p",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1101",
+      "source_location": "L1128",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_p",
       "community": 0,
       "norm_label": "p"
@@ -765,7 +765,7 @@
       "label": "client",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1109",
+      "source_location": "L1136",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_client",
       "community": 0,
       "norm_label": "client"
@@ -774,7 +774,7 @@
       "label": "goOffline()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1163",
+      "source_location": "L1190",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_gooffline",
       "community": 21,
       "norm_label": "gooffline()"
@@ -783,7 +783,7 @@
       "label": "activePage",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1182",
+      "source_location": "L1209",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_activepage",
       "community": 0,
       "norm_label": "activepage"
@@ -792,7 +792,7 @@
       "label": "pendingBuffers",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1222",
+      "source_location": "L1249",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingbuffers",
       "community": 0,
       "norm_label": "pendingbuffers"
@@ -801,7 +801,7 @@
       "label": "lastMediaStore",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1223",
+      "source_location": "L1250",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_lastmediastore",
       "community": 0,
       "norm_label": "lastmediastore"
@@ -810,7 +810,7 @@
       "label": "pendingEmailDrafts",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1224",
+      "source_location": "L1251",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_pendingemaildrafts",
       "community": 0,
       "norm_label": "pendingemaildrafts"
@@ -819,7 +819,7 @@
       "label": "enqueueChatTask",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1227",
+      "source_location": "L1254",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_enqueuechattask",
       "community": 0,
       "norm_label": "enqueuechattask"
@@ -828,7 +828,7 @@
       "label": "seenMessageIds",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1228",
+      "source_location": "L1255",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_seenmessageids",
       "community": 0,
       "norm_label": "seenmessageids"
@@ -837,7 +837,7 @@
       "label": "burst",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1246",
+      "source_location": "L1273",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_burst",
       "community": 0,
       "norm_label": "burst"
@@ -846,7 +846,7 @@
       "label": "mediaBursts",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1258",
+      "source_location": "L1285",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_mediabursts",
       "community": 0,
       "norm_label": "mediabursts"
@@ -855,7 +855,7 @@
       "label": "isInstantCommand()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1266",
+      "source_location": "L1293",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_isinstantcommand",
       "community": 0,
       "norm_label": "isinstantcommand()"
@@ -864,7 +864,7 @@
       "label": "formatUptime()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1270",
+      "source_location": "L1297",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_formatuptime",
       "community": 21,
       "norm_label": "formatuptime()"
@@ -873,7 +873,7 @@
       "label": "scheduleBurstFlush()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1276",
+      "source_location": "L1303",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_scheduleburstflush",
       "community": 39,
       "norm_label": "scheduleburstflush()"
@@ -882,7 +882,7 @@
       "label": "bufferMediaBurst()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1291",
+      "source_location": "L1318",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_buffermediaburst",
       "community": 39,
       "norm_label": "buffermediaburst()"
@@ -891,7 +891,7 @@
       "label": "processBurstItem()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1303",
+      "source_location": "L1330",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_processburstitem",
       "community": 21,
       "norm_label": "processburstitem()"
@@ -900,7 +900,7 @@
       "label": "handleIncomingMessage()",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1324",
+      "source_location": "L1351",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_handleincomingmessage",
       "community": 21,
       "norm_label": "handleincomingmessage()"
@@ -909,7 +909,7 @@
       "label": "server",
       "file_type": "code",
       "source_file": "index.js",
-      "source_location": "L1881",
+      "source_location": "L1921",
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_index_server",
       "community": 0,
       "norm_label": "server"
@@ -1572,51 +1572,6 @@
       "norm_label": "checkcomposer()"
     },
     {
-      "label": "check-curl.js",
-      "file_type": "code",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L1",
-      "id": "scratch_check_curl_js",
-      "community": 58,
-      "norm_label": "check-curl.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L1",
-      "id": "scratch_check_curl_fs",
-      "community": 58,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L2",
-      "id": "scratch_check_curl_path",
-      "community": 58,
-      "norm_label": "path"
-    },
-    {
-      "label": "sendKimi()",
-      "file_type": "code",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L5",
-      "id": "scratch_check_curl_sendkimi",
-      "community": 58,
-      "norm_label": "sendkimi()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L21",
-      "id": "scratch_check_curl_run",
-      "community": 58,
-      "norm_label": "run()"
-    },
-    {
       "label": "check-profile.js",
       "file_type": "code",
       "source_file": "scratch/check-profile.js",
@@ -1761,51 +1716,6 @@
       "norm_label": "clickwhatsappconnect()"
     },
     {
-      "label": "dialog.json",
-      "file_type": "code",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L1",
-      "id": "scratch_dialog_json",
-      "community": 59,
-      "norm_label": "dialog.json"
-    },
-    {
-      "label": "ok",
-      "file_type": "code",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L2",
-      "id": "scratch_dialog_ok",
-      "community": 59,
-      "norm_label": "ok"
-    },
-    {
-      "label": "data",
-      "file_type": "code",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L3",
-      "id": "scratch_dialog_data",
-      "community": 59,
-      "norm_label": "data"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L4",
-      "id": "scratch_dialog_data_type",
-      "community": 59,
-      "norm_label": "type"
-    },
-    {
-      "label": "value",
-      "file_type": "code",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L5",
-      "id": "scratch_dialog_data_value",
-      "community": 59,
-      "norm_label": "value"
-    },
-    {
       "label": "draft-thread.js",
       "file_type": "code",
       "source_file": "scratch/draft-thread.js",
@@ -1849,96 +1759,6 @@
       "id": "scratch_draft_thread_normalized",
       "community": 27,
       "norm_label": "normalized"
-    },
-    {
-      "label": "dump-dialog.js",
-      "file_type": "code",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L1",
-      "id": "scratch_dump_dialog_js",
-      "community": 60,
-      "norm_label": "dump-dialog.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L1",
-      "id": "scratch_dump_dialog_fs",
-      "community": 60,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L2",
-      "id": "scratch_dump_dialog_path",
-      "community": 60,
-      "norm_label": "path"
-    },
-    {
-      "label": "sendKimi()",
-      "file_type": "code",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L5",
-      "id": "scratch_dump_dialog_sendkimi",
-      "community": 60,
-      "norm_label": "sendkimi()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L21",
-      "id": "scratch_dump_dialog_run",
-      "community": 60,
-      "norm_label": "run()"
-    },
-    {
-      "label": "extract-key.js",
-      "file_type": "code",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L1",
-      "id": "scratch_extract_key_js",
-      "community": 61,
-      "norm_label": "extract-key.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L1",
-      "id": "scratch_extract_key_fs",
-      "community": 61,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L2",
-      "id": "scratch_extract_key_path",
-      "community": 61,
-      "norm_label": "path"
-    },
-    {
-      "label": "sendKimi()",
-      "file_type": "code",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L5",
-      "id": "scratch_extract_key_sendkimi",
-      "community": 61,
-      "norm_label": "sendkimi()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L21",
-      "id": "scratch_extract_key_run",
-      "community": 61,
-      "norm_label": "run()"
     },
     {
       "label": "find-plus.js",
@@ -2256,96 +2076,6 @@
       "norm_label": "inspectwhatsappconnect()"
     },
     {
-      "label": "intercept-clipboard.js",
-      "file_type": "code",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L1",
-      "id": "scratch_intercept_clipboard_js",
-      "community": 62,
-      "norm_label": "intercept-clipboard.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L1",
-      "id": "scratch_intercept_clipboard_fs",
-      "community": 62,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L2",
-      "id": "scratch_intercept_clipboard_path",
-      "community": 62,
-      "norm_label": "path"
-    },
-    {
-      "label": "sendKimi()",
-      "file_type": "code",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L5",
-      "id": "scratch_intercept_clipboard_sendkimi",
-      "community": 62,
-      "norm_label": "sendkimi()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L21",
-      "id": "scratch_intercept_clipboard_run",
-      "community": 62,
-      "norm_label": "run()"
-    },
-    {
-      "label": "intercept-copy.js",
-      "file_type": "code",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L1",
-      "id": "scratch_intercept_copy_js",
-      "community": 63,
-      "norm_label": "intercept-copy.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L1",
-      "id": "scratch_intercept_copy_fs",
-      "community": 63,
-      "norm_label": "fs"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L2",
-      "id": "scratch_intercept_copy_path",
-      "community": 63,
-      "norm_label": "path"
-    },
-    {
-      "label": "sendKimi()",
-      "file_type": "code",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L5",
-      "id": "scratch_intercept_copy_sendkimi",
-      "community": 63,
-      "norm_label": "sendkimi()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L21",
-      "id": "scratch_intercept_copy_run",
-      "community": 63,
-      "norm_label": "run()"
-    },
-    {
       "label": "parse-promo.js",
       "file_type": "code",
       "source_file": "scratch/parse-promo.js",
@@ -2380,222 +2110,6 @@
       "id": "scratch_parse_promo_chunk",
       "community": 41,
       "norm_label": "chunk"
-    },
-    {
-      "label": "snap.json",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L1",
-      "id": "scratch_snap_json",
-      "community": 56,
-      "norm_label": "snap.json"
-    },
-    {
-      "label": "ok",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L2",
-      "id": "scratch_snap_ok",
-      "community": 56,
-      "norm_label": "ok"
-    },
-    {
-      "label": "data",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L3",
-      "id": "scratch_snap_data",
-      "community": 56,
-      "norm_label": "data"
-    },
-    {
-      "label": "url",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L4",
-      "id": "scratch_snap_data_url",
-      "community": 56,
-      "norm_label": "url"
-    },
-    {
-      "label": "title",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L5",
-      "id": "scratch_snap_data_title",
-      "community": 56,
-      "norm_label": "title"
-    },
-    {
-      "label": "tree",
-      "file_type": "code",
-      "source_file": "scratch/snap.json",
-      "source_location": "L6",
-      "id": "scratch_snap_data_tree",
-      "community": 56,
-      "norm_label": "tree"
-    },
-    {
-      "label": "snap2.json",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L1",
-      "id": "scratch_snap2_json",
-      "community": 53,
-      "norm_label": "snap2.json"
-    },
-    {
-      "label": "ok",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L2",
-      "id": "scratch_snap2_ok",
-      "community": 53,
-      "norm_label": "ok"
-    },
-    {
-      "label": "data",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L3",
-      "id": "scratch_snap2_data",
-      "community": 53,
-      "norm_label": "data"
-    },
-    {
-      "label": "url",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L4",
-      "id": "scratch_snap2_data_url",
-      "community": 53,
-      "norm_label": "url"
-    },
-    {
-      "label": "title",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L5",
-      "id": "scratch_snap2_data_title",
-      "community": 53,
-      "norm_label": "title"
-    },
-    {
-      "label": "tree",
-      "file_type": "code",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L6",
-      "id": "scratch_snap2_data_tree",
-      "community": 53,
-      "norm_label": "tree"
-    },
-    {
-      "label": "snap3.json",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L1",
-      "id": "scratch_snap3_json",
-      "community": 54,
-      "norm_label": "snap3.json"
-    },
-    {
-      "label": "ok",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L2",
-      "id": "scratch_snap3_ok",
-      "community": 54,
-      "norm_label": "ok"
-    },
-    {
-      "label": "data",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L3",
-      "id": "scratch_snap3_data",
-      "community": 54,
-      "norm_label": "data"
-    },
-    {
-      "label": "url",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L4",
-      "id": "scratch_snap3_data_url",
-      "community": 54,
-      "norm_label": "url"
-    },
-    {
-      "label": "title",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L5",
-      "id": "scratch_snap3_data_title",
-      "community": 54,
-      "norm_label": "title"
-    },
-    {
-      "label": "tree",
-      "file_type": "code",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L6",
-      "id": "scratch_snap3_data_tree",
-      "community": 54,
-      "norm_label": "tree"
-    },
-    {
-      "label": "snap4.json",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L1",
-      "id": "scratch_snap4_json",
-      "community": 55,
-      "norm_label": "snap4.json"
-    },
-    {
-      "label": "ok",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L2",
-      "id": "scratch_snap4_ok",
-      "community": 55,
-      "norm_label": "ok"
-    },
-    {
-      "label": "data",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L3",
-      "id": "scratch_snap4_data",
-      "community": 55,
-      "norm_label": "data"
-    },
-    {
-      "label": "url",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L4",
-      "id": "scratch_snap4_data_url",
-      "community": 55,
-      "norm_label": "url"
-    },
-    {
-      "label": "title",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L5",
-      "id": "scratch_snap4_data_title",
-      "community": 55,
-      "norm_label": "title"
-    },
-    {
-      "label": "tree",
-      "file_type": "code",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L6",
-      "id": "scratch_snap4_data_tree",
-      "community": 55,
-      "norm_label": "tree"
     },
     {
       "label": "test-cdp-click.js",
@@ -3577,6 +3091,492 @@
       "id": "hermes_whatsapp_agent_on_google_cloud_vm_readme_license",
       "community": 10,
       "norm_label": "\ud83d\udcc4 license"
+    },
+    {
+      "label": "check-curl.js",
+      "file_type": "code",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L1",
+      "community": 58,
+      "norm_label": "check-curl.js",
+      "id": "scratch_check_curl_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L1",
+      "community": 58,
+      "norm_label": "fs",
+      "id": "scratch_check_curl_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L2",
+      "community": 58,
+      "norm_label": "path",
+      "id": "scratch_check_curl_path"
+    },
+    {
+      "label": "sendKimi()",
+      "file_type": "code",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L5",
+      "community": 58,
+      "norm_label": "sendkimi()",
+      "id": "scratch_check_curl_sendkimi"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L21",
+      "community": 58,
+      "norm_label": "run()",
+      "id": "scratch_check_curl_run"
+    },
+    {
+      "label": "dialog.json",
+      "file_type": "code",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L1",
+      "community": 59,
+      "norm_label": "dialog.json",
+      "id": "scratch_dialog_json"
+    },
+    {
+      "label": "ok",
+      "file_type": "code",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L2",
+      "community": 59,
+      "norm_label": "ok",
+      "id": "scratch_dialog_ok"
+    },
+    {
+      "label": "data",
+      "file_type": "code",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L3",
+      "community": 59,
+      "norm_label": "data",
+      "id": "scratch_dialog_data"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L4",
+      "community": 59,
+      "norm_label": "type",
+      "id": "scratch_dialog_data_type"
+    },
+    {
+      "label": "value",
+      "file_type": "code",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L5",
+      "community": 59,
+      "norm_label": "value",
+      "id": "scratch_dialog_data_value"
+    },
+    {
+      "label": "dump-dialog.js",
+      "file_type": "code",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L1",
+      "community": 60,
+      "norm_label": "dump-dialog.js",
+      "id": "scratch_dump_dialog_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L1",
+      "community": 60,
+      "norm_label": "fs",
+      "id": "scratch_dump_dialog_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L2",
+      "community": 60,
+      "norm_label": "path",
+      "id": "scratch_dump_dialog_path"
+    },
+    {
+      "label": "sendKimi()",
+      "file_type": "code",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L5",
+      "community": 60,
+      "norm_label": "sendkimi()",
+      "id": "scratch_dump_dialog_sendkimi"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L21",
+      "community": 60,
+      "norm_label": "run()",
+      "id": "scratch_dump_dialog_run"
+    },
+    {
+      "label": "extract-key.js",
+      "file_type": "code",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L1",
+      "community": 61,
+      "norm_label": "extract-key.js",
+      "id": "scratch_extract_key_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L1",
+      "community": 61,
+      "norm_label": "fs",
+      "id": "scratch_extract_key_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L2",
+      "community": 61,
+      "norm_label": "path",
+      "id": "scratch_extract_key_path"
+    },
+    {
+      "label": "sendKimi()",
+      "file_type": "code",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L5",
+      "community": 61,
+      "norm_label": "sendkimi()",
+      "id": "scratch_extract_key_sendkimi"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L21",
+      "community": 61,
+      "norm_label": "run()",
+      "id": "scratch_extract_key_run"
+    },
+    {
+      "label": "intercept-clipboard.js",
+      "file_type": "code",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L1",
+      "community": 62,
+      "norm_label": "intercept-clipboard.js",
+      "id": "scratch_intercept_clipboard_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L1",
+      "community": 62,
+      "norm_label": "fs",
+      "id": "scratch_intercept_clipboard_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L2",
+      "community": 62,
+      "norm_label": "path",
+      "id": "scratch_intercept_clipboard_path"
+    },
+    {
+      "label": "sendKimi()",
+      "file_type": "code",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L5",
+      "community": 62,
+      "norm_label": "sendkimi()",
+      "id": "scratch_intercept_clipboard_sendkimi"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L21",
+      "community": 62,
+      "norm_label": "run()",
+      "id": "scratch_intercept_clipboard_run"
+    },
+    {
+      "label": "intercept-copy.js",
+      "file_type": "code",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L1",
+      "community": 63,
+      "norm_label": "intercept-copy.js",
+      "id": "scratch_intercept_copy_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L1",
+      "community": 63,
+      "norm_label": "fs",
+      "id": "scratch_intercept_copy_fs"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L2",
+      "community": 63,
+      "norm_label": "path",
+      "id": "scratch_intercept_copy_path"
+    },
+    {
+      "label": "sendKimi()",
+      "file_type": "code",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L5",
+      "community": 63,
+      "norm_label": "sendkimi()",
+      "id": "scratch_intercept_copy_sendkimi"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L21",
+      "community": 63,
+      "norm_label": "run()",
+      "id": "scratch_intercept_copy_run"
+    },
+    {
+      "label": "snap.json",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L1",
+      "community": 56,
+      "norm_label": "snap.json",
+      "id": "scratch_snap_json"
+    },
+    {
+      "label": "ok",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L2",
+      "community": 56,
+      "norm_label": "ok",
+      "id": "scratch_snap_ok"
+    },
+    {
+      "label": "data",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L3",
+      "community": 56,
+      "norm_label": "data",
+      "id": "scratch_snap_data"
+    },
+    {
+      "label": "url",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L4",
+      "community": 56,
+      "norm_label": "url",
+      "id": "scratch_snap_data_url"
+    },
+    {
+      "label": "title",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L5",
+      "community": 56,
+      "norm_label": "title",
+      "id": "scratch_snap_data_title"
+    },
+    {
+      "label": "tree",
+      "file_type": "code",
+      "source_file": "scratch/snap.json",
+      "source_location": "L6",
+      "community": 56,
+      "norm_label": "tree",
+      "id": "scratch_snap_data_tree"
+    },
+    {
+      "label": "snap2.json",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L1",
+      "community": 53,
+      "norm_label": "snap2.json",
+      "id": "scratch_snap2_json"
+    },
+    {
+      "label": "ok",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L2",
+      "community": 53,
+      "norm_label": "ok",
+      "id": "scratch_snap2_ok"
+    },
+    {
+      "label": "data",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L3",
+      "community": 53,
+      "norm_label": "data",
+      "id": "scratch_snap2_data"
+    },
+    {
+      "label": "url",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L4",
+      "community": 53,
+      "norm_label": "url",
+      "id": "scratch_snap2_data_url"
+    },
+    {
+      "label": "title",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L5",
+      "community": 53,
+      "norm_label": "title",
+      "id": "scratch_snap2_data_title"
+    },
+    {
+      "label": "tree",
+      "file_type": "code",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L6",
+      "community": 53,
+      "norm_label": "tree",
+      "id": "scratch_snap2_data_tree"
+    },
+    {
+      "label": "snap3.json",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L1",
+      "community": 54,
+      "norm_label": "snap3.json",
+      "id": "scratch_snap3_json"
+    },
+    {
+      "label": "ok",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L2",
+      "community": 54,
+      "norm_label": "ok",
+      "id": "scratch_snap3_ok"
+    },
+    {
+      "label": "data",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L3",
+      "community": 54,
+      "norm_label": "data",
+      "id": "scratch_snap3_data"
+    },
+    {
+      "label": "url",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L4",
+      "community": 54,
+      "norm_label": "url",
+      "id": "scratch_snap3_data_url"
+    },
+    {
+      "label": "title",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L5",
+      "community": 54,
+      "norm_label": "title",
+      "id": "scratch_snap3_data_title"
+    },
+    {
+      "label": "tree",
+      "file_type": "code",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L6",
+      "community": 54,
+      "norm_label": "tree",
+      "id": "scratch_snap3_data_tree"
+    },
+    {
+      "label": "snap4.json",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L1",
+      "community": 55,
+      "norm_label": "snap4.json",
+      "id": "scratch_snap4_json"
+    },
+    {
+      "label": "ok",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L2",
+      "community": 55,
+      "norm_label": "ok",
+      "id": "scratch_snap4_ok"
+    },
+    {
+      "label": "data",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L3",
+      "community": 55,
+      "norm_label": "data",
+      "id": "scratch_snap4_data"
+    },
+    {
+      "label": "url",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L4",
+      "community": 55,
+      "norm_label": "url",
+      "id": "scratch_snap4_data_url"
+    },
+    {
+      "label": "title",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L5",
+      "community": 55,
+      "norm_label": "title",
+      "id": "scratch_snap4_data_title"
+    },
+    {
+      "label": "tree",
+      "file_type": "code",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L6",
+      "community": 55,
+      "norm_label": "tree",
+      "id": "scratch_snap4_data_tree"
     },
     {
       "label": "{ queryChatMemory }",
@@ -6834,9 +6834,9 @@
       "source_file": ".wwebjs_auth/session/component_crx_cache/metadata.json",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_component_crx_cache_metadata_json",
-      "target": "component_crx_cache_metadata_hashes",
-      "confidence_score": 1.0
+      "target": "component_crx_cache_metadata_hashes"
     },
     {
       "relation": "contains",
@@ -6844,9 +6844,9 @@
       "source_file": ".wwebjs_auth/session/extensions_crx_cache/metadata.json",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_extensions_crx_cache_metadata_json",
-      "target": "extensions_crx_cache_metadata_hashes",
-      "confidence_score": 1.0
+      "target": "extensions_crx_cache_metadata_hashes"
     },
     {
       "relation": "contains",
@@ -6854,9 +6854,9 @@
       "source_file": ".wwebjs_auth/session/Subresource Filter/Unindexed Rules/9.72.0/manifest.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_subresource_filter_unindexed_rules_9_72_0_manifest_json",
-      "target": "9_72_0_manifest_manifest_version",
-      "confidence_score": 1.0
+      "target": "9_72_0_manifest_manifest_version"
     },
     {
       "relation": "contains",
@@ -6864,9 +6864,9 @@
       "source_file": ".wwebjs_auth/session/Subresource Filter/Unindexed Rules/9.72.0/manifest.json",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_subresource_filter_unindexed_rules_9_72_0_manifest_json",
-      "target": "9_72_0_manifest_name",
-      "confidence_score": 1.0
+      "target": "9_72_0_manifest_name"
     },
     {
       "relation": "contains",
@@ -6874,9 +6874,9 @@
       "source_file": ".wwebjs_auth/session/Subresource Filter/Unindexed Rules/9.72.0/manifest.json",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_subresource_filter_unindexed_rules_9_72_0_manifest_json",
-      "target": "9_72_0_manifest_ruleset_format",
-      "confidence_score": 1.0
+      "target": "9_72_0_manifest_ruleset_format"
     },
     {
       "relation": "contains",
@@ -6884,9 +6884,9 @@
       "source_file": ".wwebjs_auth/session/Subresource Filter/Unindexed Rules/9.72.0/manifest.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "wwebjs_auth_session_subresource_filter_unindexed_rules_9_72_0_manifest_json",
-      "target": "9_72_0_manifest_version",
-      "confidence_score": 1.0
+      "target": "9_72_0_manifest_version"
     },
     {
       "relation": "defines",
@@ -7023,57 +7023,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scratch_check_curl_js",
-      "target": "scratch_check_curl_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_check_curl_js",
-      "target": "scratch_check_curl_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_check_curl_js",
-      "target": "scratch_check_curl_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "scratch_check_curl_js",
-      "target": "scratch_check_curl_run",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/check-curl.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "scratch_check_curl_run",
-      "target": "scratch_check_curl_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "scratch/check-profile.js",
       "source_location": "L1",
       "weight": 1.0,
@@ -7206,46 +7155,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_dialog_json",
-      "target": "scratch_dialog_ok",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "scratch_dialog_json",
-      "target": "scratch_dialog_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scratch_dialog_data",
-      "target": "scratch_dialog_data_type",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dialog.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_dialog_data",
-      "target": "scratch_dialog_data_value",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "scratch/draft-thread.js",
       "source_location": "L1",
       "weight": 1.0,
@@ -7282,108 +7191,6 @@
       "confidence_score": 1.0,
       "source": "scratch_draft_thread_js",
       "target": "scratch_draft_thread_normalized"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scratch_dump_dialog_js",
-      "target": "scratch_dump_dialog_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_dump_dialog_js",
-      "target": "scratch_dump_dialog_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_dump_dialog_js",
-      "target": "scratch_dump_dialog_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "scratch_dump_dialog_js",
-      "target": "scratch_dump_dialog_run",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/dump-dialog.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "scratch_dump_dialog_run",
-      "target": "scratch_dump_dialog_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scratch_extract_key_js",
-      "target": "scratch_extract_key_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_extract_key_js",
-      "target": "scratch_extract_key_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_extract_key_js",
-      "target": "scratch_extract_key_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "scratch_extract_key_js",
-      "target": "scratch_extract_key_run",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/extract-key.js",
-      "source_location": "L24",
-      "weight": 1.0,
-      "source": "scratch_extract_key_run",
-      "target": "scratch_extract_key_sendkimi",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -7672,108 +7479,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scratch_intercept_clipboard_js",
-      "target": "scratch_intercept_clipboard_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_intercept_clipboard_js",
-      "target": "scratch_intercept_clipboard_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_intercept_clipboard_js",
-      "target": "scratch_intercept_clipboard_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "scratch_intercept_clipboard_js",
-      "target": "scratch_intercept_clipboard_run",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-clipboard.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "scratch_intercept_clipboard_run",
-      "target": "scratch_intercept_clipboard_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "scratch_intercept_copy_js",
-      "target": "scratch_intercept_copy_fs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_intercept_copy_js",
-      "target": "scratch_intercept_copy_path",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_intercept_copy_js",
-      "target": "scratch_intercept_copy_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "scratch_intercept_copy_js",
-      "target": "scratch_intercept_copy_run",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/intercept-copy.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "scratch_intercept_copy_run",
-      "target": "scratch_intercept_copy_sendkimi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "scratch/parse-promo.js",
       "source_location": "L1",
       "weight": 1.0,
@@ -7800,206 +7505,6 @@
       "confidence_score": 1.0,
       "source": "scratch_parse_promo_js",
       "target": "scratch_parse_promo_chunk"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_snap_json",
-      "target": "scratch_snap_ok",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "scratch_snap_json",
-      "target": "scratch_snap_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scratch_snap_data",
-      "target": "scratch_snap_data_url",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_snap_data",
-      "target": "scratch_snap_data_title",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "scratch_snap_data",
-      "target": "scratch_snap_data_tree",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_snap2_json",
-      "target": "scratch_snap2_ok",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "scratch_snap2_json",
-      "target": "scratch_snap2_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scratch_snap2_data",
-      "target": "scratch_snap2_data_url",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_snap2_data",
-      "target": "scratch_snap2_data_title",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap2.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "scratch_snap2_data",
-      "target": "scratch_snap2_data_tree",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_snap3_json",
-      "target": "scratch_snap3_ok",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "scratch_snap3_json",
-      "target": "scratch_snap3_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scratch_snap3_data",
-      "target": "scratch_snap3_data_url",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_snap3_data",
-      "target": "scratch_snap3_data_title",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap3.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "scratch_snap3_data",
-      "target": "scratch_snap3_data_tree",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "scratch_snap4_json",
-      "target": "scratch_snap4_ok",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "scratch_snap4_json",
-      "target": "scratch_snap4_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "scratch_snap4_data",
-      "target": "scratch_snap4_data_url",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "scratch_snap4_data",
-      "target": "scratch_snap4_data_title",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scratch/snap4.json",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "scratch_snap4_data",
-      "target": "scratch_snap4_data_tree",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -9048,6 +8553,501 @@
       "target": "hermes_whatsapp_agent_on_google_cloud_vm_readme_codeblock_16"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_check_curl_js",
+      "target": "scratch_check_curl_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_check_curl_js",
+      "target": "scratch_check_curl_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_check_curl_js",
+      "target": "scratch_check_curl_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_check_curl_js",
+      "target": "scratch_check_curl_run"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/check-curl.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_check_curl_run",
+      "target": "scratch_check_curl_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dialog_json",
+      "target": "scratch_dialog_ok"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dialog_json",
+      "target": "scratch_dialog_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dialog_data",
+      "target": "scratch_dialog_data_type"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dialog.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dialog_data",
+      "target": "scratch_dialog_data_value"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dump_dialog_js",
+      "target": "scratch_dump_dialog_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dump_dialog_js",
+      "target": "scratch_dump_dialog_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dump_dialog_js",
+      "target": "scratch_dump_dialog_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dump_dialog_js",
+      "target": "scratch_dump_dialog_run"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/dump-dialog.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_dump_dialog_run",
+      "target": "scratch_dump_dialog_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_extract_key_js",
+      "target": "scratch_extract_key_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_extract_key_js",
+      "target": "scratch_extract_key_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_extract_key_js",
+      "target": "scratch_extract_key_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_extract_key_js",
+      "target": "scratch_extract_key_run"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/extract-key.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_extract_key_run",
+      "target": "scratch_extract_key_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_clipboard_js",
+      "target": "scratch_intercept_clipboard_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_clipboard_js",
+      "target": "scratch_intercept_clipboard_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_clipboard_js",
+      "target": "scratch_intercept_clipboard_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_clipboard_js",
+      "target": "scratch_intercept_clipboard_run"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-clipboard.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_clipboard_run",
+      "target": "scratch_intercept_clipboard_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_copy_js",
+      "target": "scratch_intercept_copy_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_copy_js",
+      "target": "scratch_intercept_copy_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_copy_js",
+      "target": "scratch_intercept_copy_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_copy_js",
+      "target": "scratch_intercept_copy_run"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/intercept-copy.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_intercept_copy_run",
+      "target": "scratch_intercept_copy_sendkimi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap_json",
+      "target": "scratch_snap_ok"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap_json",
+      "target": "scratch_snap_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap_data",
+      "target": "scratch_snap_data_url"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap_data",
+      "target": "scratch_snap_data_title"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap_data",
+      "target": "scratch_snap_data_tree"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap2_json",
+      "target": "scratch_snap2_ok"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap2_json",
+      "target": "scratch_snap2_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap2_data",
+      "target": "scratch_snap2_data_url"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap2_data",
+      "target": "scratch_snap2_data_title"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap2.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap2_data",
+      "target": "scratch_snap2_data_tree"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap3_json",
+      "target": "scratch_snap3_ok"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap3_json",
+      "target": "scratch_snap3_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap3_data",
+      "target": "scratch_snap3_data_url"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap3_data",
+      "target": "scratch_snap3_data_title"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap3.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap3_data",
+      "target": "scratch_snap3_data_tree"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap4_json",
+      "target": "scratch_snap4_ok"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap4_json",
+      "target": "scratch_snap4_data"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap4_data",
+      "target": "scratch_snap4_data_url"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap4_data",
+      "target": "scratch_snap4_data_title"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scratch/snap4.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scratch_snap4_data",
+      "target": "scratch_snap4_data_tree"
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -9380,5 +9380,5 @@
       "source_file": "index.js"
     }
   ],
-  "built_at_commit": "d0ae0e4fb07f81258eb3abd5a87c52c42c7c666a"
+  "built_at_commit": "6379c1fa537732f2f63b1aba61fc9bb0009c6d08"
 }

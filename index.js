@@ -64,7 +64,7 @@ async function getGCPAccessToken() {
     return null;
 }
 
-const OCR_MAX_CHARS = 1200;
+const OCR_MAX_CHARS = 4000;
 const HISTORY_MSG_MAX_CHARS = 400;
 const REPLY_MAX_TOKENS = 350;
 
@@ -112,8 +112,9 @@ function compactForHistory(msg) {
     if (text.startsWith('[IMAGE RECEIVED')) {
         const caption = (text.match(/User text accompanying the media: "([\s\S]*?)"$/) || [])[1];
         const scene = (text.match(/- Labels \/ Scene: (.*)/) || [])[1];
-        const hasOcr = /Detected Text \(OCR/.test(text);
-        return `[User sent a photo${scene ? ` (${scene.split(',').slice(0, 4).join(',').trim()})` : ''}${hasOcr ? ' containing text' : ''}${caption ? `; caption: "${caption.slice(0, 120)}"` : ''}. Summary was given.]`;
+        const ocrMatch = text.match(/Detected Text \(OCR[^)]*\):\s*"([\s\S]*?)"/) || text.match(/\[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS\]:\s*([\s\S]*?)(?:\n\n|\n\[|\(No caption|$)/);
+        const ocrSnippet = ocrMatch && ocrMatch[1] ? ocrMatch[1].replace(/\s+/g, ' ').trim().slice(0, 250) : '';
+        return `[User sent a photo${scene ? ` (${scene.split(',').slice(0, 4).join(',').trim()})` : ''}${ocrSnippet ? `; text: "${ocrSnippet}…"` : ''}${caption ? `; caption: "${caption.slice(0, 120)}"` : ''}.]`;
     }
     if (text.startsWith('[REPLIED-TO / QUOTED MESSAGE')) {
         const quotedPreview = (text.match(/Content: """([\s\S]*?)"""/) || [])[1] || '';
@@ -219,7 +220,7 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
 }
 
 /**
- * Fallback image analysis using Gemini Multimodal if Google Cloud Vision is unavailable
+ * Multimodal Vision & OCR Engine powered by Google Gemini Vision
  */
 async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
     if (!GEMINI_API_KEY) return null;
@@ -230,19 +231,23 @@ async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
             body: JSON.stringify({
                 contents: [{
                     parts: [
-                        { text: "Describe what is in this image concisely in 2-3 sentences. If there is text, handwriting, or payment/financial figures (especially Indian Rupee ₹ amounts, recipient names, or UPI IDs), transcribe them accurately without confusing currency symbols." },
+                        { text: "Thoroughly analyze and transcribe this image. If it contains slides, presentations, documents, forms, receipts, or screenshots, extract all visible text verbatim, including main titles, headings, speaker/presenter names, slide bullets, rules, legal acts, dates, and amounts (especially Indian Rupee ₹ figures). Structure the output clearly." },
                         { inline_data: { mime_type: mimeType, data: base64Data } }
                     ]
                 }],
-                generationConfig: { maxOutputTokens: 250 }
+                generationConfig: {
+                    maxOutputTokens: 2048,
+                    thinkingConfig: { thinkingBudget: 0 }
+                }
             }),
-            signal: AbortSignal.timeout(15000)
+            signal: AbortSignal.timeout(20000)
         });
         if (resp.ok) {
             const data = await resp.json();
-            const desc = cleanOcrText(data.candidates?.[0]?.content?.parts?.[0]?.text || '');
-            if (desc) {
-                return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${desc}`;
+            const text = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
+            if (text) {
+                const cleaned = text.length > 3500 ? text.slice(0, 3500) + ' …[truncated]' : text;
+                return `[IMAGE RECEIVED - MULTIMODAL VISION ANALYSIS]:\n${cleaned}`;
             }
         }
     } catch (e) {
@@ -252,16 +257,18 @@ async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
 }
 
 /**
- * Multi-layer Vision Engine: Prioritizes Google Cloud Vision API, falls back to Gemini Multimodal
+ * Multi-layer Vision Engine: Prioritizes Gemini Multimodal Vision (fastest & richest context), falls back to Google Cloud Vision API
  */
 async function getImageVisionDescription(base64Data, mimeType = 'image/jpeg') {
-    console.log('[Vision Engine] Processing image with Google Cloud Vision API...');
+    if (GEMINI_API_KEY) {
+        console.log('[Vision Engine] Processing image with Gemini Multimodal Vision (gemini-3.5-flash)...');
+        const geminiResult = await analyzeImageWithGemini(base64Data, mimeType);
+        if (geminiResult) return geminiResult;
+    }
+
+    console.log('[Vision Engine] Trying Google Cloud Vision API fallback...');
     const visionResult = await analyzeImageWithVision(base64Data, mimeType);
     if (visionResult) return visionResult;
-
-    console.log('[Vision Engine] Cloud Vision API unavailable or returned empty. Falling back to Gemini Multimodal Vision...');
-    const geminiResult = await analyzeImageWithGemini(base64Data, mimeType);
-    if (geminiResult) return geminiResult;
 
     return '[IMAGE RECEIVED]: An image file was received, but automated vision analysis was unavailable.';
 }
@@ -609,22 +616,25 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
 
 const OWNER_NAME = process.env.OWNER_NAME || 'My Owner';
 const BOT_NAME = process.env.BOT_NAME || 'Hermes AI';
-const WHATSAPP_STYLE_RULES = `\n\nRESPONSE STYLE (strict): Write like a sharp, warm friend texting on a phone, better than Meta AI. Reply in under ~250 words / 350 tokens. ` +
-    `1) Jump straight into the answer. NEVER open with "Certainly!", "Sure!", "Sure thing!", "Of course!", "Great question!", "Here is what you asked for", and NEVER say "As an AI". NEVER close with "Let me know if you need anything else!" or any similar offer. ` +
-    `2) Keep paragraphs to 1-2 punchy sentences separated by a blank line. ` +
-    `3) Use *single asterisks* for bold key words. NEVER use **double asterisks**, markdown headers (#), tables, or code fences. ` +
-    `4) For lists use "•" bullets, each starting with a fitting emoji, one idea per line. ` +
-    `5) NEVER paste raw OCR text, scans, or memory notes. ` +
-    `For photos/documents/scans, reply with the PHOTO CARD below.`;
+const WHATSAPP_STYLE_RULES = `\n\nRESPONSE STYLE (strict): Write like a sharp, highly capable executive assistant on WhatsApp. ` +
+    `1) Jump straight into the answer. NEVER open with "Certainly!", "Sure!", "Sure thing!", "Of course!", "Great question!", "Here is what you asked for", and NEVER say "As an AI". NEVER close with "Let me know if you need anything else!" or any similar filler. ` +
+    `2) Keep paragraphs clean and readable, separated by blank lines. ` +
+    `3) Use *single asterisks* for bold keywords. NEVER use **double asterisks**, markdown headers (#), tables, or code fences. ` +
+    `4) For lists use "•" bullets, each starting with a fitting emoji or bullet, one idea per line. ` +
+    `5) For photos/documents/scans/slides, extract and present all key information cleanly following the format below.`;
 
-// Shared card layout for every photo/document (single or part of a burst).
-const PHOTO_CARD_FORMAT = `PHOTO CARD FORMAT (use exactly, max ~120 words, never paste raw OCR):\n` +
-    `📸 *<Photo/Document Overview: one punchy line>*\n\n` +
-    `• *Key Information:*\n` +
-    `  • <extracted figure, date, name, or key item>\n` +
-    `  • <2-5 clean bullets total>\n\n` +
-    `👉 *Takeaway/Action:* <one-line conclusion or next step>\n\n` +
-    `ACCURACY RULE FOR FINANCIAL TRANSACTIONS: For receipts, invoices, or UPI/bank payment screenshots, transcribe currency amounts with exact precision. Note that '₹' represents Indian Rupees; never confuse or prefix '₹' with digits (e.g. ₹269 is ₹269, never 3269).`;
+// Shared layout for every photo/document (single or part of a burst).
+const PHOTO_CARD_FORMAT = `RESPONSE FORMAT FOR PHOTOS & DOCUMENTS:\n` +
+    `1. For initial photo/document shares, provide a clean, structured overview formatted for WhatsApp:\n` +
+    `📸 *<Punchy Title or Subject of Photo/Slide/Document>*\n\n` +
+    `• *Key Details:*\n` +
+    `  • <extracted heading, rule, degree, speaker name, or critical line>\n` +
+    `  • <transcribed facts, figures, dates, or criteria>\n\n` +
+    `👉 *Takeaway / Summary:* <one-line conclusion or answer to user's question>\n\n` +
+    `2. Extraction / Full Details Requests:\n` +
+    `If the user asks to "Extract", "Read", "Transcribe", "Details", "Kya likha hai", or asks specific questions about the image content, DO NOT truncate or deny. Provide the full extracted text, speaker names, legal acts, slide bullets, and data points cleanly and completely.\n\n` +
+    `3. Accuracy & Integrity:\n` +
+    `NEVER claim an image is blank or unreadable when analysis data is present. For legal acts, regulations, official degrees, or financial transactions (especially Indian Rupee ₹ amounts), transcribe names, terms, and numbers with exact precision.`;
 
 // Rejects if a slow call exceeds ms so one stuck image can't freeze the per-chat queue.
 function withTimeout(promise, ms, label, fallback) {
@@ -698,7 +708,9 @@ const OWNER_PROMPT = `You are ${BOT_NAME}, ${OWNER_NAME}'s world-class executive
     `Always use second person ("you"/"your"). NEVER use "he/him/his" or ${OWNER_NAME}'s name to refer to the person you're talking to, and never say he is away, busy, or that a message "will be passed on". ` +
     `Understand natural Hinglish, Hindi, and English (and voice-note transcripts with typos) and reply in the language he used. ` +
     `Give the answer or result first, instantly; no preamble, no restating the question, no filler. Ask at most one short clarifying question, only when truly blocked. ` +
-    `Act on requests (emails, saving media, summaries) rather than describing how. Recalled background context is silent: never recite it. ` +
+    `Act on requests (emails, saving media, summaries, extractions) rather than describing how. Recalled background context is silent: never recite it. ` +
+    `When he sends photos, slides, or documents, inspect the vision analysis and extract key facts, titles, speaker names, legal acts, or figures immediately. ` +
+    `If he asks to "Extract", "Read", or follow up on an image, fulfill the request completely with full structured transcription. NEVER claim an image is blank if vision data is present. ` +
     `Google Drive/Cloud Vault: media he sends is automatically saved; when you see [GOOGLE DRIVE LINK] or [CLOUD STORAGE LINK], confirm it was saved and share the link. ` +
     `EMAIL & DISPATCH CAPABILITY: You have direct integrated Gmail SMTP. When Roshan asks to send an email, mail documents, or forward receipts, draft and prepare the email immediately. NEVER refuse or say you don't have email access.` +
     WHATSAPP_STYLE_RULES;
@@ -823,7 +835,8 @@ async function getGeminiReply(chatId, userMessage, customSystemPrompt = null, ma
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: maxTokens
+                    maxOutputTokens: Math.max(maxTokens, 1024),
+                    thinkingConfig: { thinkingBudget: 0 }
                 }
             })
         });
@@ -899,13 +912,27 @@ async function getHermesReply(chatId, userMessage, customSystemPrompt = null, ma
 }
 
 async function generateAIReply(chatId, userMessage, customSystemPrompt = null, maxTokens = REPLY_MAX_TOKENS) {
+    let reply = null;
+    const isError = txt => !txt || txt.startsWith('Sorry,') || txt.includes('momentary issue') || txt.includes("couldn't reach");
+
     if (AI_PROVIDER === 'deepseek') {
-        return await getDeepSeekReply(chatId, userMessage, customSystemPrompt, maxTokens);
+        reply = await getDeepSeekReply(chatId, userMessage, customSystemPrompt, maxTokens);
+        if (isError(reply) && GEMINI_API_KEY) {
+            console.log(`[AI FALLBACK] Primary provider (DeepSeek) returned error. Falling back to Gemini (${GEMINI_MODEL})...`);
+            const fallback = await getGeminiReply(chatId, userMessage, customSystemPrompt, maxTokens);
+            if (fallback && !isError(fallback)) reply = fallback;
+        }
     } else if (AI_PROVIDER === 'gemini') {
-        return await getGeminiReply(chatId, userMessage, customSystemPrompt, maxTokens);
+        reply = await getGeminiReply(chatId, userMessage, customSystemPrompt, maxTokens);
+        if (isError(reply) && DEEPSEEK_API_KEY) {
+            console.log(`[AI FALLBACK] Primary provider (Gemini) returned error. Falling back to DeepSeek (${DEEPSEEK_MODEL})...`);
+            const fallback = await getDeepSeekReply(chatId, userMessage, customSystemPrompt, maxTokens);
+            if (fallback && !isError(fallback)) reply = fallback;
+        }
     } else {
-        return await getHermesReply(chatId, userMessage, customSystemPrompt, maxTokens);
+        reply = await getHermesReply(chatId, userMessage, customSystemPrompt, maxTokens);
     }
+    return reply || "I received your message and will update you shortly.";
 }
 
 /**
@@ -1588,12 +1615,15 @@ CRITICAL INSTRUCTIONS:
                     mediaContext += `\n[CLOUD STORAGE LINK]: ${storageInfo.gcsUrl}`;
                 }
 
-                // Remember this upload for this sender for 10 minutes
-                // so "save to drive" sent as a separate follow-up message works
-                if (storageInfo) {
-                    lastMediaStore.set(sender, { storageInfo, urls: [storageInfo.driveUrl || storageInfo.gcsUrl].filter(Boolean), timestamp: Date.now() });
-                    console.log(`[LAST MEDIA STORE] Cached storageInfo for ${sender} (driveUrl: ${storageInfo.driveUrl || 'none'})`);
-                }
+                // Remember this upload and vision context for this sender for 10 minutes
+                // so "save to drive" or "extract" sent as a separate follow-up message works
+                lastMediaStore.set(sender, {
+                    storageInfo,
+                    mediaContext,
+                    urls: [storageInfo?.driveUrl || storageInfo?.gcsUrl].filter(Boolean),
+                    timestamp: Date.now()
+                });
+                console.log(`[LAST MEDIA STORE] Cached media & vision analysis for ${sender} (driveUrl: ${storageInfo?.driveUrl || 'none'})`);
             } else {
                 console.warn('[MEDIA WARNING]: downloadMedia() returned empty or undefined media.');
             }
@@ -1605,9 +1635,19 @@ CRITICAL INSTRUCTIONS:
     let finalPrompt = incomingText;
     if (mediaContext) {
         if (incomingText) {
-            finalPrompt = `${mediaContext}\n\n(If this is a photo/scan/document, answer with the card below and address the user's request in the Takeaway line.)\n${PHOTO_CARD_FORMAT}\nUser text accompanying the media: "${incomingText}"`;
+            finalPrompt = `${mediaContext}\n\n${PHOTO_CARD_FORMAT}\n\nUser text accompanying the media: "${incomingText}". Please answer their question and extract all relevant details thoroughly.`;
         } else {
-            finalPrompt = `${mediaContext}\n\n(No caption. If this is a photo/scan/document, reply with the card below. Do NOT repeat the raw text.)\n${PHOTO_CARD_FORMAT}`;
+            finalPrompt = `${mediaContext}\n\n${PHOTO_CARD_FORMAT}\n\n(No caption provided. Provide a clean overview and extract key details, names, titles, and rules accurately.)`;
+        }
+    } else if (!hasMedia) {
+        // Support follow-up questions / extraction on recently received media
+        const cached = lastMediaStore.get(sender);
+        const isRecentMedia = cached && cached.mediaContext && (Date.now() - cached.timestamp) < 15 * 60 * 1000;
+        const isExtractionOrImageQuery = /\b(extract|read|transcribe|batao|kya hai|kya likha hai|padho|details|points|slide|text|nikalo|samjhao|explain|summary|what|who|kaun|kab|degree|act|rule|amount|rupee|photo|image|picture|pic|screenshot|screen)\b/i.test(incomingText) ||
+            Boolean(quotedBody && /photo|image|attachment|📸|document|slide/i.test(quotedBody));
+
+        if (isRecentMedia && isExtractionOrImageQuery) {
+            finalPrompt = `${cached.mediaContext}\n\n[USER FOLLOW-UP ON THE RECENT IMAGE/DOCUMENT]:\n"${incomingText}"\n\n${PHOTO_CARD_FORMAT}\n\n[SYSTEM INSTRUCTION: The user is asking about or requesting extraction from the verified image/document above. Provide a thorough, accurate, and structured response addressing their query directly. If they asked to extract or transcribe, provide all slide/document contents cleanly and completely. Ignore any past assistant claims that the image was unreadable.]`;
         }
     } else if (hasMedia) {
         if (incomingText) {

@@ -1,7 +1,7 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-16)
 
 ## Corpus Check
-- 60 files · ~33,486 words
+- 50 files · ~31,573 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d0ae0e4f`
+- Built from commit: `6379c1fa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
