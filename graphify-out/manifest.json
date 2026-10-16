@@ -259,56 +259,6 @@
     "ast_hash": "4ad953cb90511ac213ee7064b82e4167",
     "semantic_hash": ""
   },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\check-curl.js": {
-    "mtime": 1792156334.7167845,
-    "ast_hash": "c20db348b2189761c18eab4c96a913d5",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\dialog.json": {
-    "mtime": 1792156315.456922,
-    "ast_hash": "af1089acce25a5e82d3ebc34337a243e",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\dump-dialog.js": {
-    "mtime": 1792156307.6595478,
-    "ast_hash": "e5923f2023b483199f25ccf552dab04d",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\extract-key.js": {
-    "mtime": 1792156253.7651956,
-    "ast_hash": "4b80041c349881d312086b6cfe1bc037",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\intercept-clipboard.js": {
-    "mtime": 1792156366.0029693,
-    "ast_hash": "daf7e54a2f825124b73fdf2b2a1688ce",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\intercept-copy.js": {
-    "mtime": 1792156397.4375036,
-    "ast_hash": "883f77956179f9db11ce34b9f85ffa2d",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\snap.json": {
-    "mtime": 1792156101.9059682,
-    "ast_hash": "38e329b15e7e9360144bac2233d95963",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\snap2.json": {
-    "mtime": 1792156133.1995883,
-    "ast_hash": "0002f06d8d57969e6145f93f2832d7ac",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\snap3.json": {
-    "mtime": 1792156156.731063,
-    "ast_hash": "c130d711efbc03d71c37c32c6584f864",
-    "semantic_hash": ""
-  },
-  "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\scratch\\snap4.json": {
-    "mtime": 1792156220.7978005,
-    "ast_hash": "afc9eb646414d7a5ccec630564d1eff0",
-    "semantic_hash": ""
-  },
   "C:\\Users\\sgarm\\Hermes-WhatsApp-Agent-on-Google-Cloud-VM\\.wwebjs_auth\\session\\Default\\Service Worker\\CacheStorage\\0bf6ab7f94a21cdc9c1649f884333ec20f40a544\\index.txt": {
     "mtime": 1791717602.9288979,
     "ast_hash": "51f62d761e64857b6afe9da8138b61bb",
