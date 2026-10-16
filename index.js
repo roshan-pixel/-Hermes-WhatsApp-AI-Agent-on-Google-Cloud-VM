@@ -19,7 +19,7 @@ const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-chat';
 
 // Gemini Settings
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
 
 // Hermes Settings (via OpenRouter)
 const HERMES_API_KEY = process.env.HERMES_API_KEY || '';
@@ -357,7 +357,7 @@ async function transcribeAudioWithGemini(base64Data, mimeType = 'audio/ogg') {
     // WhatsApp sends audio/ogg;codecs=opus — Gemini needs clean audio/ogg
     const cleanMime = (mimeType || 'audio/ogg').split(';')[0].trim() || 'audio/ogg';
 
-    const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash', GEMINI_MODEL].filter(Boolean);
+    const modelsToTry = [GEMINI_MODEL, 'gemini-3.5-flash', 'gemini-flash-latest'].filter(Boolean);
 
     for (const model of modelsToTry) {
         try {
