@@ -264,6 +264,8 @@ async function getGCPAccessToken() {
 const OCR_MAX_CHARS = 4000;
 const HISTORY_MSG_MAX_CHARS = 400;
 const REPLY_MAX_TOKENS = 350;
+const REPLY_MAX_TOKENS_FULL = 4500; // replies to a long quoted message / translations (Hindi needs many more tokens than English)
+const QUOTED_FULL_INSTRUCTION = `\n\n[FULL-LENGTH RULES: If the user asks to translate, transcribe, restate, explain or continue the quoted message (for example "in Hindi"), reproduce ALL of it completely, every section, bullet and number, in the requested language. Do not summarize, shorten or skip anything, and do not add commentary.]`;
 const REPLY_MAX_TOKENS_DOC = 3000; // extraction replies need room for the full details
 const DOC_DETAIL_INSTRUCTION = `
 
@@ -2048,7 +2050,7 @@ async function handleIncomingMessage(msg, opts = {}) {
                 }
                 if (quotedBody) {
                     const cleanQuoted = quotedBody.replace(/"""/g, "'''");
-                    const truncatedQuoted = cleanQuoted.length > 1500 ? cleanQuoted.slice(0, 1500) + '… [truncated]' : cleanQuoted;
+                    const truncatedQuoted = cleanQuoted.length > 12000 ? cleanQuoted.slice(0, 12000) + '… [truncated]' : cleanQuoted;
                     quotedContext = `[REPLIED-TO / QUOTED MESSAGE (The user specifically slid/replied to this message)]:\n` +
                         `From: ${senderLabel}\n` +
                         `Content: """\n${truncatedQuoted}\n"""`;
@@ -2498,7 +2500,15 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
         }
 
         const isDocExtraction = /\[(DOCUMENT TEXT EXTRACTED|REPORT GUIDANCE)/.test(finalPrompt);
-        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, isDocExtraction && !finalPrompt.includes(REPORT_MARK) ? finalPrompt + DOC_DETAIL_INSTRUCTION : finalPrompt, fullPrompt, isDocExtraction ? REPLY_MAX_TOKENS_DOC : REPLY_MAX_TOKENS));
+        // Replying to a long message, or asking to translate / transcribe / explain it, needs the full text, not a 350-token answer
+        const longQuoted = Boolean(quotedBody) && !/^\[.+ attachment\]$/i.test(quotedBody) && quotedBody.length > 500;
+        const wantsFullOutput = /(hindi|हिंदी|हिन्दी|translate|anuvad|transcribe|transcript|extract|in detail|full|poora|pura|vistar|explain|samjha)/i.test(incomingText);
+        const fullQuotedReply = Boolean(quotedContext) && (longQuoted || wantsFullOutput);
+        const promptToSend = isDocExtraction && !finalPrompt.includes(REPORT_MARK) ? finalPrompt + DOC_DETAIL_INSTRUCTION
+            : fullQuotedReply ? finalPrompt + QUOTED_FULL_INSTRUCTION
+            : finalPrompt;
+        const replyTokens = fullQuotedReply ? REPLY_MAX_TOKENS_FULL : (isDocExtraction ? REPLY_MAX_TOKENS_DOC : REPLY_MAX_TOKENS);
+        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, promptToSend, fullPrompt, replyTokens));
         console.log(`[REPLY to ${isDilip ? 'Dilip Singh (Formal)' : sender}]: ${reply}`);
         await msg.reply(reply);
 
