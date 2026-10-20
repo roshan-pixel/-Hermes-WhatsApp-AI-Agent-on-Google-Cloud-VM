@@ -134,6 +134,7 @@ function createReportBot(deps) {
             if (!isPdf && !mime.startsWith('image/')) { await msg.reply(MSG.badType); return; }
             if (media.data.length * 0.75 > MAX_FILE_BYTES) { await msg.reply(MSG.tooBig); return; }
             const text = await extractReportText(media);
+            console.log(`[REPORT BOT] file ${texts.length + (text ? 1 : 0)}/${items.length} ${text ? `read (${text.length} chars)` : 'had no readable text'}`);
             if (text) texts.push(text);
         }
         const reportText = texts.join('\n\n').trim();
@@ -150,11 +151,11 @@ function createReportBot(deps) {
         if (!guidance) { sessions.delete(sender); await msg.reply(MSG.noMatch); return; }
 
         const chatId = `report:${sender}`;
-        const prompt = `MEMBER'S REPORT TEXT:\n${reportText.slice(0, 9000)}\n\n${guidance}\n\n${ANALYSIS_EXTRA}`;
+        const prompt = `MEMBER'S REPORT TEXT:\n${reportText.slice(0, 30000)}\n\n${guidance}\n\n${ANALYSIS_EXTRA}`;
         const raw = await generateAIReply(chatId, prompt, SYSTEM_PROMPT, 3000);
         chatHistory.delete(chatId);
         const reply = sanitizeWhatsAppReply(raw);
-        await msg.reply((name ? `👤 *Report analysis for ${name}*
+        await msg.reply((name ? `👤 *Report analysis for ${name}* (${texts.length} of ${items.length} files read)
 
 ${reply}` : reply) + '\n\n_Ask me anything about this report. Type /done when you have finished so the next member can use the assistant._');
         countAnalysis(sender);

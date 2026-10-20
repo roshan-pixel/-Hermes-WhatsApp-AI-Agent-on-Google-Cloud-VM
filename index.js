@@ -591,7 +591,7 @@ async function buildReportGuidance(reportText) {
     try {
         const tmpId = `guide-select:${Date.now()}-${Math.random().toString(36).slice(2)}`;
         const raw = await generateAIReply(tmpId,
-            `REPORT TEXT:\n${String(reportText).slice(0, 6000)}\n\nCONDITION LIST (id|name):\n${diseaseGuide.catalogText()}\n\n` +
+            `REPORT TEXT:\n${String(reportText).slice(0, 16000)}\n\nCONDITION LIST (id|name):\n${diseaseGuide.catalogText()}\n\n` +
             `Choose the 1 to 3 conditions from the list that the report's abnormal findings most directly point to. If nothing in the report is abnormal or relevant, return an empty ids array. ` +
             `Return ONLY JSON like {"ids":[3,7],"abnormal":["HbA1c 8.4% (high, normal 4-5.6)"],"urgent":""}. "urgent" is a short red-flag note only if a value is dangerously abnormal, otherwise an empty string.`,
             'You are a careful clinical triage assistant. Return ONLY valid JSON.', 600);
