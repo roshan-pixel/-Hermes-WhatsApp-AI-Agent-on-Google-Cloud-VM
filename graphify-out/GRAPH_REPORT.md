@@ -1,7 +1,7 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-21)
 
 ## Corpus Check
-- 54 files · ~86,961 words
+- 54 files · ~87,119 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a04bb776`
+- Built from commit: `a3a1a7f6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -183,7 +183,7 @@ Nodes (3): crypto, fs, path
 
 ### Community 21 - "Message Formatting & Preview Cards"
 Cohesion: 0.20
-Nodes (11): buildEmailConfirmation(), buildEmailPreviewCard(), formatUptime(), getCurrentISTContext(), getLastAssistantReply(), goOffline(), handleIncomingMessage(), processBurstItem() (+3 more)
+Nodes (12): buildEmailConfirmation(), buildEmailPreviewCard(), describeDocument(), formatUptime(), getCurrentISTContext(), getLastAssistantReply(), goOffline(), handleIncomingMessage() (+4 more)
 
 ### Community 22 - "X Thread Publishing Pipeline"
 Cohesion: 0.38
@@ -306,8 +306,8 @@ Cohesion: 0.50
 Nodes (4): fs, path, run(), sendKimi()
 
 ### Community 67 - "Community 67"
-Cohesion: 0.27
-Nodes (11): analyzeImageWithGemini(), analyzeImageWithTencentOCR(), analyzeImageWithTesseract(), cleanOcrText(), describeDocument(), execFileAsync, extractDocumentText(), extractPdfText() (+3 more)
+Cohesion: 0.31
+Nodes (10): analyzeImageWithGemini(), analyzeImageWithTencentOCR(), analyzeImageWithTesseract(), cleanOcrText(), execFileAsync, extractDocumentText(), extractPdfText(), extractReportText() (+2 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.33
