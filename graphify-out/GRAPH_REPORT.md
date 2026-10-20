@@ -1,16 +1,16 @@
-# Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-16)
+# Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-21)
 
 ## Corpus Check
-- 51 files · ~31,929 words
+- 54 files · ~86,961 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 468 nodes · 508 edges · 69 communities (62 shown, 7 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.92)
+- 567 nodes · 642 edges · 79 communities (70 shown, 9 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3bdc5d21`
+- Built from commit: `a04bb776`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -73,18 +73,26 @@
 - [[_COMMUNITY_Community 65|Community 65]]
 - [[_COMMUNITY_Community 67|Community 67]]
 - [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
+- [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 76|Community 76]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `handleIncomingMessage()` - 17 edges
+1. `handleIncomingMessage()` - 19 edges
 2. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
-3. `sendEmail()` - 6 edges
-4. `getImageVisionDescription()` - 6 edges
-5. `saveMediaToCloudStorage()` - 6 edges
-6. `publishAllPosts()` - 6 edges
-7. `🛠️ Core Engineering Highlights` - 6 edges
-8. `wwebjs Monkey Patch Script` - 6 edges
-9. `analyzeImageWithVision()` - 5 edges
-10. `generateAIReply()` - 5 edges
+3. `saveMediaToCloudStorage()` - 10 edges
+4. `runBroadcast()` - 9 edges
+5. `getImageVisionDescription()` - 7 edges
+6. `sendEmail()` - 6 edges
+7. `analyzeImageWithVision()` - 6 edges
+8. `generateAIReply()` - 6 edges
+9. `processBurstItem()` - 6 edges
+10. `publishAllPosts()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `wwebjs Monkey Patch Script` --conceptually_related_to--> `Watchdog Resilience Pattern`  [INFERRED]
@@ -103,11 +111,11 @@
 - **Chromium Runtime Crash Defense System** — index_watchdog, patch_wwebjs_script, patch_framenavigated_guard, patch_evaluate_loop_guards, patch_inject_retry_loop [INFERRED 0.95]
 - **Multi-Factor Whitelist & Persona Isolation Framework** — index_message_handler, readme_whitelist_isolation_matrix, readme_reactive_architecture [INFERRED 0.95]
 
-## Communities (69 total, 7 thin omitted)
+## Communities (79 total, 9 thin omitted)
 
 ### Community 0 - "WhatsApp Client Core Runtime"
 Cohesion: 0.03
-Nodes (62): activePage, AI_PROVIDER, allowedLIDs, allowedNumbers, burst, cached, chatHistory, cleanJson (+54 more)
+Nodes (71): activePage, ADMIN_TOKEN_PATH, AI_PROVIDER, allowedLIDs, allowedNumbers, broadcaster, burst, cached (+63 more)
 
 ### Community 1 - "Project Manifest & Dependencies"
 Cohesion: 0.12
@@ -122,32 +130,28 @@ Cohesion: 0.29
 Nodes (10): Memory Graph Loader, queryChatMemory Function, chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply(), Inbound Message Handler (+2 more)
 
 ### Community 4 - "Chat Memory Graph & Retrieval"
-Cohesion: 0.10
-Nodes (17): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory(), assert, burstResults (+9 more)
+Cohesion: 0.14
+Nodes (11): assert, burstResults, driveInputs, { findRecentEmail }, foundEmail, helpInputs, mediaBursts, path (+3 more)
 
 ### Community 5 - "wwebjs Monkey Patch Engine"
-Cohesion: 0.22
-Nodes (8): clientPath, code, fs, messagePath, msgCode, path, utilsCode, utilsPath
+Cohesion: 0.15
+Nodes (12): c, clientPath, code, cp, end, fs, messagePath, msgCode (+4 more)
 
 ### Community 6 - "Multi-Model AI Pipelines"
-Cohesion: 0.60
-Nodes (5): compactForHistory(), generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply()
+Cohesion: 0.47
+Nodes (6): buildReportGuidance(), compactForHistory(), generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply()
 
 ### Community 7 - "Cloud Vision & Image Perception"
 Cohesion: 0.50
 Nodes (4): analyzeImageWithGemini(), analyzeImageWithVision(), getGCPAccessToken(), getImageVisionDescription()
 
 ### Community 10 - "System Design & Operations Matrix"
-Cohesion: 0.05
-Nodes (39): 1. 100% Purely Reactive Architecture, 1. Provision the Google Cloud Compute Engine VM, 2. High-Resilience 3-Strike Grace Watchdog, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 3. Rapid Debouncer & Real-Time Typing Simulation, 4. 24/7 Presence Engine & Synthetic Focus Simulation, 4. Clone Repository & Setup Environment (+31 more)
-
-### Community 11 - "GCP Compute Engine Deployment"
-Cohesion: 0.29
-Nodes (7): code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" -L 3000), code:block14 (http://localhost:3000/pair-code?phone=918058363027), code:powershell (ssh -i "$env:USERPROFILE\.ssh\google_compute_engine" sgarm@1), Option A: 8-Digit Pairing Code (Recommended - Zero Camera Scanning), Option B: Terminal ASCII QR Code, Option C: Browser Visual QR, 📲 WhatsApp Multi-Device Linking Protocol
+Cohesion: 0.04
+Nodes (47): 1. 100% Purely Reactive Architecture, 1. Provision the Google Cloud Compute Engine VM, 2. High-Resilience 3-Strike Grace Watchdog, 2. Static External IP Reservation, 3. Connect via SSH & Install Dependencies, 3. Rapid Debouncer & Real-Time Typing Simulation, 4. 24/7 Presence Engine & Synthetic Focus Simulation, 4. Clone Repository & Setup Environment (+39 more)
 
 ### Community 12 - "Multimodal Vision & Speech Processing"
-Cohesion: 0.33
-Nodes (7): getAudioTranscription(), getGCPAccessToken(), getGoogleDriveAccessToken(), saveMediaToCloudStorage(), transcribeAudioWithGemini(), transcribeAudioWithSpeech(), uploadToGoogleDrive()
+Cohesion: 0.19
+Nodes (13): analyzeImageWithVision(), getAudioTranscription(), getGCPAccessToken(), getGCSAccessToken(), getGoogleDriveAccessToken(), makeShortLink(), proxyCosObject(), saveMediaToCloudStorage() (+5 more)
 
 ### Community 14 - "Social Media Post Publisher"
 Cohesion: 0.42
@@ -246,8 +250,8 @@ Cohesion: 0.50
 Nodes (4): fs, path, sendKimiCommand(), testThreadBuilding()
 
 ### Community 38 - "Developer Guides & God Nodes"
-Cohesion: 0.50
-Nodes (3): Core System Architecture & God Nodes, Critical Guidelines, Hermes WhatsApp AI Agent - Architecture & System Guide
+Cohesion: 0.40
+Nodes (4): Core System Architecture & God Nodes, Critical Guidelines, Hermes WhatsApp AI Agent - Architecture & System Guide, Newer modules (Oct 2026)
 
 ### Community 40 - "Nodemailer Email Notification Service"
 Cohesion: 0.36
@@ -302,32 +306,60 @@ Cohesion: 0.50
 Nodes (4): fs, path, run(), sendKimi()
 
 ### Community 67 - "Community 67"
-Cohesion: 0.47
-Nodes (6): analyzeImageWithGemini(), analyzeImageWithTesseract(), analyzeImageWithVision(), cleanOcrText(), execFileAsync, getImageVisionDescription()
+Cohesion: 0.27
+Nodes (11): analyzeImageWithGemini(), analyzeImageWithTencentOCR(), analyzeImageWithTesseract(), cleanOcrText(), describeDocument(), execFileAsync, extractDocumentText(), extractPdfText() (+3 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.33
 Nodes (4): b64, dotenv, env, fs
 
+### Community 69 - "Community 69"
+Cohesion: 0.22
+Nodes (9): claim, crypto, fs, header, key, now, signature, signer (+1 more)
+
+### Community 70 - "Community 70"
+Cohesion: 0.20
+Nodes (16): AUTH_DIR, BOT_DIR, loadBroadcast(), LOG, markSent(), members(), notifyOwner(), readJson() (+8 more)
+
+### Community 71 - "Community 71"
+Cohesion: 0.21
+Nodes (9): bestCombination(), fs, guide, guideContext(), LAB_RULES, norm(), path, searchByText() (+1 more)
+
+### Community 72 - "Community 72"
+Cohesion: 0.17
+Nodes (11): dependencies, pino, @whiskeysockets/baileys, description, name, private, scripts, start (+3 more)
+
+### Community 73 - "Community 73"
+Cohesion: 0.29
+Nodes (6): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory()
+
+### Community 74 - "Community 74"
+Cohesion: 0.33
+Nodes (4): crypto, fs, path, SENT_PATH
+
+### Community 75 - "Community 75"
+Cohesion: 0.33
+Nodes (4): fs, MEMBERS_CACHE, MSG, path
+
 ## Knowledge Gaps
-- **250 isolated node(s):** `fs`, `path`, `posts`, `fs`, `path` (+245 more)
+- **296 isolated node(s):** `fs`, `path`, `crypto`, `SENT_PATH`, `fs` (+291 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `client` connect `Chromium Resilience & Watchdog` to `WhatsApp Client Core Runtime`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `findRecentEmail()` connect `Chat Memory Graph & Retrieval` to `WhatsApp Client Core Runtime`, `Message Formatting & Preview Cards`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` connect `System Design & Operations Matrix` to `GCP Compute Engine Deployment`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **What connects `fs`, `path`, `posts` to the rest of the system?**
-  _258 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `findRecentEmail()` connect `Community 73` to `WhatsApp Client Core Runtime`, `Chat Memory Graph & Retrieval`, `Message Formatting & Preview Cards`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **What connects `fs`, `path`, `crypto` to the rest of the system?**
+  _304 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `WhatsApp Client Core Runtime` be split into smaller, more focused modules?**
-  _Cohesion score 0.03076923076923077 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02702702702702703 - nodes in this community are weakly interconnected._
 - **Should `Project Manifest & Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Chat Memory Graph & Retrieval` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Should `System Design & Operations Matrix` be split into smaller, more focused modules?**
+  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._

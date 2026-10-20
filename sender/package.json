@@ -1,0 +1,9 @@
+{
+  "name": "hermes-baileys-sender",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Second linked device (Baileys) used by Hermes to send broadcasts to people the account has never chatted with",
+  "scripts": { "start": "node sender.mjs" },
+  "dependencies": { "@whiskeysockets/baileys": "^7.0.0-rc14", "pino": "^9.0.0" }
+}

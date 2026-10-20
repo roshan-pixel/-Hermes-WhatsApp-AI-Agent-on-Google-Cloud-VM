@@ -248,3 +248,21 @@ if (fs.existsSync(utilsPath)) {
         console.log('[patch-wwebjs] Injected/Utils.js is already patched.');
     }
 }
+
+// 5. Pairing code: use WAWebAltDeviceLinkingApi directly (window.AuthStore is not always injected)
+{
+    const cp = path.join(__dirname, '..', 'node_modules', 'whatsapp-web.js', 'src', 'Client.js');
+    let c = fs.readFileSync(cp, 'utf8');
+    const start = c.indexOf('while (!window.AuthStore.PairingCodeLinkUtils)');
+    const endMarker = 'showNotification,\n                    );';
+    const end = c.indexOf(endMarker, start);
+    if (start !== -1 && end !== -1) {
+        const replacement = `window.require('WAWebAltDeviceLinkingApi').setPairingType('ALT_DEVICE_LINKING');
+                    await window.require('WAWebAltDeviceLinkingApi').initializeAltDeviceLinking();
+                    return window.require('WAWebAltDeviceLinkingApi').startAltLinkingFlow(phoneNumber, showNotification);`;
+        // keep the trailing "};" of getCode: cut through the closing of the return statement
+        c = c.slice(0, start) + replacement + c.slice(end + endMarker.length);
+        fs.writeFileSync(cp, c);
+        console.log('[patch-wwebjs] Patched requestPairingCode to use WAWebAltDeviceLinkingApi directly');
+    }
+}

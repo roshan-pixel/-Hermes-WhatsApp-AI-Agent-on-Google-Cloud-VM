@@ -16,6 +16,18 @@ The agent operates with **zero phone dependency** (runs 24/7 without the physica
 
 ## 🚀 Latest Releases & Engineering Updates
 
+### 🆕 October 2026 update: Tencent Cloud, OCR, report assistant and broadcast
+
+* **Runs on a Tencent Cloud (Lighthouse) VM** with Caddy providing HTTPS; media is stored in **Tencent COS** (50 GB package) instead of Google Cloud Storage. Files open through the bot itself: `/f/<id>` short links and a token-protected `/vault` page.
+* **OCR on Tencent Cloud** (`GeneralBasicOCR`) with local Tesseract as fallback. PDFs: embedded text first (`pdftotext`), scanned PDFs by COS link (small) or rendered pages (large).
+* **Document extraction**: PDF, DOCX/XLSX/PPTX and text files are read and answered in full; follow-up "extract" requests re-read the saved file.
+* **Health report assistant for Mizoram Bonanza members** (`reportBot.js`, `diseaseGuide.js`): a member types `/report`, sends a lab/medical report (PDF or photo), and gets a detailed analysis with the matching AWPL product combination, do's, don'ts and precautions from the disease guide (`data/disease_guide.json`, 139 conditions). One member at a time, report questions only, fixed replies cost no tokens.
+* **Owner-only controls**: `+91 8058363027` is the Hermes owner. Identity is decided by phone number / WhatsApp id only; profile names never grant access.
+* **Broadcast** (`broadcast.js` + `sender/`): the owner types `/broadcast`, sends the message (text and/or video), reviews the preview, and confirms with `/confirm`. It goes to every Mizoram Bonanza member, one at a time, through the Baileys sender, and a completion report comes back to the owner.
+* **Reliability**: graceful shutdown (closes the WhatsApp client cleanly), leftover Chrome cleanup, token usage logging (`[DeepSeek tokens]`).
+* **Security**: no API keys in the code (everything comes from `.env`), runtime data and sessions are git-ignored.
+
+
 | Version / Commit | Focus Area | Architectural Impact & Summary |
 | :--- | :--- | :--- |
 | **`46c1083`** | **100% Reactive Mode** | Completely decommissioned proactive automated morning (6:00 AM IST) and lunch (3:00 PM IST) schedulers. The agent now operates **strictly in reactive mode**: zero unprompted outbound messages. |

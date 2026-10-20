@@ -31,13 +31,162 @@ const HERMES_BASE_URL = process.env.HERMES_BASE_URL || 'https://openrouter.ai/ap
 const HERMES_MODEL = process.env.HERMES_MODEL || 'nousresearch/hermes-3-llama-3.1-8b';
 
 // Google Cloud Platform Settings (Vision, Speech-to-Text & Cloud Storage)
-const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV3SMllSsMvdALP81zmQlrV_9w7k0';
-const GOOGLE_SPEECH_API_KEY = process.env.GOOGLE_SPEECH_API_KEY || process.env.GOOGLE_VISION_API_KEY || 'AIzaSyApaRpV3SMllSsMvdALP81zmQlrV_9w7k0';
+const GOOGLE_VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY || '';
+const GOOGLE_SPEECH_API_KEY = process.env.GOOGLE_SPEECH_API_KEY || process.env.GOOGLE_VISION_API_KEY || '';
 const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'hermes-whatsapp-vault-390608';
+// Tencent Cloud COS (50 GB package) - primary vault when credentials are set
+const COS_SECRET_ID = process.env.COS_SECRET_ID || '';
+const COS_SECRET_KEY = process.env.COS_SECRET_KEY || '';
+const COS_BUCKET = process.env.COS_BUCKET || 'hermes-whatsapp-vault-1498387033';
+const COS_REGION = process.env.COS_REGION || 'ap-singapore';
+const COS_ENABLED = Boolean(COS_SECRET_ID && COS_SECRET_KEY);
 
-// Google Drive Vault Settings (Option B)
+// Pre-signed GET link so files in the private bucket open in a browser (default 30 days)
+const COS_URL_TTL_SECONDS = (parseInt(process.env.COS_URL_TTL_DAYS, 10) || 30) * 86400;
+function signedCosUrl(objectKey) {
+    const crypto = require('crypto');
+    const host = `${COS_BUCKET}.cos.${COS_REGION}.myqcloud.com`;
+    const pathname = `/${objectKey}`;
+    const start = Math.floor(Date.now() / 1000) - 60;
+    const signTime = `${start};${start + COS_URL_TTL_SECONDS}`;
+    const signKey = crypto.createHmac('sha1', COS_SECRET_KEY).update(signTime).digest('hex');
+    const httpString = `get
+${pathname}
+
+
+`;
+    const stringToSign = `sha1
+${signTime}
+${crypto.createHash('sha1').update(httpString).digest('hex')}
+`;
+    const signature = crypto.createHmac('sha1', signKey).update(stringToSign).digest('hex');
+    return `https://${host}${pathname}?q-sign-algorithm=sha1&q-ak=${COS_SECRET_ID}&q-sign-time=${signTime}&q-key-time=${signTime}&q-header-list=&q-url-param-list=&q-signature=${signature}`;
+}
+
+// Short links: WhatsApp gets http://<server>:3000/f/<id>, which redirects to a fresh signed COS URL
+const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
+const SHORT_LINKS_PATH = path.join(__dirname, 'short-links.json');
+let shortLinks = {};
+try { shortLinks = JSON.parse(fs.readFileSync(SHORT_LINKS_PATH, 'utf8')); } catch (_) { /* first run */ }
+function makeShortLink(objectKey) {
+    const id = require('crypto').randomBytes(5).toString('base64url');
+    shortLinks[id] = objectKey;
+    try { fs.writeFileSync(SHORT_LINKS_PATH, JSON.stringify(shortLinks)); } catch (e) { console.warn('[SHORT LINK] could not persist:', e.message); }
+    return `${PUBLIC_BASE_URL}/f/${id}`;
+}
+
+// Vault browser: /vault?t=<token> lists everything in the COS bucket (newest first) with working links.
+const VAULT_TOKEN_PATH = path.join(__dirname, 'vault-token.txt');
+let VAULT_TOKEN = process.env.VAULT_TOKEN || '';
+if (!VAULT_TOKEN) {
+    try { VAULT_TOKEN = fs.readFileSync(VAULT_TOKEN_PATH, 'utf8').trim(); } catch (_) { /* generate below */ }
+}
+if (!VAULT_TOKEN) {
+    VAULT_TOKEN = require('crypto').randomBytes(9).toString('base64url');
+    try { fs.writeFileSync(VAULT_TOKEN_PATH, VAULT_TOKEN, { mode: 0o600 }); } catch (e) { console.warn('[VAULT] could not persist token:', e.message); }
+}
+const VAULT_URL = `${PUBLIC_BASE_URL}/vault?t=${VAULT_TOKEN}`;
+
+async function listCosObjects() {
+    const crypto = require('crypto');
+    const host = `${COS_BUCKET}.cos.${COS_REGION}.myqcloud.com`;
+    const start = Math.floor(Date.now() / 1000) - 60;
+    const signTime = `${start};${start + 600}`;
+    const signKey = crypto.createHmac('sha1', COS_SECRET_KEY).update(signTime).digest('hex');
+    const httpString = `get\n/\n\nhost=${host}\n`;
+    const stringToSign = `sha1\n${signTime}\n${crypto.createHash('sha1').update(httpString).digest('hex')}\n`;
+    const signature = crypto.createHmac('sha1', signKey).update(stringToSign).digest('hex');
+    const authorization = `q-sign-algorithm=sha1&q-ak=${COS_SECRET_ID}&q-sign-time=${signTime}&q-key-time=${signTime}&q-header-list=host&q-url-param-list=&q-signature=${signature}`;
+    const resp = await fetch(`https://${host}/`, { headers: { Authorization: authorization }, signal: AbortSignal.timeout(15000) });
+    if (!resp.ok) throw new Error(`COS list ${resp.status}`);
+    const xml = await resp.text();
+    return [...xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)].map(m => ({
+        key: (m[1].match(/<Key>([^<]*)<\/Key>/) || [])[1] || '',
+        size: parseInt((m[1].match(/<Size>(\d+)<\/Size>/) || [])[1], 10) || 0,
+        modified: (m[1].match(/<LastModified>([^<]*)<\/LastModified>/) || [])[1] || ''
+    })).filter(o => o.key && !o.key.endsWith('/') && !o.key.startsWith('tmp-test/') && o.key !== 'healthcheck.txt')
+       .sort((a, b) => b.modified.localeCompare(a.modified));
+}
+
+async function renderVaultPage() {
+    const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const fmtSize = (n) => n > 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`;
+    const items = await listCosObjects();
+    const rows = items.map(o => {
+        const url = `${PUBLIC_BASE_URL}/vault/file?t=${VAULT_TOKEN}&k=${encodeURIComponent(o.key)}`;
+        const isImg = /\.(jpe?g|png|webp)$/i.test(o.key);
+        return `<a class="item" href="${esc(url)}" target="_blank" rel="noopener">${isImg ? `<img loading="lazy" src="${esc(url)}" alt="">` : '<div class="ico">📄</div>'}<div class="meta"><b>${esc(o.key.split('/').pop())}</b><span>${esc(o.key.split('/')[0])} · ${fmtSize(o.size)}</span></div></a>`;
+    }).join('');
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cloud Vault</title>` +
+        `<style>body{margin:0;font:15px system-ui,sans-serif;background:#0f172a;color:#e2e8f0}h1{padding:20px 16px 4px;margin:0;font-size:22px}p{margin:0 16px 16px;color:#94a3b8}` +
+        `.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:0 16px 24px}.item{display:flex;gap:10px;align-items:center;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px;text-decoration:none;color:inherit}` +
+        `.item:hover{border-color:#38bdf8}.item img,.ico{width:56px;height:56px;border-radius:6px;object-fit:cover;flex:none;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:26px}` +
+        `.meta{display:flex;flex-direction:column;min-width:0}.meta b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.meta span{color:#94a3b8;font-size:12px}</style></head>` +
+        `<body><h1>📁 Cloud Vault</h1><p>${items.length} file(s) in Tencent COS · tap a file to open it</p><div class="grid">${rows || '<p>No files yet.</p>'}</div></body></html>`;
+}
+
+// Stream a COS object through this server (same trusted HTTPS domain), inline and with Range support (iOS PDF/video viewers).
+async function proxyCosObject(req, res, key) {
+    try {
+        const headers = {};
+        if (req.headers.range) headers.Range = req.headers.range;
+        const upstream = await fetch(signedCosUrl(key), { headers, signal: AbortSignal.timeout(120000) });
+        if (!upstream.ok && upstream.status !== 206) {
+            res.writeHead(upstream.status === 404 ? 404 : 502, { 'Content-Type': 'text/plain' });
+            return res.end(upstream.status === 404 ? 'File not found' : 'Storage unavailable');
+        }
+        const out = {
+            'Content-Type': upstream.headers.get('content-type') || 'application/octet-stream',
+            'Content-Disposition': `inline; filename="${path.basename(key)}"`,
+            'Accept-Ranges': 'bytes',
+            'Cache-Control': 'private, max-age=300'
+        };
+        for (const h of ['content-length', 'content-range']) {
+            const v = upstream.headers.get(h);
+            if (v) out[h] = v;
+        }
+        res.writeHead(upstream.status, out);
+        require('stream').Readable.fromWeb(upstream.body).pipe(res);
+    } catch (e) {
+        console.error('[FILE PROXY ERROR]:', e.message);
+        if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('File temporarily unavailable');
+    }
+}
+
+// PUT an object to COS using the q-sign (HMAC-SHA1) header signature. Key must contain only URL-safe characters.
+async function uploadToCOS(buffer, objectKey, contentType) {
+    const crypto = require('crypto');
+    const host = `${COS_BUCKET}.cos.${COS_REGION}.myqcloud.com`;
+    const pathname = `/${objectKey}`;
+    const start = Math.floor(Date.now() / 1000) - 60;
+    const signTime = `${start};${start + 3600}`;
+    const signKey = crypto.createHmac('sha1', COS_SECRET_KEY).update(signTime).digest('hex');
+    const httpString = `put
+${pathname}
+
+host=${host}
+`;
+    const stringToSign = `sha1
+${signTime}
+${crypto.createHash('sha1').update(httpString).digest('hex')}
+`;
+    const signature = crypto.createHmac('sha1', signKey).update(stringToSign).digest('hex');
+    const authorization = `q-sign-algorithm=sha1&q-ak=${COS_SECRET_ID}&q-sign-time=${signTime}&q-key-time=${signTime}&q-header-list=host&q-url-param-list=&q-signature=${signature}`;
+    const resp = await fetch(`https://${host}${pathname}`, {
+        method: 'PUT',
+        headers: { 'Authorization': authorization, 'Content-Type': contentType || 'application/octet-stream' },
+        body: buffer,
+        signal: AbortSignal.timeout(30000)
+    });
+    if (!resp.ok) throw new Error(`COS ${resp.status}: ${(await resp.text()).slice(0, 300)}`);
+    return `https://${host}${pathname}`;
+}
+
+// Google Storage & Drive Vault Settings
 const GOOGLE_DRIVE_KEY_PATH = process.env.GOOGLE_DRIVE_KEY_PATH || path.join(__dirname, 'google-drive-key.json');
 const GOOGLE_DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
+const GCS_KEY_PATH = process.env.GCS_KEY_PATH || path.join(__dirname, 'google-storage-key.json');
 
 let googleDriveKey = null;
 if (fs.existsSync(GOOGLE_DRIVE_KEY_PATH)) {
@@ -46,6 +195,50 @@ if (fs.existsSync(GOOGLE_DRIVE_KEY_PATH)) {
         console.log(`[GOOGLE DRIVE] Loaded Service Account: ${googleDriveKey.client_email}`);
     } catch (e) {
         console.warn('[GOOGLE DRIVE] Could not load service account key:', e.message);
+    }
+}
+
+let googleStorageKey = null;
+if (fs.existsSync(GCS_KEY_PATH)) {
+    try {
+        googleStorageKey = JSON.parse(fs.readFileSync(GCS_KEY_PATH, 'utf8'));
+        console.log(`[CLOUD STORAGE] Loaded Service Account: ${googleStorageKey.client_email}`);
+    } catch (e) {
+        console.warn('[CLOUD STORAGE] Could not load service account key:', e.message);
+    }
+}
+
+async function getGCSAccessToken() {
+    const key = googleStorageKey || googleDriveKey;
+    if (!key) return null;
+    try {
+        const crypto = require('crypto');
+        const now = Math.floor(Date.now() / 1000);
+        const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+        const claim = Buffer.from(JSON.stringify({
+            iss: key.client_email,
+            scope: 'https://www.googleapis.com/auth/devstorage.full_control https://www.googleapis.com/auth/cloud-platform',
+            aud: 'https://oauth2.googleapis.com/token',
+            exp: now + 3600,
+            iat: now
+        })).toString('base64url');
+
+        const signer = crypto.createSign('RSA-SHA256');
+        signer.update(`${header}.${claim}`);
+        const signature = signer.sign(key.private_key, 'base64url');
+        const jwt = `${header}.${claim}.${signature}`;
+
+        const resp = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+        });
+
+        const data = await resp.json();
+        return data.access_token || null;
+    } catch (e) {
+        console.error('[CLOUD STORAGE AUTH ERROR]:', e.message);
+        return null;
     }
 }
 
@@ -71,6 +264,10 @@ async function getGCPAccessToken() {
 const OCR_MAX_CHARS = 4000;
 const HISTORY_MSG_MAX_CHARS = 400;
 const REPLY_MAX_TOKENS = 350;
+const REPLY_MAX_TOKENS_DOC = 3000; // extraction replies need room for the full details
+const DOC_DETAIL_INSTRUCTION = `
+
+[EXTRACTION DETAIL RULES: This is a document extraction. Give the COMPLETE useful content, not a short summary: every party/person name, ID number, date, amount, address, clause, term, condition and signature detail found in the text, organized under clear *bold* section headings with • bullets. Keep the original wording and numbers. Fix only obvious OCR typos. Cover all pages. Do not stop early or shorten; the user wants most of the information.]`;
 
 /**
  * Cleans raw OCR output (collapses whitespace/noise, dedupes lines) and truncates it
@@ -111,6 +308,10 @@ function cleanOcrText(raw) {
  */
 function compactForHistory(msg) {
     const text = String(msg || '');
+    if (text.startsWith('[DOCUMENT TEXT EXTRACTED')) {
+        const docName = (text.match(/^\[DOCUMENT TEXT EXTRACTED from "([^"]*)"/) || [])[1] || 'document';
+        return `[User sent document "${docName}"; text: "${text.slice(0, 600).replace(/\s+/g, ' ')}…"]`;
+    }
     const burstCount = (text.match(/^\[MEDIA BURST: (\d+) /) || [])[1];
     if (burstCount) return `[User sent ${burstCount} photos/documents at once. One combined summary was given.]`;
     if (text.startsWith('[IMAGE RECEIVED')) {
@@ -147,7 +348,7 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
         if (GOOGLE_VISION_API_KEY) {
             apiUrl += `?key=${GOOGLE_VISION_API_KEY}`;
         } else {
-            const accessToken = (googleDriveKey ? await getGoogleDriveAccessToken() : null) || await getGCPAccessToken();
+            const accessToken = (await getGCSAccessToken()) || (await getGCPAccessToken());
             if (accessToken) {
                 headers['Authorization'] = `Bearer ${accessToken}`;
             } else {
@@ -229,6 +430,202 @@ async function analyzeImageWithVision(base64Data, mimeType = 'image/jpeg') {
  * Local Offline OCR Engine powered by Tesseract
  * Bulletproof fallback when cloud vision APIs hit high demand or network spikes.
  */
+// Tencent Cloud OCR (GeneralBasicOCR). Uses the same API key pair as COS unless TENCENT_SECRET_* are set.
+const TENCENT_OCR_ID = process.env.TENCENT_SECRET_ID || COS_SECRET_ID;
+const TENCENT_OCR_KEY = process.env.TENCENT_SECRET_KEY || COS_SECRET_KEY;
+const TENCENT_OCR_ENABLED = Boolean(TENCENT_OCR_ID && TENCENT_OCR_KEY) && process.env.TENCENT_OCR !== 'off';
+async function tencentOcrRaw(base64Data, extra = {}) {
+    try {
+        const crypto = require('crypto');
+        const host = process.env.TENCENT_OCR_HOST || 'ocr.intl.tencentcloudapi.com';
+        const service = 'ocr', action = 'GeneralBasicOCR';
+        const payload = JSON.stringify({ ...(base64Data ? { ImageBase64: base64Data } : {}), LanguageType: 'auto', ...extra });
+        const ts = Math.floor(Date.now() / 1000);
+        const date = new Date(ts * 1000).toISOString().slice(0, 10);
+        const sha = (x) => crypto.createHash('sha256').update(x).digest('hex');
+        const hmac = (k, x) => crypto.createHmac('sha256', k).update(x).digest();
+        const canonical = `POST\n/\n\ncontent-type:application/json; charset=utf-8\nhost:${host}\nx-tc-action:${action.toLowerCase()}\n\ncontent-type;host;x-tc-action\n${sha(payload)}`;
+        const scope = `${date}/${service}/tc3_request`;
+        const stringToSign = `TC3-HMAC-SHA256\n${ts}\n${scope}\n${sha(canonical)}`;
+        const signKey = hmac(hmac(hmac('TC3' + TENCENT_OCR_KEY, date), service), 'tc3_request');
+        const signature = crypto.createHmac('sha256', signKey).update(stringToSign).digest('hex');
+        const resp = await fetch(`https://${host}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `TC3-HMAC-SHA256 Credential=${TENCENT_OCR_ID}/${scope}, SignedHeaders=content-type;host;x-tc-action, Signature=${signature}`,
+                'Content-Type': 'application/json; charset=utf-8',
+                'X-TC-Action': action,
+                'X-TC-Version': '2018-11-19',
+                'X-TC-Timestamp': String(ts),
+                'X-TC-Region': process.env.TENCENT_OCR_REGION || 'ap-singapore'
+            },
+            body: payload,
+            signal: AbortSignal.timeout(15000)
+        });
+        const data = (await resp.json()).Response || {};
+        if (data.Error) {
+            console.warn(`[Tencent OCR] ${data.Error.Code}: ${data.Error.Message}`);
+            return null;
+        }
+        return (data.TextDetections || []).map(t => t.DetectedText).join('\n').trim();
+    } catch (err) {
+        console.warn('[Tencent OCR Warn]:', err.message);
+    }
+    return null;
+}
+
+async function analyzeImageWithTencentOCR(base64Data) {
+    const text = await tencentOcrRaw(base64Data);
+    if (text && text.length > 10) {
+        return `[IMAGE RECEIVED - TENCENT CLOUD OCR TRANSCRIPTION]:\n${cleanOcrText(text)}`;
+    }
+    return null;
+}
+
+// Extract readable text from a received document (PDF via Tencent OCR page by page, DOCX/XLSX/PPTX via unzip, plain text).
+const DOC_MAX_PDF_PAGES = parseInt(process.env.DOC_MAX_PDF_PAGES, 10) || 8;
+// PDF text: embedded text layer first (pdftotext). Scanned PDFs are OCR'd by Tencent: small files by passing the COS link
+// (no upload of the file contents), large files by rendering pages to JPEG (pdftoppm) and sending those.
+const PDF_LINK_OCR_MAX_BYTES = 6 * 1024 * 1024; // Tencent rejects larger files fetched by URL
+async function extractPdfText(buffer, base64Data, cloudUrl) {
+    const base = path.join(os.tmpdir(), `pdf_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+    const pdfPath = `${base}.pdf`;
+    const lastPage = String(DOC_MAX_PDF_PAGES);
+    await fs.promises.writeFile(pdfPath, buffer);
+    const ocrInBatches = async (count, ocrPage) => {
+        const pages = [];
+        for (let i = 0; i < count; i += 3) {
+            const batch = Array.from({ length: Math.min(3, count - i) }, (_, k) => i + k + 1);
+            const texts = await Promise.all(batch.map(ocrPage));
+            texts.forEach((text, k) => { if (text) pages.push(`--- Page ${batch[k]} ---\n${text}`); });
+        }
+        return pages.length ? pages.join('\n\n') : null;
+    };
+    try {
+        try {
+            const { stdout } = await execFileAsync('pdftotext', ['-layout', '-l', lastPage, pdfPath, '-'], { timeout: 20000, maxBuffer: 20 * 1024 * 1024 });
+            if (stdout.replace(/\s/g, '').length >= 80) return stdout.trim();
+            if (!TENCENT_OCR_ENABLED) return null;
+
+            let pageCount = DOC_MAX_PDF_PAGES;
+            try {
+                const info = (await execFileAsync('pdfinfo', [pdfPath], { timeout: 10000 })).stdout.match(/^Pages:\s+(\d+)/m);
+                if (info) pageCount = Math.min(parseInt(info[1], 10), DOC_MAX_PDF_PAGES);
+            } catch (_) { /* keep default */ }
+
+            if (cloudUrl && buffer.length <= PDF_LINK_OCR_MAX_BYTES) {
+                console.log(`[DOC EXTRACT] Scanned PDF: OCR via COS link (${pageCount} pages)`);
+                const viaLink = await ocrInBatches(pageCount, (page) => tencentOcrRaw(null, { ImageUrl: cloudUrl, IsPdf: true, PdfPageNumber: page }));
+                if (viaLink) return viaLink;
+            }
+
+            console.log(`[DOC EXTRACT] Scanned PDF: rendering ${pageCount} pages for OCR`);
+            await execFileAsync('pdftoppm', ['-jpeg', '-r', '110', '-l', String(pageCount), pdfPath, base], { timeout: 90000 });
+            const prefix = `${path.basename(base)}-`;
+            const pageFiles = (await fs.promises.readdir(os.tmpdir())).filter(f => f.startsWith(prefix) && f.endsWith('.jpg')).sort();
+            try {
+                return await ocrInBatches(pageFiles.length, async (page) => {
+                    const img = (await fs.promises.readFile(path.join(os.tmpdir(), pageFiles[page - 1]))).toString('base64');
+                    return tencentOcrRaw(img);
+                });
+            } finally {
+                for (const f of pageFiles) fs.promises.unlink(path.join(os.tmpdir(), f)).catch(() => {});
+            }
+        } catch (err) {
+            if (err.code !== 'ENOENT') throw err;
+            console.warn('[DOC EXTRACT] poppler-utils not installed, sending PDF directly to Tencent OCR');
+        }
+        if (!TENCENT_OCR_ENABLED || base64Data.length > 9 * 1024 * 1024) return null;
+        return await ocrInBatches(DOC_MAX_PDF_PAGES, (page) => tencentOcrRaw(base64Data, { IsPdf: true, PdfPageNumber: page }));
+    } finally {
+        fs.promises.unlink(pdfPath).catch(() => {});
+    }
+}
+
+async function extractDocumentText(base64Data, mimeType, filename, cloudUrl) {
+    const mime = (mimeType || '').toLowerCase();
+    const name = (filename || '').toLowerCase().trim();
+    try {
+        const buffer = Buffer.from(base64Data, 'base64');
+        if (mime.includes('pdf') || name.endsWith('.pdf')) {
+            return await extractPdfText(buffer, base64Data, cloudUrl);
+        }
+        if (name.endsWith('.docx') || name.endsWith('.xlsx') || name.endsWith('.pptx') || mime.includes('officedocument')) {
+            const inner = name.endsWith('.xlsx') ? 'xl/sharedStrings.xml' : name.endsWith('.pptx') ? 'ppt/slides/slide*.xml' : 'word/document.xml';
+            const tmp = path.join(os.tmpdir(), `doc_${Date.now()}_${Math.random().toString(36).slice(2)}${path.extname(name) || '.zip'}`);
+            await fs.promises.writeFile(tmp, buffer);
+            try {
+                const { stdout } = await execFileAsync('unzip', ['-p', tmp, inner], { timeout: 15000, maxBuffer: 20 * 1024 * 1024 });
+                return stdout.replace(/<\/(w:p|a:p|si)>/g, '\n').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim() || null;
+            } finally {
+                fs.promises.unlink(tmp).catch(() => {});
+            }
+        }
+        if (mime.startsWith('text/') || /\.(txt|csv|md|json)$/.test(name)) {
+            return buffer.toString('utf8').trim() || null;
+        }
+    } catch (err) {
+        console.warn('[DOC EXTRACT Warn]:', err.message);
+    }
+    return null;
+}
+
+// ─── Disease guide: medical report -> best product combination with do's and don'ts ───
+const diseaseGuide = require('./diseaseGuide');
+const REPORT_MARK = '[REPORT GUIDANCE]';
+const REPORT_GUIDANCE_RULES = `[REPORT GUIDANCE RULES]
+You are writing a WhatsApp reply for a wellness-product guide, based ONLY on the report text above and the matched guide data above.
+1. Start with a short "📋 Report summary": list the abnormal values (value vs normal range, marked high/low). Do not invent values that are not in the report.
+2. "🩺 What it may indicate": name the matched conditions in plain words. Say "may indicate / is consistent with", never "you have". This is guidance, not a diagnosis.
+3. "💊 Best product combination": recommend ONLY the products listed under BEST PRODUCT COMBINATION, with their exact dosage and timing. Never invent products, ingredients, doses or claims. Never say a product cures, treats or reverses a disease; say it "supports" wellness.
+4. "✅ Do" and "❌ Don't": use the DO and DON'T lists above (pick the most relevant, short bullets).
+5. "⚠️ See a doctor": always tell them to continue prescribed medicines (never stop or replace them), to show this plan to their doctor before starting, and to seek urgent medical care for red-flag signs (chest pain, breathlessness, very high or low sugar, fainting, severe pain, bleeding, very abnormal results). If the report itself looks critical, say this first.
+6. Use *single asterisk* bold and • bullets only, no tables or markdown headers. Reply in the user's language (Hindi/Hinglish if they wrote Hindi). Include all the useful detail but keep each bullet to one line.
+7. End with one line: "This is general wellness guidance, not a medical diagnosis or a substitute for your doctor's advice."`;
+
+async function buildReportGuidance(reportText) {
+    if (!diseaseGuide.count()) return null;
+    let diseases = [];
+    let abnormal = [];
+    let urgent = '';
+    try {
+        const tmpId = `guide-select:${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const raw = await generateAIReply(tmpId,
+            `REPORT TEXT:\n${String(reportText).slice(0, 6000)}\n\nCONDITION LIST (id|name):\n${diseaseGuide.catalogText()}\n\n` +
+            `Choose the 1 to 3 conditions from the list that the report's abnormal findings most directly point to. If nothing in the report is abnormal or relevant, return an empty ids array. ` +
+            `Return ONLY JSON like {"ids":[3,7],"abnormal":["HbA1c 8.4% (high, normal 4-5.6)"],"urgent":""}. "urgent" is a short red-flag note only if a value is dangerously abnormal, otherwise an empty string.`,
+            'You are a careful clinical triage assistant. Return ONLY valid JSON.', 600);
+        chatHistory.delete(tmpId);
+        const parsed = JSON.parse((String(raw).match(/\{[\s\S]*\}/) || ['{}'])[0]);
+        diseases = (parsed.ids || []).map(id => diseaseGuide.getDisease(id)).filter(Boolean).slice(0, 3);
+        abnormal = Array.isArray(parsed.abnormal) ? parsed.abnormal.slice(0, 15) : [];
+        urgent = typeof parsed.urgent === 'string' ? parsed.urgent : '';
+    } catch (e) {
+        console.warn('[REPORT GUIDANCE] condition selection failed, using keyword match:', e.message);
+    }
+    if (!diseases.length) diseases = diseaseGuide.searchByText(reportText, 3);
+    if (!diseases.length) return null;
+    console.log(`[REPORT GUIDANCE] Matched: ${diseases.map(d => d.name).join(', ')}`);
+    return `${REPORT_MARK}\n` +
+        (abnormal.length ? `ABNORMAL FINDINGS (from the report): ${abnormal.join('; ')}\n` : '') +
+        (urgent ? `RED FLAG: ${urgent}\n` : '') +
+        `${diseaseGuide.guideContext(diseases)}\n\n${REPORT_GUIDANCE_RULES}`;
+}
+
+const DISEASE_QUERY_RE = /\b(products?|medicines?|dawai|dawa|upay|ilaj|treatment|guide|suggest|recommend|kya le|kya lu|kaun sa)\b/i;
+
+async function describeDocument(base64Data, mimeType, filename, cloudUrl) {
+    const startedAt = Date.now();
+    const text = await extractDocumentText(base64Data, mimeType, filename, cloudUrl);
+    const seconds = ((Date.now() - startedAt) / 1000).toFixed(1);
+    if (!text) {
+        console.log(`[DOCUMENT] No text extracted from "${filename || 'document'}" after ${seconds}s.`);
+        return null;
+    }
+    console.log(`[DOCUMENT] Extracted ${text.length} chars from "${filename || 'document'}" in ${seconds}s.`);
+    return `[DOCUMENT TEXT EXTRACTED from "${filename || 'Document'}"]:\n${text.slice(0, 12000)}${text.length > 12000 ? '\n...[truncated]' : ''}`;
+}
+
 async function analyzeImageWithTesseract(base64Data) {
     let tmpPath = null;
     try {
@@ -308,22 +705,22 @@ async function analyzeImageWithGemini(base64Data, mimeType = 'image/jpeg') {
  * 3. Google Cloud Vision API fallback
  */
 async function getImageVisionDescription(base64Data, mimeType = 'image/jpeg') {
-    if (GEMINI_API_KEY) {
-        console.log('[Vision Engine] Processing image with Gemini Multimodal Vision...');
-        const geminiResult = await analyzeImageWithGemini(base64Data, mimeType);
-        if (geminiResult) return geminiResult;
+    // OCR chain: Tencent Cloud OCR first, local Tesseract as fallback (Google Vision and Gemini vision removed)
+    if (TENCENT_OCR_ENABLED) {
+        console.log('[Vision Engine] Trying Tencent Cloud OCR...');
+        const tencentResult = await analyzeImageWithTencentOCR(base64Data);
+        if (tencentResult) {
+            console.log('[Vision Engine] Tencent Cloud OCR successfully extracted text.');
+            return tencentResult;
+        }
+        console.log('[Vision Engine] Tencent OCR returned no text. Falling back to Local Tesseract OCR...');
     }
 
-    console.log('[Vision Engine] Gemini busy or unavailable. Falling back to Local Tesseract OCR...');
     const tesseractResult = await analyzeImageWithTesseract(base64Data);
     if (tesseractResult) {
         console.log('[Vision Engine] Local Tesseract OCR successfully extracted text.');
         return tesseractResult;
     }
-
-    console.log('[Vision Engine] Trying Google Cloud Vision API fallback...');
-    const visionResult = await analyzeImageWithVision(base64Data, mimeType);
-    if (visionResult) return visionResult;
 
     return '[IMAGE RECEIVED]: An image file was received, but automated text extraction could not detect distinct characters.';
 }
@@ -604,18 +1001,11 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
 
         const cleanSender = String(sender).replace(/[^\w]/g, '_');
         const fileName = `${dateFolder}/${cleanSender}_${timestamp}.${ext}`;
-        const localDir = path.join(__dirname, 'saved-media', dateFolder);
-
-        if (!fs.existsSync(localDir)) {
-            fs.mkdirSync(localDir, { recursive: true });
-        }
-
         const localFilePath = path.join(__dirname, 'saved-media', fileName);
         const buffer = Buffer.from(base64Data, 'base64');
-        fs.writeFileSync(localFilePath, buffer);
-        console.log(`[CLOUD VAULT] Saved local archive: ${localFilePath} (~${Math.round(buffer.length / 1024)} KB)`);
 
         let gcsUrl = null;
+        let cosSignedUrl = null;
         let driveUrl = null;
 
         // 1. Google Drive Upload (Option B)
@@ -628,10 +1018,22 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
             }
         }
 
-        // 2. Google Cloud Storage Bucket Upload
-        if (GCS_BUCKET_NAME) {
+        // 2. Tencent COS upload (primary cloud vault)
+        if (COS_ENABLED) {
+            try {
+                await uploadToCOS(buffer, fileName, cleanMime.split(';')[0]);
+                cosSignedUrl = signedCosUrl(fileName);
+                gcsUrl = makeShortLink(fileName);
+                console.log(`[TENCENT COS] Successfully uploaded to cos://${COS_BUCKET}/${fileName}`);
+            } catch (e) {
+                console.warn('[TENCENT COS] Upload failed:', e.message);
+            }
+        }
+
+        // 3. Google Cloud Storage Bucket Upload (fallback when COS is not configured)
+        if (!COS_ENABLED && GCS_BUCKET_NAME) {
             // Prefer service account key token (has Storage Admin); fall back to GCE metadata token
-            const accessToken = (googleDriveKey ? await getGoogleDriveAccessToken() : null) || await getGCPAccessToken();
+            const accessToken = (await getGCSAccessToken()) || (await getGCPAccessToken());
             if (accessToken) {
                 const uploadUrl = `https://storage.googleapis.com/upload/storage/v1/b/${GCS_BUCKET_NAME}/o?uploadType=media&name=${encodeURIComponent(fileName)}`;
                 const uploadResp = await fetch(uploadUrl, {
@@ -652,15 +1054,25 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
                     console.warn(`[CLOUD STORAGE] Upload response status ${uploadResp.status}:`, errText);
                 }
             } else {
-                console.log(`[CLOUD VAULT] GCE metadata token not present (local dev). Local copy stored safely at ${localFilePath}`);
+                console.log(`[CLOUD VAULT] GCE metadata token not present (local dev). Local fallback copy will be kept`);
             }
+        }
+
+        // Files go straight to the cloud; keep a local copy only when no cloud upload succeeded
+        let localPath = null;
+        if (!(COS_ENABLED && gcsUrl)) {
+            fs.mkdirSync(path.dirname(localFilePath), { recursive: true });
+            fs.writeFileSync(localFilePath, buffer);
+            localPath = localFilePath;
+            console.log(`[CLOUD VAULT] Cloud upload unavailable, saved local archive: ${localFilePath} (~${Math.round(buffer.length / 1024)} KB)`);
         }
 
         return {
             saved: true,
             fileName: fileName,
-            localPath: localFilePath,
+            localPath: localPath,
             gcsUrl: gcsUrl,
+            cosSignedUrl: cosSignedUrl,
             driveUrl: driveUrl
         };
     } catch (e) {
@@ -854,6 +1266,9 @@ async function getDeepSeekReply(chatId, userMessage, customSystemPrompt = null, 
 
         const data = await resp.json();
         const replyText = data.choices?.[0]?.message?.content?.trim() || "Message received!";
+        if (data.usage) {
+            console.log(`[DeepSeek tokens] in=${data.usage.prompt_tokens} out=${data.usage.completion_tokens} cached=${data.usage.prompt_cache_hit_tokens || 0} (${String(chatId).split(':')[0].replace(/[0-9]{6,}.*/, 'chat')})`);
+        }
         
         history[history.length - 1] = { role: 'user', content: compactForHistory(userMessage) };
         history.push({ role: 'assistant', content: replyText });
@@ -1049,7 +1464,7 @@ async function robustDownloadMedia(client, msg) {
                 // Check if there's a blob URL already in the renderer
                 let blobUrl = null;
                 if (waMsg.mediaData && waMsg.mediaData.mediaBlob) {
-                    blobUrl = URL.createObjectURL(waMsg.mediaData.mediaBlob);
+                    try { blobUrl = URL.createObjectURL(waMsg.mediaData.mediaBlob); } catch (e) { blobUrl = null; } // not a real Blob (e.g. a video you sent yourself): fall through to the direct download
                 } else if (waMsg.clientUrl && waMsg.clientUrl.startsWith('blob:')) {
                     blobUrl = waMsg.clientUrl;
                 }
@@ -1070,7 +1485,8 @@ async function robustDownloadMedia(client, msg) {
                     try { return WA('WAWebDownloadManager'); } catch(e) { return null; }
                 })();
                 if (DownloadManager && DownloadManager.downloadAndMaybeDecrypt) {
-                    const blob = await DownloadManager.downloadAndMaybeDecrypt({ msg: waMsg, signal: null });
+                    let blob = null;
+                    try { blob = await DownloadManager.downloadAndMaybeDecrypt({ msg: waMsg, signal: null }); } catch (e) { blob = null; }
                     if (blob) {
                         const arrayBuf = await blob.arrayBuffer();
                         const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuf)));
@@ -1176,6 +1592,14 @@ const CHROME_PATH = process.env.PUPPETEER_EXECUTABLE_PATH ||
     (fs.existsSync('/usr/local/bin/google-chrome-stable') ? '/usr/local/bin/google-chrome-stable' :
     (fs.existsSync('/home/sgarm/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome') ? '/home/sgarm/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome' : undefined));
 
+// A previous Chrome still running on the same profile corrupts the WhatsApp login (WhatsApp then logs the device out),
+// so stop any leftover instance before starting a new one.
+try {
+    require('child_process').execFileSync('pkill', ['-f', '--', `--user-data-dir=${path.join(__dirname, '.wwebjs_auth', 'session')}`], { stdio: 'ignore' });
+    console.log('[CLEANUP] Stopped a leftover Chrome using the WhatsApp profile');
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2500);
+} catch (_) { /* none running */ }
+
 // Clean up any stale Chromium locks left from previous restarts/crashes
 const sessionDir = path.join(__dirname, '.wwebjs_auth', 'session');
 ['SingletonLock', 'SingletonSocket', 'SingletonCookie'].forEach(f => {
@@ -1225,8 +1649,8 @@ client.on('qr', async (qr) => {
     try {
         currentQRDataUrl = await QRCode.toDataURL(qr, { margin: 2, scale: 8 });
         currentQRSVG = await QRCode.toString(qr, { type: 'svg', margin: 2 });
-        fs.writeFileSync('/home/sgarm/whatsapp-agent/current_qr.txt', qr);
-        fs.writeFileSync('/home/sgarm/whatsapp-agent/current_qr.svg', currentQRSVG);
+        fs.writeFileSync('/home/ubuntu/hermes-whatsapp-agent/current_qr.txt', qr);
+        fs.writeFileSync('/home/ubuntu/hermes-whatsapp-agent/current_qr.svg', currentQRSVG);
     } catch (err) {
         console.error('Error generating QR image:', err);
     }
@@ -1292,6 +1716,18 @@ client.on('auth_failure', (msg) => {
     console.error('[AUTH ERROR] Authentication failure:', msg);
 });
 
+// Graceful shutdown (pm2 restart/stop): let WhatsApp Web close and flush the saved login before exiting
+let shuttingDown = false;
+for (const sig of ['SIGINT', 'SIGTERM']) {
+    process.on(sig, async () => {
+        if (shuttingDown) return;
+        shuttingDown = true;
+        console.log(`[SHUTDOWN] ${sig} received, closing WhatsApp client...`);
+        try { await Promise.race([client.destroy(), new Promise(r => setTimeout(r, 6000))]); } catch (_) { /* ignore */ }
+        process.exit(0);
+    });
+}
+
 client.on('disconnected', (reason) => {
     clientStatus = 'DISCONNECTED';
     console.warn('[DISCONNECTED] Client was disconnected:', reason);
@@ -1309,6 +1745,11 @@ const pendingEmailDrafts = new Map(); // sender -> { subject, body, effectiveSto
 const enqueueChatTask = createSequentialQueue();
 const seenMessageIds = new Set();
 
+// Your own messages (e.g. the broadcast you send to yourself) do not trigger 'message', only 'message_create'
+client.on('message_create', (msg) => {
+    try { if (msg && msg.fromMe) broadcaster.record(msg); } catch (_) { /* ignore */ }
+});
+
 client.on('message', (msg) => {
     if (!msg || !msg.from) return;
     const msgId = msg.id && msg.id._serialized;
@@ -1316,6 +1757,12 @@ client.on('message', (msg) => {
         if (seenMessageIds.has(msgId)) return; // duplicate event -> no duplicate reply
         seenMessageIds.add(msgId);
         if (seenMessageIds.size > 500) seenMessageIds.delete(seenMessageIds.values().next().value);
+    }
+    // While /broadcast is waiting for the message, the owner's next message (text/video/photo) is the broadcast itself
+    if (!msg.fromMe && broadcaster.isAwaiting(msg.from) && broadcaster.collect(msg)) return;
+    // Remember what the owner sends (text, video, photo) so /broadcast can forward it later
+    if (!msg.fromMe && ['254975783530728@lid', '257487752175866@lid', '918529911832@c.us', '918058363027@c.us'].includes(msg.from)) {
+        broadcaster.record(msg);
     }
     // Photos/documents are buffered per sender so a burst gets ONE combined reply.
     if (!msg.fromMe && msg.hasMedia && ['image', 'document'].includes(msg.type)) {
@@ -1346,7 +1793,7 @@ const STATUS_RE = /^\s*(\/?status|\/?ping|\/?health)[.!?,]*\s*$/i;
 const DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1g_P5pR04n6VDqO1iZQGYfJf-Pvj8T05r';
 
 function isInstantCommand(text) {
-    return [RESET_RE, DRIVE_RE, HELP_RE, STATUS_RE].some(re => re.test(text || ''));
+    return [RESET_RE, DRIVE_RE, HELP_RE, STATUS_RE, /^\s*\/(broadcast|confirm|cancel|report|done)\b/i].some(re => re.test(text || ''));
 }
 
 function formatUptime(totalSeconds) {
@@ -1393,7 +1840,8 @@ async function processBurstItem(m, sender) {
             desc = await withTimeout(getImageVisionDescription(media.data, media.mimetype), 35000, 'Vision analysis',
                 '[IMAGE RECEIVED]: vision analysis timed out.');
         } else {
-            desc = `[DOCUMENT]: "${media.filename || 'Document'}" (${media.mimetype}) received and archived.`;
+            desc = await withTimeout(describeDocument(media.data, media.mimetype, media.filename, storageInfo?.cosSignedUrl || null), 120000, 'Document extraction', null)
+                || `[DOCUMENT]: "${media.filename || 'Document'}" (${media.mimetype}) received and archived (no readable text found).`;
         }
         if (caption) desc += `\n[USER CAPTION ON THIS ITEM]: "${caption}"`;
         return { desc, storageInfo };
@@ -1402,6 +1850,47 @@ async function processBurstItem(m, sender) {
         return { desc: '[media processing failed]', storageInfo: null };
     }
 }
+
+// ─── Mizoram Bonanza report assistant (/report): report-only, members of the Mizoram Bonanza list ───
+async function extractReportText(media) {
+    const mime = (media.mimetype || '').toLowerCase();
+    if (mime.startsWith('image/')) {
+        const viaTencent = TENCENT_OCR_ENABLED ? await tencentOcrRaw(media.data) : null;
+        if (viaTencent && viaTencent.length > 10) return viaTencent;
+        const viaTesseract = await analyzeImageWithTesseract(media.data);
+        return viaTesseract ? viaTesseract.replace(/^\[[^\]]*\]:\n?/, '') : null;
+    }
+    if (mime.includes('pdf') || /\.pdf$/i.test(media.filename || '')) {
+        return extractDocumentText(media.data, media.mimetype, media.filename, null); // in memory only, never stored
+    }
+    return null;
+}
+
+const reportBot = require('./reportBot').createReportBot({
+    client,
+    generateAIReply,
+    chatHistory,
+    sanitizeWhatsAppReply,
+    extractReportText,
+    buildReportGuidance,
+    diseaseGuide,
+    REPORT_MARK,
+    downloadMedia: (m) => withTimeout(robustDownloadMedia(client, m), 45000, 'Media download', null)
+});
+
+const ADMIN_TOKEN_PATH = path.join(__dirname, 'data', 'admin-token.txt');
+let ADMIN_TOKEN = '';
+try { ADMIN_TOKEN = fs.readFileSync(ADMIN_TOKEN_PATH, 'utf8').trim(); } catch (_) { /* generate below */ }
+if (!ADMIN_TOKEN) {
+    ADMIN_TOKEN = require('crypto').randomBytes(16).toString('base64url');
+    try { fs.mkdirSync(path.dirname(ADMIN_TOKEN_PATH), { recursive: true }); fs.writeFileSync(ADMIN_TOKEN_PATH, ADMIN_TOKEN, { mode: 0o600 }); } catch (e) { console.warn('[ADMIN] could not persist token:', e.message); }
+}
+const broadcaster = require('./broadcast').createBroadcaster({
+    client,
+    MessageMedia: require('whatsapp-web.js').MessageMedia,
+    downloadMedia: (m) => withTimeout(robustDownloadMedia(client, m), 60000, 'Media download', null),
+    listMembers: () => reportBot.listMembers()
+});
 
 async function handleIncomingMessage(msg, opts = {}) {
     if (msg.from === 'status@broadcast') return;
@@ -1452,33 +1941,41 @@ async function handleIncomingMessage(msg, opts = {}) {
         } catch(e) {}
     }
 
-    const isRoshan = sender === '254975783530728@lid' ||
-                     sender === '257487752175866@lid' ||
-                     sender.includes('8529911832') ||
-                     sender.includes('8058363027') ||
-                     contactNum.includes('8529911832') ||
-                     contactNum.includes('8058363027') ||
-                     chatTitle.toLowerCase().includes('roshan') ||
-                     chatTitle.toLowerCase().includes('jhotwara') ||
-                     contactName.toLowerCase().includes('roshan') ||
-                     contactName.toLowerCase().includes('jhotwara');
+    // Identity is decided ONLY by phone number / WhatsApp id. Names (WhatsApp profile names are chosen by the sender) never grant access.
+    // OWNER of Hermes: +91 8058363027 (the only person with owner powers: full assistant, /broadcast, email, drive, admin).
+    const isOwner = sender === '257487752175866@lid' ||
+                    sender.includes('8058363027') ||
+                    contactNum.includes('8058363027');
+    const isRoshan = isOwner;   // owner persona/prompt (name kept for the existing code paths)
 
     const isDilip = sender === '237413007929354@lid' ||
                     sender.includes('9549477444') ||
-                    contactNum.includes('9549477444') ||
-                    chatTitle.toLowerCase().includes('dilip') ||
-                    contactName.toLowerCase().includes('dilip');
+                    contactNum.includes('9549477444');
 
     const isMother = sender.includes('7976765590') ||
                      contactNum.includes('7976765590');
 
-    const isUserTester = sender === '257487752175866@lid' ||
-                         sender.includes('8058363027') ||
-                         contactNum.includes('8058363027') ||
-                         chatTitle.toLowerCase().includes('jhotwara') ||
-                         contactName.toLowerCase().includes('jhotwara');
+    const isUserTester = isOwner;
 
-    const isAllowed = isRoshan || isDilip || isMother || isUserTester;
+    const isAllowed = isOwner || isDilip || isMother;
+
+    // Owner-only broadcast to the Mizoram Bonanza members (/broadcast -> preview, /confirm -> send, /cancel)
+    const isOwnerStrict = isOwner;
+    if (isOwnerStrict && !hasMedia && broadcaster.isCommand(incomingText) &&
+        (!/^\/cancel\b/i.test(incomingText.trim()) || broadcaster.hasActive())) {
+        await broadcaster.handle(msg, sender, incomingText);
+        await goOffline(null);
+        return;
+    }
+
+    // Report assistant: members of the Mizoram Bonanza list get ONLY this (strict guard rail); the owner's contacts
+    // can try it with /report and stay in it until /done or the session expires.
+    const reportMember = !isOwner && reportBot.isMember(contactNum);
+    if (reportMember || (isAllowed && (/^\/report\b/i.test(incomingText) || reportBot.hasSession(sender)))) {
+        await reportBot.handle(msg, { sender, phone: contactNum, incomingText, hasMedia, items: opts.burst || [msg] });
+        await goOffline(null);
+        return;
+    }
 
     if (!isAllowed) {
         console.log(`[FILTERED / IGNORED]: Message from ${sender} (Chat: "${chatTitle}", Contact: "${contactName}") - Not in allowed whitelist.`);
@@ -1495,7 +1992,7 @@ async function handleIncomingMessage(msg, opts = {}) {
         return;
     }
     if (!hasMedia && DRIVE_RE.test(incomingText)) {
-        await msg.reply(`📁 *Your Cloud Vault*\n${DRIVE_FOLDER_URL}`);
+        await msg.reply(`📁 *Your Cloud Vault*\n${COS_ENABLED ? VAULT_URL : DRIVE_FOLDER_URL}`);
         await goOffline(null);
         return;
     }
@@ -1531,7 +2028,7 @@ async function handleIncomingMessage(msg, opts = {}) {
             `${yn(GEMINI_API_KEY)} Gemini\n` +
             `${yn(GOOGLE_VISION_API_KEY)} Cloud Vision\n` +
             `${yn(googleDriveKey)} Google Drive vault\n` +
-            `${yn(GCS_BUCKET_NAME)} Cloud Storage`);
+            `${yn(COS_ENABLED || GCS_BUCKET_NAME)} Cloud Storage (${COS_ENABLED ? 'Tencent COS' : 'Google'})`);
         await goOffline(null);
         return;
     }
@@ -1611,7 +2108,7 @@ CRITICAL INSTRUCTIONS:
             const chat = await msg.getChat().catch(() => null);
             if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
             const timeContext = getCurrentISTContext();
-            const reply = sanitizeWhatsAppReply(await generateAIReply(sender, burstPrompt, (customPrompt || SYSTEM_PROMPT) + timeContext, 500));
+            const reply = sanitizeWhatsAppReply(await generateAIReply(sender, /\[DOCUMENT TEXT EXTRACTED/.test(burstPrompt) ? burstPrompt + DOC_DETAIL_INSTRUCTION : burstPrompt, (customPrompt || SYSTEM_PROMPT) + timeContext, /\[DOCUMENT TEXT EXTRACTED/.test(burstPrompt) ? REPLY_MAX_TOKENS_DOC : 500));
             console.log(`[BURST REPLY to ${sender}]: ${reply}`);
             let finalReply = reply;
             if (urls.length && /\b(save|store|upload|backup|daal|rakh)\b.{0,40}\b(drive|gdrive|vault|cloud)\b/i.test(opts.query || '')) {
@@ -1657,11 +2154,19 @@ CRITICAL INSTRUCTIONS:
                 } else if (isDoc) {
                     const docName = media.filename || 'Document';
                     console.log(`[DOCUMENT] Received document/file: "${docName}" (${media.mimetype}).`);
-                    if (storageInfo && storageInfo.driveUrl) {
+                    const extractedDoc = await withTimeout(describeDocument(media.data, media.mimetype, docName, storageInfo?.cosSignedUrl || null), 120000, 'Document extraction', null);
+                    if (extractedDoc) {
+                        mediaContext = extractedDoc;
+                    } else if (storageInfo && storageInfo.driveUrl) {
                         mediaContext = `[DOCUMENT RECEIVED & SAVED TO GOOGLE DRIVE]: A document named "${docName}" was received and successfully uploaded to Google Drive. Direct Link: ${storageInfo.driveUrl}`;
                     } else {
                         mediaContext = `[DOCUMENT RECEIVED]: A document named "${docName}" was received and securely archived in the Cloud Storage Vault.`;
                     }
+                }
+
+                if (/^\[(IMAGE RECEIVED|DOCUMENT TEXT EXTRACTED)/.test(mediaContext) && diseaseGuide.looksLikeMedicalReport(mediaContext)) {
+                    const reportGuidance = await withTimeout(buildReportGuidance(mediaContext), 90000, 'Report guidance', null);
+                    if (reportGuidance) mediaContext += `\n\n${reportGuidance}`;
                 }
 
                 if (storageInfo && storageInfo.driveUrl) {
@@ -1676,6 +2181,9 @@ CRITICAL INSTRUCTIONS:
                     storageInfo,
                     mediaContext,
                     urls: [storageInfo?.driveUrl || storageInfo?.gcsUrl].filter(Boolean),
+                    // kept so an "extract" follow-up can re-read a document whose text was not extracted yet
+                    docInfo: isDoc && storageInfo?.cosSignedUrl ? { url: storageInfo.cosSignedUrl, mime: media.mimetype, name: media.filename || 'Document' } : null,
+                    extracted: /^\[DOCUMENT TEXT EXTRACTED/.test(mediaContext),
                     timestamp: Date.now()
                 });
                 console.log(`[LAST MEDIA STORE] Cached media & vision analysis for ${sender} (driveUrl: ${storageInfo?.driveUrl || 'none'})`);
@@ -1688,7 +2196,9 @@ CRITICAL INSTRUCTIONS:
     }
 
     let finalPrompt = incomingText;
-    if (mediaContext) {
+    if (mediaContext && mediaContext.includes(REPORT_MARK)) {
+        finalPrompt = `${mediaContext}\n\n${incomingText ? `User text accompanying the report: "${incomingText}".` : '(No caption provided.)'} Follow the REPORT GUIDANCE RULES.`;
+    } else if (mediaContext) {
         if (incomingText) {
             finalPrompt = `${mediaContext}\n\n${PHOTO_CARD_FORMAT}\n\nUser text accompanying the media: "${incomingText}". Please answer their question and extract all relevant details thoroughly.`;
         } else {
@@ -1702,7 +2212,33 @@ CRITICAL INSTRUCTIONS:
             Boolean(quotedBody && /photo|image|attachment|📸|document|slide/i.test(quotedBody));
 
         if (isRecentMedia && isExtractionOrImageQuery) {
+            if (cached.docInfo && !cached.extracted) {
+                try {
+                    console.log(`[DOCUMENT] Follow-up extraction for "${cached.docInfo.name}" - re-reading from cloud vault...`);
+                    const resp = await fetch(cached.docInfo.url, { signal: AbortSignal.timeout(30000) });
+                    if (!resp.ok) throw new Error(`vault download ${resp.status}`);
+                    const buf = Buffer.from(await resp.arrayBuffer());
+                    const extractedText = await withTimeout(describeDocument(buf.toString('base64'), cached.docInfo.mime, cached.docInfo.name, cached.docInfo.url), 120000, 'Document extraction', null);
+                    if (extractedText) {
+                        cached.mediaContext = `${extractedText}
+[CLOUD STORAGE LINK]: ${cached.storageInfo?.gcsUrl || cached.docInfo.url}`;
+                        cached.extracted = true;
+                    }
+                } catch (e) {
+                    console.warn('[DOCUMENT] Follow-up extraction failed:', e.message);
+                }
+            }
+            if (cached.mediaContext.includes(REPORT_MARK)) {
+                finalPrompt = `${cached.mediaContext}\n\n[USER FOLLOW-UP ON THE REPORT ABOVE]:\n"${incomingText}"\n\nAnswer using the report, the matched guide data and the REPORT GUIDANCE RULES.`;
+            } else
             finalPrompt = `${cached.mediaContext}\n\n[USER FOLLOW-UP ON THE RECENT IMAGE/DOCUMENT]:\n"${incomingText}"\n\n${PHOTO_CARD_FORMAT}\n\n[SYSTEM INSTRUCTION: The user is asking about or requesting extraction from the verified image/document above. Provide a thorough, accurate, and structured response addressing their query directly. If they asked to extract or transcribe, provide all slide/document contents cleanly and completely. Ignore any past assistant claims that the image was unreadable.]`;
+        }
+        if (finalPrompt === incomingText && DISEASE_QUERY_RE.test(incomingText)) {
+            const hits = diseaseGuide.searchByText(incomingText, 2);
+            if (hits.length) {
+                console.log(`[DISEASE GUIDE] Typed query matched: ${hits.map(d => d.name).join(', ')}`);
+                finalPrompt = `${REPORT_MARK}\n${diseaseGuide.guideContext(hits)}\n\n${REPORT_GUIDANCE_RULES}\n\n[USER MESSAGE]:\n"${incomingText}"\n(No lab report was shared; base the reply on the condition the user described. Skip the "Report summary" section.)`;
+            }
         }
     } else if (hasMedia) {
         if (incomingText) {
@@ -1961,7 +2497,8 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
             await chat.sendStateTyping().catch(() => {});
         }
 
-        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, finalPrompt, fullPrompt));
+        const isDocExtraction = /\[(DOCUMENT TEXT EXTRACTED|REPORT GUIDANCE)/.test(finalPrompt);
+        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, isDocExtraction && !finalPrompt.includes(REPORT_MARK) ? finalPrompt + DOC_DETAIL_INSTRUCTION : finalPrompt, fullPrompt, isDocExtraction ? REPLY_MAX_TOKENS_DOC : REPLY_MAX_TOKENS));
         console.log(`[REPLY to ${isDilip ? 'Dilip Singh (Formal)' : sender}]: ${reply}`);
         await msg.reply(reply);
 
@@ -1987,20 +2524,192 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === '/pair-code') {
-        const phone = (parsedUrl.query.phone || '918529911832').replace(/[^\d]/g, '');
+        let phone = (parsedUrl.query.phone || '918529911832').replace(/[^\d]/g, '');
+        if (phone.length === 10) phone = '91' + phone;
+        if (clientStatus === 'CONNECTED') {
+            res.writeHead(409, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'WhatsApp is already linked. Log out first to pair another number.' }));
+        }
         try {
-            console.log(`[PAIRING CODE] Requesting code for phone: ${phone}...`);
+            console.log(`[PAIRING CODE] Requesting fresh code for phone: ${phone}...`);
             const pairCode = await client.requestPairingCode(phone);
             console.log(`[PAIRING CODE] SUCCESS! Generated Code: ${pairCode}`);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ success: true, code: pairCode, phone: phone }));
         } catch (err) {
-            console.error('[PAIRING CODE ERROR]:', err.message);
+            console.warn('[PAIRING CODE] First attempt threw error (' + err.message + '), reloading page and retrying...');
+            try {
+                if (client.pupPage && !client.pupPage.isClosed()) {
+                    await client.pupPage.reload({ waitUntil: 'domcontentloaded' });
+                    await client.pupPage.waitForFunction(() => window.AuthStore && window.AuthStore.PairingCodeLinkUtils, { timeout: 15000 });
+                    await new Promise(r => setTimeout(r, 1000));
+                    const retryCode = await client.requestPairingCode(phone);
+                    console.log(`[PAIRING CODE] RETRY SUCCESS! Code: ${retryCode}`);
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    return res.end(JSON.stringify({ success: true, code: retryCode, phone: phone }));
+                }
+            } catch (re) {
+                console.error('[PAIRING CODE RETRY FAILED]:', re.message);
+            }
             res.writeHead(500, { 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({ success: false, error: err.message }));
+            return res.end(JSON.stringify({ success: false, error: (!err.message || err.message.length < 4) ? "WhatsApp rejected the pairing request (CompanionHelloError). Wait ~1 hour without retrying, or scan the QR code instead." : err.message }));
         }
     }
 
+    // Admin channel (read the token over SSH from data/admin-token.txt)
+    if (pathname.startsWith('/admin/')) {
+        if (parsedUrl.query.t !== ADMIN_TOKEN) { res.writeHead(403, { 'Content-Type': 'text/plain' }); return res.end('Forbidden'); }
+        const send = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
+        try {
+            if (pathname === '/admin/chats') {
+                const q = String(parsedUrl.query.q || '').toLowerCase();
+                const chats = await client.getChats();
+                return send(200, chats.filter(c => !c.isGroup && (c.name || '').toLowerCase().includes(q)).slice(0, 10).map(c => ({ id: c.id._serialized, name: c.name })));
+            }
+            if (pathname === '/admin/chat-info') {
+                const chat = await client.getChatById(String(parsedUrl.query.chat));
+                const msgs = await chat.fetchMessages({ limit: 15 });
+                const now = Date.now() / 1000;
+                return send(200, { total: msgs.length, messages: msgs.map(m => ({ type: m.type, fromMe: m.fromMe, quoted: !!m.hasQuotedMsg, hasMedia: !!m.hasMedia, ageMin: Math.round((now - m.timestamp) / 60), textLen: (m.body || '').length })) });
+            }
+            if (pathname === '/admin/diag-modules') {
+                // lists WhatsApp Web module names containing a word (read-only)
+                const q = String(parsedUrl.query.q || '').toLowerCase();
+                const names = await client.pupPage.evaluate((needle) => {
+                    try {
+                        const dbg = window.require('__debug');
+                        const map = (dbg && dbg.modulesMap) || {};
+                        return Object.keys(map).filter(n => n.toLowerCase().includes(needle)).slice(0, 60);
+                    } catch (e) { return ['ERR ' + String(e.message || e).slice(0, 100)]; }
+                }, q);
+                return send(200, names);
+            }
+            if (pathname === '/admin/diag-send3') {
+                // the real broadcast send for ONE member, run inside the page so a failure returns the full in-page stack
+                const phone = String(parsedUrl.query.phone || '').replace(/[^0-9]/g, '');
+                const latest = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'broadcast-latest.json'), 'utf8'));
+                const variant = String(parsedUrl.query.variant || '');
+                const out = await client.pupPage.evaluate(async (num, media, caption, variant) => {
+                    try {
+                        const chat = await window.WWebJS.getChat(num + '@c.us', { getAsModel: false });
+                        if (variant === 'a' && chat.id && typeof chat.id.isLid === 'function' && chat.id.isLid()) {
+                            // build the message as a phone-number chat: sender = your phone-number id
+                            Object.defineProperty(chat.id, 'isLid', { value: () => false, configurable: true });
+                        }
+                        if (variant === 'b') {
+                            // make the "me" lookups all return the phone-number user
+                            const U = window.require('WAWebUserPrefsMeUser');
+                            const pn = U.getMaybeMePnUser();
+                            window.__origMeLid = window.__origMeLid || U.getMaybeMeLidUser;
+                            U.getMaybeMeLidUser = () => pn;
+                        }
+                        const msg = await window.WWebJS.sendMessage(chat, '', { media, caption });
+                        return { ok: true, id: msg && msg.id && msg.id._serialized, variant };
+                    } catch (e) {
+                        return { ok: false, message: String(e && e.message || e), stack: String(e && e.stack || '').split(String.fromCharCode(10)).slice(0, 12).join(' <- ').slice(0, 1800) };
+                    }
+                }, phone, latest.media, latest.text, variant);
+                return send(200, out);
+            }
+            if (pathname === '/admin/diag-me') {
+                const out = await client.pupPage.evaluate(async () => {
+                    const r = {};
+                    const step = async (name, fn) => { try { const v = await fn(); r[name] = v === undefined ? 'undefined' : v; } catch (e) { r[name] = 'ERR: ' + String(e && e.message || e).slice(0, 140); } };
+                    const U = window.require('WAWebUserPrefsMeUser');
+                    await step('exports', async () => Object.keys(U).join(','));
+                    await step('getMaybeMeLidUser', async () => { const x = U.getMaybeMeLidUser(); return x ? x._serialized : null; });
+                    await step('getMaybeMePnUser', async () => { const x = U.getMaybeMePnUser(); return x ? x._serialized : null; });
+                    for (const k of Object.keys(U)) {
+                        if (/lid/i.test(k) && typeof U[k] === 'function' && k !== 'getMaybeMeLidUser') {
+                            await step('call ' + k, async () => { const x = await U[k](); return x && x._serialized ? x._serialized : String(x).slice(0, 80); });
+                        }
+                    }
+                    await step('Conn.lid', async () => { const c = window.require('WAWebConnModel').Conn; return c.lid ? (c.lid._serialized || String(c.lid)) : null; });
+                    await step('Conn.wid', async () => { const c = window.require('WAWebConnModel').Conn; return c.wid ? c.wid._serialized : null; });
+                    await step('Conn.platform', async () => window.require('WAWebConnModel').Conn.platform);
+                    return r;
+                });
+                return send(200, out);
+            }
+            if (pathname === '/admin/diag-send2') {
+                // runs the steps of WhatsApp Web's send routine for a number WITHOUT sending anything
+                const phone = String(parsedUrl.query.phone || '').replace(/[^0-9]/g, '');
+                const out = await client.pupPage.evaluate(async (num) => {
+                    const r = {};
+                    const step = async (name, fn) => { try { const v = await fn(); r[name] = v === undefined ? 'ok' : v; } catch (e) { r[name] = 'ERR: ' + String(e && e.message || e).slice(0, 160); } };
+                    let wid, lidWid, chat;
+                    await step('createWid', async () => { wid = window.require('WAWebWidFactory').createWid(num + '@c.us'); return wid._serialized; });
+                    await step('enforceLidAndPn', async () => { const x = await window.WWebJS.enforceLidAndPnRetrieval(wid); lidWid = x.lid; return { lid: x.lid && x.lid._serialized }; });
+                    await step('getChat(phone id)', async () => { chat = await window.WWebJS.getChat(num + '@c.us', { getAsModel: false }); return !!chat; });
+                    await step('chat.id', async () => chat && chat.id && chat.id._serialized);
+                    await step('getIsNewsletter', async () => window.require('WAWebChatGetters').getIsNewsletter(chat));
+                    await step('getChat(lid id)', async () => { const c2 = await window.WWebJS.getChat(lidWid._serialized, { getAsModel: false }); return !!c2 && (c2.id && c2.id._serialized); });
+                    await step('getChatModel', async () => { const m = await window.WWebJS.getChatModel(chat, { isChannel: false }); return !!m; });
+                    await step('processMediaData', async () => {
+                        const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+                        const res = await window.WWebJS.processMediaData({ mimetype: 'image/png', data: png, filename: 'x.png' }, {});
+                        return Object.keys(res || {}).join(',');
+                    });
+                    await step('meUser', async () => { const u = window.require('WAWebUserPrefsMeUser'); const me = (u.getMaybeMePnUser && u.getMaybeMePnUser()) || (u.getMaybeMeLidUser && u.getMaybeMeLidUser()); return me && me._serialized; });
+                    return r;
+                }, phone);
+                return send(200, out);
+            }
+            if (pathname === '/admin/diag-send') {
+                // step-by-step check of how WhatsApp Web resolves a phone number (no message is sent)
+                const phone = String(parsedUrl.query.phone || '').replace(/[^0-9]/g, '');
+                const out = await client.pupPage.evaluate(async (num) => {
+                    const r = {};
+                    const step = async (name, fn) => { try { const v = await fn(); r[name] = v === undefined ? 'ok(undefined)' : v; } catch (e) { r[name] = 'ERR: ' + String(e && e.message || e).slice(0, 140); } };
+                    let wid;
+                    await step('createWid', async () => { wid = window.require('WAWebWidFactory').createWid(num + '@c.us'); return wid && wid._serialized; });
+                    await step('queryWidExists', async () => { const x = await window.require('WAWebQueryExistsJob').queryWidExists(wid); return x ? { wid: x.wid && x.wid._serialized, lid: x.lid && x.lid._serialized } : null; });
+                    await step('enforceLidAndPn', async () => { const x = await window.WWebJS.enforceLidAndPnRetrieval(wid); return { lid: x.lid && x.lid._serialized, phone: x.phone && x.phone._serialized }; });
+                    await step('chatInStore', async () => !!window.require('WAWebCollections').Chat.get(wid));
+                    await step('findOrCreateLatestChat', async () => { const x = await window.require('WAWebFindChatAction').findOrCreateLatestChat(wid); return !!(x && x.chat); });
+                    return r;
+                }, phone);
+                return send(200, out);
+            }
+            if (pathname === '/admin/broadcast/preview') return send(200, await broadcaster.adminPreview(String(parsedUrl.query.chat)));
+            if (pathname === '/admin/broadcast/send') return send(200, await broadcaster.adminSend(String(parsedUrl.query.chat), parsedUrl.query.to ? String(parsedUrl.query.to) : null));
+        } catch (e) { return send(500, { error: String(e.message || e) }); }
+        return send(404, { error: 'unknown admin path' });
+    }
+
+    if (pathname === '/vault') {
+        if (!COS_ENABLED || parsedUrl.query.t !== VAULT_TOKEN) {
+            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            return res.end('Forbidden');
+        }
+        try {
+            const html = await renderVaultPage();
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+            return res.end(html);
+        } catch (e) {
+            console.error('[VAULT PAGE ERROR]:', e.message);
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            return res.end('Vault temporarily unavailable');
+        }
+    }
+
+    if (pathname === '/vault/file') {
+        const key = String(parsedUrl.query.k || '');
+        if (!COS_ENABLED || parsedUrl.query.t !== VAULT_TOKEN || !key || key.includes('..')) {
+            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            return res.end('Forbidden');
+        }
+        return proxyCosObject(req, res, key);
+    }
+
+    if (pathname.startsWith('/f/')) {
+        const key = shortLinks[pathname.slice(3)];
+        if (!key || !COS_ENABLED) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            return res.end('Link not found');
+        }
+        return proxyCosObject(req, res, key);
+    }
 
     if (pathname === '/status') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2299,8 +3008,9 @@ const server = http.createServer(async (req, res) => {
             const btn = document.getElementById('sendOtpBtn');
             const input = document.getElementById('phoneNumberInput');
             const resultDiv = document.getElementById('pairingCodeResult');
-            const phone = input.value.replace(/[^\d]/g, '');
-            if (!phone) return alert('Please enter your phone number');
+            let rawVal = input ? input.value : '';
+            let phone = rawVal.replace(/[^\d]/g, '') || '918529911832';
+            if (phone.length === 10) phone = '91' + phone;
             btn.disabled = true;
             btn.innerText = 'Requesting...';
             resultDiv.style.display = 'block';

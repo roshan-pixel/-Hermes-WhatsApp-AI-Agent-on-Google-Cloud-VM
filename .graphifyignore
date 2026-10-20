@@ -1,1 +1,5 @@
 chat-memory-graph/
+google-*-key.json
+.env
+.wwebjs_auth/
+node_modules/

@@ -12,3 +12,14 @@ google-gmail-key.json
 saved-media/
 scratch/
 graphify-out/20*
+
+# runtime data, tokens and sessions (members' phone numbers, saved broadcast video, access tokens)
+data/*
+!data/disease_guide.json
+vault-token.txt
+short-links.json
+current_qr.*
+sender/auth/
+sender/node_modules/
+sender/sender.log
+*.bak*

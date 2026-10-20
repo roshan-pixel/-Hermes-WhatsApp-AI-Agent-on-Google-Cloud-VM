@@ -20,3 +20,9 @@ This project is mapped by Graphify. The full knowledge graph report is at `graph
    - Separate conversational mentions of email from explicit actions to send/draft email.
 3. **Owner (Roshan) Context**:
    - When the message is from Roshan (owner), the AI assistant is speaking directly to Roshan—not managing messages on his behalf in third person.
+
+## Newer modules (Oct 2026)
+- **`reportBot.js` / `diseaseGuide.js`**: Mizoram Bonanza members only; `/report` flow, strict report-only guard rails, product guide in `data/disease_guide.json`.
+- **`broadcast.js` + `sender/`**: owner-only `/broadcast` -> preview -> `/confirm`; sending goes through the Baileys sender (a second linked device).
+- **Owner**: `+91 8058363027`. Never grant access from names; use numbers / WhatsApp ids.
+- **Storage / OCR**: Tencent COS and Tencent Cloud OCR (Tesseract fallback). No API keys in code.
