@@ -14,6 +14,12 @@ const MAX_FOLLOWUPS = 6;
 const MAX_ANALYSES_PER_DAY = parseInt(process.env.REPORT_MAX_PER_DAY, 10) || 5;
 const MAX_FILE_BYTES = 15 * 1024 * 1024;
 const HINT_COOLDOWN_MS = 10 * 60 * 1000;
+// Owner-watched members: their DS id / billing details and payment slips are extracted and mailed to the owner
+const WATCHED = (process.env.WATCHED_MEMBERS || '9402526277').split(',').map(x => x.replace(/\D/g, '').slice(-10)).filter(Boolean);
+const FORWARD_TO = process.env.BILLING_FORWARD_TO || 'sgarmy200@outlook.com';
+const MAX_ATTACH_BYTES = 12 * 1024 * 1024;
+const OWNER_CHAT = '257487752175866@lid';   // owner (+91 8058363027) gets the payment summary on WhatsApp too
+const BILLING_ACK = 'I have updated the invoices. Thanks.\n\nRegards,\nRoshan Singh Rathore\nSapphire';
 
 const MSG = {
     ask: '📋 *Health Report Analysis*\n\nPlease send your medical report now as a *PDF* or a clear *photo* (all pages if it has more than one).\n\nI only analyse medical reports. Type /done to stop.',
@@ -205,7 +211,11 @@ function createReportBot(deps) {
         if (s && s.expires < Date.now()) { sessions.delete(sender); return null; }
         return s || null;
     };
-    const hasSession = (sender) => Boolean(getSession(sender));
+    // TEMPORARY owner test: while data/test-forward.json = {"until":<ms>} is fresh, the owner's next message is treated like a watched member's (one shot)
+    const TEST_FLAG = path.join(__dirname, 'data', 'test-forward.json');
+    const isOwnerId = (sender, phone) => sender === '257487752175866@lid' || String(sender).includes('8058363027') || String(phone).includes('8058363027');
+    const testArmed = () => { try { return JSON.parse(fs.readFileSync(TEST_FLAG, 'utf8')).until > Date.now(); } catch (_) { return false; } };
+    const hasSession = (sender) => Boolean(getSession(sender)) || (isOwnerId(sender, '') && (testArmed() || pendingBilling.has(sender)));
 
     function underDailyLimit(sender) {
         const day = new Date().toISOString().slice(0, 10);
@@ -276,6 +286,89 @@ ${reply}` : reply) + '\n\n_Ask me anything about this report. Type /done when yo
         if (s.followups >= MAX_FOLLOWUPS) sessions.delete(sender);
     }
 
+    // ── Billing forwarder: a watched member's slips/invoices are collected for BILLING_WAIT_MS after the last file
+    // (she may send 4 invoices and 1 slip, or 2 slips, as separate messages), then reconciled, mailed and summarised.
+    delete require.cache[require.resolve('./billing')];
+    const billing = require('./billing');
+    delete require.cache[require.resolve('./ledger')];
+    const ledger = require('./ledger');
+    const BILLING_WAIT_MS = 45 * 1000;
+    const pendingBilling = new Map();   // sender -> { files: [Promise<media>], texts, lastMsg, name, test, timer }
+
+    function queueBilling(msg, sender, items, text, name, hasMedia, test) {
+        const b = pendingBilling.get(sender) || { files: [], texts: [], name, test };
+        if (hasMedia) for (const m of items) b.files.push(Promise.resolve(deps.downloadMedia(m)).catch(() => null));   // download now, links expire
+        if (text) b.texts.push(text);
+        b.lastMsg = msg;
+        clearTimeout(b.timer);
+        b.timer = setTimeout(() => { pendingBilling.delete(sender); flushBilling(sender, b); }, BILLING_WAIT_MS);
+        pendingBilling.set(sender, b);
+    }
+
+    async function flushBilling(sender, b) {
+        try {
+            const { sendEmail } = require('./emailService');
+            const who = b.name || 'Member';
+            const attachments = [], parts = [];
+            for (const media of await Promise.all(b.files)) {
+                if (!media || !media.data) continue;
+                const mime = (media.mimetype || '').toLowerCase();
+                const ext = mime.includes('pdf') ? 'pdf' : (mime.split('/')[1] || 'bin').split(';')[0];
+                const filename = media.filename || `${who.replace(/\W+/g, '_')}_${parts.length + 1}.${ext}`;
+                const buf = Buffer.from(media.data, 'base64');
+                if (buf.length <= MAX_ATTACH_BYTES) attachments.push({ filename, content: buf, contentType: mime || undefined });
+                let ocr = '';
+                if (mime.includes('pdf') || mime.startsWith('image/')) { try { ocr = await limited(() => extractReportText(media)); } catch (_) { ocr = ''; } }
+                parts.push({ filename, ocr: ocr || '' });
+            }
+            const text = b.texts.join('\n');
+            const received = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+            // Keep the last batch's OCR on the server so a wrong reading can be checked later
+            try { fs.writeFileSync(path.join(__dirname, 'data', 'billing-last.json'), JSON.stringify({ at: new Date().toISOString(), who, parts }, null, 1)); } catch (_) { /* debug only */ }
+            const r = parts.length ? billing.reconcile(parts) : null;
+            // Write the payment into the live ledger's invoice remarks (only MATCHED batches; old remarks are backed up, then replaced)
+            const ledgerRes = r ? await ledger.updateRemarks(r) : null;
+            if (ledgerRes) console.log('[REPORT BOT] ledger remarks:', JSON.stringify(ledgerRes));
+            const summary = r ? `${billing.whatsappText(r, who)}\n\n${ledger.ledgerLine(ledgerRes)}` : (parts.length ? await aiSummary(text, parts) : '');
+            if (parts.length) attachments.push({ filename: 'ocr-text.txt', content: Buffer.from(parts.map(p => `=== ${p.filename} ===\n${p.ocr || '(no readable text)'}\n`).join('\n'), 'utf8') });
+            const subject = r
+                ? `[Hermes] ${who}: ${r.slips.length ? `${billing.inr(r.paid)} paid` : 'no slip'} · ${r.invoices.length} invoice${r.invoices.length === 1 ? '' : 's'} · ${r.status}`
+                : `[Hermes] ${who} sent ${parts.length ? `${parts.length} file(s)` : 'a message'}`;
+            const plain = `${summary || ''}${text ? `\n\nMessage:\n${text}` : ''}`.replace(/\*/g, '').trim();
+            const ledgerText = ledger.ledgerLine(ledgerRes).replace(/\*/g, '').replace(/^📒 Ledger:?\s*/, '');
+            const html = r ? billing.emailHtml(r, who, { received, files: parts.length, text, ledger: ledgerText }) : undefined;
+            await sendEmail({ to: FORWARD_TO, subject, text: plain || '(no text)', html, attachments });
+            console.log(`[REPORT BOT] billing mail sent: ${parts.length} file(s), ${r ? r.status : 'no structured match'}`);
+            if (!parts.length) return;
+            const tail = `\n\n_📧 Slips + details mailed to ${FORWARD_TO}_`;
+            if (b.test) {
+                await b.lastMsg.reply(`${summary}${tail}`);
+                await b.lastMsg.reply(`_(TEST — the member gets this reply:)_\n\n${BILLING_ACK}`);
+            } else {
+                if (summary) { try { await client.sendMessage(OWNER_CHAT, `${summary}${tail}`); } catch (e) { console.warn('[REPORT BOT] owner WhatsApp summary failed:', e && e.message); } }
+                await b.lastMsg.reply(BILLING_ACK);
+            }
+        } catch (e) {
+            console.warn('[REPORT BOT] billing forward failed:', e && e.message);
+        }
+    }
+
+    // Fallback when the files cannot be matched in code (no slip and no DS id found)
+    async function aiSummary(text, parts) {
+        const files = parts.map((p, i) => `--- FILE ${i + 1} ---\n${(p.ocr || '(no readable text)').slice(0, 6000)}`).join('\n\n');
+        const prompt = `OCR text of files a member sent (payment slips and/or invoices).\n\n${text ? `MESSAGE: ${text.slice(0, 2000)}\n\n` : ''}${files}\n\n` +
+            `Summarise for the owner in short WhatsApp lines (*bold* allowed, no tables): payment slip(s) with amount, date, from, to and transaction ids; invoices with DS id, name and amount; then total paid vs invoice total and MATCHED or MISMATCH. Use only numbers in the text, write "unclear" otherwise.`;
+        try {
+            const chatId = `billing:${Date.now()}`;
+            const raw = await generateAIReply(chatId, prompt, 'You are a careful accounts assistant. Reply in English.', 900);
+            chatHistory.delete(chatId);
+            return `🧾 *Files received*\n\n${sanitizeWhatsAppReply(raw).trim()}`;
+        } catch (e) {
+            console.warn('[REPORT BOT] billing AI summary failed:', e && e.message);
+            return '';
+        }
+    }
+
     // Returns true when the message was handled here (always true for members).
     async function handle(msg, ctx) {
         const { sender, incomingText, hasMedia, items, phone } = ctx;
@@ -285,6 +378,20 @@ ${reply}` : reply) + '\n\n_Ask me anything about this report. Type /done when yo
         const reply = async (t) => { await msg.reply(t); };
         const kind = /^\/(report|done|stop|end|cancel)\b/i.test(text) ? text.toLowerCase().split(/\s/)[0] : (hasMedia ? `media x${(items || []).length}` : 'text');
         console.log(`[REPORT BOT] ...${last10(sender).slice(-4) || 'user'} ${kind} | session=${s ? s.state : 'none'}`);
+        if (isOwnerId(sender, phone) && (testArmed() || pendingBilling.has(sender))) {
+            // The test stays armed until the flag expires (several batches can be tried); texts join a pending batch
+            if (!hasMedia && !pendingBilling.has(sender)) { console.log('[REPORT BOT] TEST armed: owner text skipped, waiting for the files'); return true; }
+            console.log(`[REPORT BOT] TEST: queued owner ${hasMedia ? `${items.length} file(s)` : 'text'} as a watched member`);
+            queueBilling(msg, sender, items, text, 'Owner TEST', hasMedia, true);
+            return true;
+        }
+        if (!s && !/^\/(report|done|stop|end|cancel)\b/i.test(text) && WATCHED.includes(lidMap.get(lidUser(sender)) || last10(phone))) {
+            const batching = pendingBilling.has(sender);
+            queueBilling(msg, sender, items, text, name, hasMedia, false);
+            console.log(`[REPORT BOT] watched member: queued ${hasMedia ? `${items.length} file(s)` : 'text'} for the billing check`);
+            // Slips/invoices get the owner's acknowledgement (after the batch) instead of the /report hint
+            if (hasMedia || batching) return true;
+        }
         try {
             if (/^\/(done|stop|end|cancel)\b/i.test(text)) {
                 sessions.delete(sender);
