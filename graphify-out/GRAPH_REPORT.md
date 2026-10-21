@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-10-21)
+# Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-22)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 60 files · ~94,620 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 600 nodes · 669 edges · 81 communities (72 shown, 9 thin omitted)
+- 634 nodes · 727 edges · 81 communities (74 shown, 7 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `167e1f21`
+- Built from commit: `038d1db7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -87,12 +88,12 @@
 2. `🏛️ Hermes WhatsApp AI Agent on Google Cloud VM` - 14 edges
 3. `saveMediaToCloudStorage()` - 10 edges
 4. `runBroadcast()` - 9 edges
-5. `getImageVisionDescription()` - 7 edges
-6. `sendEmail()` - 6 edges
-7. `analyzeImageWithVision()` - 6 edges
-8. `generateAIReply()` - 6 edges
-9. `processBurstItem()` - 6 edges
-10. `scripts` - 6 edges
+5. `match()` - 7 edges
+6. `getImageVisionDescription()` - 7 edges
+7. `updateRemarks()` - 7 edges
+8. `inr()` - 6 edges
+9. `parseSlip()` - 6 edges
+10. `sendEmail()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `wwebjs Monkey Patch Script` --conceptually_related_to--> `Watchdog Resilience Pattern`  [INFERRED]
@@ -111,11 +112,11 @@
 - **Chromium Runtime Crash Defense System** — index_watchdog, patch_wwebjs_script, patch_framenavigated_guard, patch_evaluate_loop_guards, patch_inject_retry_loop [INFERRED 0.95]
 - **Multi-Factor Whitelist & Persona Isolation Framework** — index_message_handler, readme_whitelist_isolation_matrix, readme_reactive_architecture [INFERRED 0.95]
 
-## Communities (81 total, 9 thin omitted)
+## Communities (81 total, 7 thin omitted)
 
 ### Community 0 - "WhatsApp Client Core Runtime"
 Cohesion: 0.03
-Nodes (70): activePage, ADMIN_TOKEN_PATH, AI_PROVIDER, allowedLIDs, allowedNumbers, broadcaster, burst, cached (+62 more)
+Nodes (74): activePage, ADMIN_TOKEN_PATH, AI_PROVIDER, allowedLIDs, allowedNumbers, broadcaster, bufferMediaBurst(), burst (+66 more)
 
 ### Community 1 - "Project Manifest & Dependencies"
 Cohesion: 0.04
@@ -174,8 +175,8 @@ Cohesion: 0.20
 Nodes (11): client, server, Connection Watchdog Monitor, Postinstall Patch Hook, CDP Evaluation Loop Guards, Frame Navigation Crash Guard, Client Inject Retry Mechanism, wwebjs Monkey Patch Script (+3 more)
 
 ### Community 15 - "Google Drive IAM Credentials"
-Cohesion: 0.29
-Nodes (10): Memory Graph Loader, queryChatMemory Function, chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply(), Inbound Message Handler (+2 more)
+Cohesion: 0.80
+Nodes (5): chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply()
 
 ### Community 16 - "Google Drive Upload Harness"
 Cohesion: 0.42
@@ -210,8 +211,8 @@ Cohesion: 0.47
 Nodes (6): buildReportGuidance(), compactForHistory(), generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply()
 
 ### Community 24 - "UI Compose Button Inspector"
-Cohesion: 0.33
-Nodes (4): fs, MEMBERS_CACHE, MSG, path
+Cohesion: 0.29
+Nodes (5): fs, MEMBERS_CACHE, MSG, path, WATCHED
 
 ### Community 25 - "Social Profile Inspector"
 Cohesion: 0.40
@@ -345,22 +346,30 @@ Nodes (4): analyzeImageWithGemini(), analyzeImageWithVision(), getGCPAccessToken
 Cohesion: 0.50
 Nodes (3): chunk, content, fs
 
+### Community 59 - "Community 59"
+Cohesion: 0.11
+Nodes (27): allocate(), emailHtml(), esc(), ICON, inr(), lines(), match(), money() (+19 more)
+
+### Community 60 - "Community 60"
+Cohesion: 0.40
+Nodes (5): Memory Graph Loader, queryChatMemory Function, Inbound Message Handler, 100% Reactive Architecture Principle, Contact Whitelist & Isolation Matrix
+
 ## Knowledge Gaps
-- **318 isolated node(s):** `fs`, `path`, `crypto`, `SENT_PATH`, `fs` (+313 more)
+- **326 isolated node(s):** `ICON`, `STATUS_NOTE`, `fs`, `path`, `crypto` (+321 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `client` connect `Social Media Post Publisher` to `WhatsApp Client Core Runtime`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
 - **Why does `findRecentEmail()` connect `Chromium Resilience & Watchdog` to `WhatsApp Client Core Runtime`, `Semantic Memory & Model Dispatch`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **What connects `fs`, `path`, `crypto` to the rest of the system?**
-  _326 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **What connects `ICON`, `STATUS_NOTE`, `fs` to the rest of the system?**
+  _334 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `WhatsApp Client Core Runtime` be split into smaller, more focused modules?**
-  _Cohesion score 0.02666666666666667 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02596559558584875 - nodes in this community are weakly interconnected._
 - **Should `Project Manifest & Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
 - **Should `Chromium Resilience & Watchdog` be split into smaller, more focused modules?**
