@@ -1665,6 +1665,7 @@ client.on('ready', async () => {
         await client.sendPresenceUnavailable();
         console.log('[PRESENCE] WhatsApp presence set to UNAVAILABLE (anti-ban reactive mode).');
     } catch(e) {}
+    setTimeout(() => reportBot.resolveMemberLids().catch(e => console.warn('[REPORT BOT] id lookup failed:', e.message)), 20000);
 });
 
 // Reactive presence: stop typing indicator and go offline right after a reply is sent.
@@ -1868,7 +1869,7 @@ async function extractReportText(media) {
     return null;
 }
 
-const reportBot = require('./reportBot').createReportBot({
+const reportBotDeps = {
     client,
     generateAIReply,
     chatHistory,
@@ -1877,8 +1878,22 @@ const reportBot = require('./reportBot').createReportBot({
     buildReportGuidance,
     diseaseGuide,
     REPORT_MARK,
-    downloadMedia: (m) => withTimeout(robustDownloadMedia(client, m), 45000, 'Media download', null)
-});
+    downloadMedia: (m) => withTimeout(robustDownloadMedia(client, m), 45000, 'Media download', null),
+    // members' report files (jpg/png/pdf) are archived in the Tencent COS vault under report_<name>_<id>
+    saveToVault: (media, who) => saveMediaToCloudStorage(media.data, media.mimetype, `report_${who}`, media.filename || null)
+};
+let reportBot = require('./reportBot').createReportBot(reportBotDeps);
+// Swap in new reportBot.js code without restarting (a restart kills the WhatsApp browser and can unlink the session)
+function reloadReportBot() {
+    const old = reportBot;
+    delete require.cache[require.resolve('./reportBot')];
+    const fresh = require('./reportBot').createReportBot(reportBotDeps);
+    fresh.setSessions(old.getSessions());
+    old.stop();
+    reportBot = fresh;
+    fresh.resolveMemberLids().catch(e => console.warn('[REPORT BOT] id lookup failed:', e.message));
+    console.log('[REPORT BOT] Reloaded.');
+}
 
 const ADMIN_TOKEN_PATH = path.join(__dirname, 'data', 'admin-token.txt');
 let ADMIN_TOKEN = '';
@@ -1961,6 +1976,12 @@ async function handleIncomingMessage(msg, opts = {}) {
 
     const isAllowed = isOwner || isDilip || isMother;
 
+    // Owner-only: whitelist commands live in reportBot.js (hot-reloadable): "add <number> [as Name] to the whitelist", or a contact card then "whitelist"
+    if (isOwner && !hasMedia && incomingText && await reportBot.ownerText(msg, incomingText)) {
+        await goOffline(null);
+        return;
+    }
+
     // Owner-only broadcast to the Mizoram Bonanza members (/broadcast -> preview, /confirm -> send, /cancel)
     const isOwnerStrict = isOwner;
     if (isOwnerStrict && !hasMedia && broadcaster.isCommand(incomingText) &&
@@ -1972,7 +1993,9 @@ async function handleIncomingMessage(msg, opts = {}) {
 
     // Report assistant: members of the Mizoram Bonanza list get ONLY this (strict guard rail); the owner's contacts
     // can try it with /report and stay in it until /done or the session expires.
-    const reportMember = !isOwner && reportBot.isMember(contactNum);
+    // contactNum falls back to the id's own digits when WhatsApp hides the phone number, so only learn a real, different number
+    if (sender.endsWith('@lid') && contactNum && contactNum !== sender.split('@')[0]) reportBot.learnLid(sender, contactNum);
+    const reportMember = !isOwner && reportBot.isMember(contactNum, sender);
     if (reportMember || (isAllowed && (/^\/report\b/i.test(incomingText) || reportBot.hasSession(sender)))) {
         await reportBot.handle(msg, { sender, phone: contactNum, incomingText, hasMedia, items: opts.burst || [msg] });
         await goOffline(null);
@@ -2571,6 +2594,7 @@ const server = http.createServer(async (req, res) => {
         if (parsedUrl.query.t !== ADMIN_TOKEN) { res.writeHead(403, { 'Content-Type': 'text/plain' }); return res.end('Forbidden'); }
         const send = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
         try {
+            if (pathname === '/admin/reload-report') { reloadReportBot(); return send(200, { ok: true, members: reportBot.memberCount() }); }
             if (pathname === '/admin/chats') {
                 const q = String(parsedUrl.query.q || '').toLowerCase();
                 const chats = await client.getChats();
