@@ -11,8 +11,8 @@ const execFileAsync = util.promisify(execFile);
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcodeTerminal = require('qrcode-terminal');
 const QRCode = require('qrcode');
-const { queryChatMemory, findRecentEmail, createSequentialQueue } = require('./chatMemory');
-const { sendEmail } = require('./emailService');
+const { queryChatMemory, createSequentialQueue } = require('./chatMemory');
+const { sendEmail, GMAIL_USER } = require('./emailService');
 
 const AI_PROVIDER = (process.env.AI_PROVIDER || 'deepseek').toLowerCase();
 
@@ -1011,7 +1011,8 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
         let driveUrl = null;
 
         // 1. Google Drive Upload (Option B)
-        if (googleDriveKey) {
+        // Drive uploads always fail with 403 storageQuotaExceeded for a service account; the Tencent vault is the store. Set GOOGLE_DRIVE_UPLOAD=1 to try again.
+        if (googleDriveKey && process.env.GOOGLE_DRIVE_UPLOAD === '1') {
             console.log(`[GOOGLE DRIVE] Attempting upload for ${originalFilename || fileName}...`);
             const driveResult = await uploadToGoogleDrive(buffer, originalFilename || path.basename(fileName), cleanMime);
             if (driveResult && driveResult.driveUrl) {
@@ -1027,6 +1028,7 @@ async function saveMediaToCloudStorage(base64Data, mimeType, sender, originalFil
                 cosSignedUrl = signedCosUrl(fileName);
                 gcsUrl = makeShortLink(fileName);
                 console.log(`[TENCENT COS] Successfully uploaded to cos://${COS_BUCKET}/${fileName}`);
+                if (!String(sender).startsWith('report_')) mailAssistant.rememberFile(sender, { key: fileName, url: gcsUrl, mime: cleanMime.split(';')[0], name: originalFilename || '', ts: timestamp });
             } catch (e) {
                 console.warn('[TENCENT COS] Upload failed:', e.message);
             }
@@ -1117,21 +1119,6 @@ function withTimeout(promise, ms, label, fallback) {
     return Promise.race([Promise.resolve(promise), guard]).finally(() => clearTimeout(timer));
 }
 
-function buildEmailConfirmation({ to, subject, body, fromHistory }) {
-    return `✅ *Email sent to ${to}*${fromHistory ? ' _(recipient from our chat)_' : ''}\n\n` +
-        `📌 *Subject:* ${subject}\n\n` +
-        `📝 ${body}\n\n` +
-        `_Sent from sgarmy200@gmail.com_`;
-}
-
-function buildEmailPreviewCard({ to, subject, body, fromHistory }) {
-    return `✉️ *Email Ready to Send!*\n\n` +
-        `*To:* ${to}${fromHistory ? ' _(resolved from recent chat)_' : ''}\n` +
-        `*Subject:* ${subject}\n` +
-        `*Preview:* "${body}"\n\n` +
-        `Shall I send this mail? Reply *Yes / Send* (or *Haan / Bhej do*) to dispatch, or *Cancel* to discard.`;
-}
-
 /**
  * Final delivery sanitizer: enforces WhatsApp-native formatting and strips AI boilerplate.
  */
@@ -1170,7 +1157,7 @@ const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT ||
     `When you see [GOOGLE DRIVE LINK] in the context, it means the file WAS successfully saved. Confirm this to the user and share the link. ` +
     `When you see [CLOUD STORAGE LINK] instead, the file was saved to Google Cloud Storage backup. ` +
     `NEVER say you cannot access Drive or cannot save files — you absolutely can and do this automatically for every media received. ` +
-    `EMAIL & DISPATCH CAPABILITY: You have fully automated Gmail sending capabilities via integrated SMTP (sgarmy200@gmail.com). When a user asks to send an email, mail documents/summaries, or draft a message, NEVER say you cannot send emails or lack email access. You can directly send emails on behalf of Roshan.` +
+    `EMAIL: Mail is handled by a separate mail assistant that shows a preview card and sends only after Roshan replies Yes. You never write email drafts yourself, never say a mail was sent, attached or delivered, and never claim you lack email access. If he asks about a mail, tell him to say for example "make a mail to name@x.com about ...".` +
     WHATSAPP_STYLE_RULES;
 
 const OWNER_PROMPT = `You are ${BOT_NAME}, ${OWNER_NAME}'s world-class executive assistant. You are talking directly to ${OWNER_NAME}, the owner. ` +
@@ -1181,21 +1168,11 @@ const OWNER_PROMPT = `You are ${BOT_NAME}, ${OWNER_NAME}'s world-class executive
     `When he sends photos, slides, or documents, inspect the vision analysis and extract key facts, titles, speaker names, legal acts, or figures immediately. ` +
     `If he asks to "Extract", "Read", or follow up on an image, fulfill the request completely with full structured transcription. NEVER claim an image is blank if vision data is present. ` +
     `Google Drive/Cloud Vault: media he sends is automatically saved; when you see [GOOGLE DRIVE LINK] or [CLOUD STORAGE LINK], confirm it was saved and share the link. ` +
-    `EMAIL & DISPATCH CAPABILITY: You have direct integrated Gmail SMTP. When Roshan asks to send an email, mail documents, or forward receipts, draft and prepare the email immediately. NEVER refuse or say you don't have email access.` +
+    `EMAIL: Mail is handled by a separate mail assistant that shows a preview card and sends only after Roshan replies Yes. You never write email drafts yourself, never say a mail was sent, attached or delivered, and never claim you lack email access. If he asks about a mail, tell him to say for example "make a mail to name@x.com about ...".` +
     WHATSAPP_STYLE_RULES;
 
 const chatHistory = new Map();
 const MAX_HISTORY = 10;
-
-function getLastAssistantReply(sender) {
-    const history = chatHistory.get(sender) || [];
-    for (let i = history.length - 1; i >= 0; i--) {
-        const item = history[i];
-        if (item.role === 'assistant' && item.content) return item.content;
-        if (item.role === 'model' && item.parts && item.parts[0]?.text) return item.parts[0].text;
-    }
-    return '';
-}
 
 let currentQR = null;
 let currentQRDataUrl = null;
@@ -1742,7 +1719,6 @@ client.on('disconnected', (reason) => {
 
 const pendingBuffers = new Map(); // sender -> { timeout, texts: [], lastMsg }
 const lastMediaStore = new Map();  // sender -> { storageInfo, timestamp } — remembers last upload for 10 minutes
-const pendingEmailDrafts = new Map(); // sender -> { subject, body, effectiveStorageInfo, timestamp } — multi-turn email drafts
 
 // Per-chat sequential queue: burst uploads (e.g. 6 photos) are processed fully and in order, never in parallel.
 const enqueueChatTask = createSequentialQueue();
@@ -1883,6 +1859,28 @@ const reportBotDeps = {
     saveToVault: (media, who) => saveMediaToCloudStorage(media.data, media.mimetype, `report_${who}`, media.filename || null)
 };
 let reportBot = require('./reportBot').createReportBot(reportBotDeps);
+
+// Mail assistant (mailAssistant.js): drafts persist in data/mail-state.json, so a reload or restart keeps them
+const mailDeps = {
+    generateAIReply,
+    chatHistory,
+    sendEmail,
+    // vault file -> real mail attachment
+    fetchFile: async (key) => {
+        const r = await fetch(signedCosUrl(key), { signal: AbortSignal.timeout(60000) });
+        if (!r.ok) throw new Error(`storage HTTP ${r.status}`);
+        return { buffer: Buffer.from(await r.arrayBuffer()), contentType: r.headers.get('content-type') || '' };
+    },
+    fromAddress: GMAIL_USER,
+    ownerName: 'Roshan'
+};
+let mailAssistant = require('./mailAssistant').createMailAssistant(mailDeps);
+mailAssistant.seedFromShortLinks(shortLinks, PUBLIC_BASE_URL);
+function reloadMailAssistant() {
+    delete require.cache[require.resolve('./mailAssistant')];
+    mailAssistant = require('./mailAssistant').createMailAssistant(mailDeps);
+    console.log('[MAIL] Reloaded.');
+}
 // Swap in new reportBot.js code without restarting (a restart kills the WhatsApp browser and can unlink the session)
 function reloadReportBot() {
     const old = reportBot;
@@ -2010,7 +2008,7 @@ async function handleIncomingMessage(msg, opts = {}) {
     // ─── INSTANT RESET: zero LLM, zero media processing ───
     if (!hasMedia && RESET_RE.test(incomingText)) {
         chatHistory.delete(sender);
-        pendingEmailDrafts.delete(sender);
+        mailAssistant.dropDraft(sender);
         lastMediaStore.delete(sender);
         await msg.reply('🧹');
         await goOffline(null);
@@ -2200,6 +2198,8 @@ CRITICAL INSTRUCTIONS:
                     mediaContext += `\n[CLOUD STORAGE LINK]: ${storageInfo.gcsUrl}`;
                 }
 
+                if (storageInfo && storageInfo.fileName && mediaContext) mailAssistant.setFileText(sender, storageInfo.fileName, mediaContext);
+
                 // Remember this upload and vision context for this sender for 10 minutes
                 // so "save to drive" or "extract" sent as a separate follow-up message works
                 lastMediaStore.set(sender, {
@@ -2321,190 +2321,9 @@ CRITICAL INSTRUCTIONS:
         return;
     }
 
-    // ─── MULTI-TURN EMAIL DRAFT RESOLUTION ───
-    // If user previously asked to send an email without providing an address, and is now replying:
-    if (pendingEmailDrafts.has(sender)) {
-        const draft = pendingEmailDrafts.get(sender);
-        // Expire draft after 15 minutes
-        if (Date.now() - draft.timestamp > 15 * 60 * 1000) {
-            pendingEmailDrafts.delete(sender);
-        } else {
-            const replyText = incomingText.trim();
-
-            // Cancellation
-            if (/^(cancel|no|nahi|nahin|mat bhej|mat bhejo|discard|radd|stop|chhoro|chhod do|rehne do)\b[\s.!]*$/i.test(replyText) ||
-                /^(cancel|discard|radd|chhoro|stop|rehne do)\b/i.test(replyText)) {
-                pendingEmailDrafts.delete(sender);
-                console.log(`[MULTI-TURN EMAIL] Draft cancelled by ${sender}`);
-                await msg.reply('❌ *Draft discarded.* Nothing was sent.');
-                await goOffline(null);
-                return;
-            }
-
-            // A (new) email address sets/updates the recipient, then asks for confirmation
-            const matchEmail = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
-            if (matchEmail) {
-                draft.to = matchEmail[1];
-                draft.fromHistory = false;
-                draft.timestamp = Date.now();
-                await msg.reply(buildEmailPreviewCard({ to: draft.to, subject: draft.subject, body: draft.body }));
-                return;
-            }
-
-            // Confirmation
-            if (/^(yes|yeah|yep|yup|y|send|send it|send now|haan|han|ha|haa|haan bhej do|bhej do|bhejo|bhej|bhej dena|bhej de|ok|okay|ok send|sure|proceed|go ahead|confirm|confirmed|done|kar do|kardo)[\s.!]*$/i.test(replyText)) {
-                if (!draft.to) {
-                    await msg.reply('👉 *Send to whom?* Please reply with the recipient\'s email address, or *Cancel* to discard.');
-                    return;
-                }
-                pendingEmailDrafts.delete(sender);
-                try {
-                    const chat = await msg.getChat().catch(() => null);
-                    if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
-
-                    console.log(`[MULTI-TURN EMAIL] Dispatching confirmed draft to ${draft.to}...`);
-                    await sendEmail({
-                        to: draft.to,
-                        subject: draft.subject,
-                        text: draft.body
-                    });
-
-                    await msg.reply(buildEmailConfirmation({ to: draft.to, subject: draft.subject, body: draft.body, fromHistory: draft.fromHistory }));
-                    await goOffline(chat);
-                } catch (sendErr) {
-                    console.error('[MULTI-TURN EMAIL SEND ERROR]:', sendErr);
-                    await msg.reply(`⚠️ Failed to send email to ${draft.to}: ${sendErr.message || 'SMTP error'}. Please try again.`).catch(() => {});
-                    await goOffline(null);
-                }
-                return;
-            }
-        }
-    }
-
-    // ─── EMAIL INTENT: Send email directly from WhatsApp ───
-    const hasEmailAddress = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i.test(incomingText);
-    // Only explicit send/draft instructions trigger the email flow; mere mentions ("did you see my mail?",
-    // "what is your email?") fall through to normal chat and cost no extra LLM calls.
-    const isEmailQuestion = /^\s*(did|have|has|had|was|were|what|which|when|where|why|who|whose|kab|kaun)\b/i.test(incomingText);
-    const isSelfEmailDeclaration = /^\s*(my|mera|meri)\s+(e-?mail|gmail|id)\b/i.test(incomingText);
-    const hasEmailAction = !isEmailQuestion && !isSelfEmailDeclaration && (
-        // Verbs preceding email/mail: 'send email', 'draft mail', 'forward an email to...'
-        /\b(send|draft|compose|write|forward|shoot|fire\s*off)\b[^.?!\n]{0,40}\b(e-?mail|mail|gmail)\b/i.test(incomingText) ||
-        // Mail/email as action verb: 'mail it to...', 'email this to...', 'mail them to...'
-        /\b(e-?mail|mail)\b[^.?!\n]{0,40}\b(it|this|that|them|these|to|ko|pe|at|draft|send)\b/i.test(incomingText) ||
-        // Direct 'mail/email <address>'
-        /\b(e-?mail|mail)\s+[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/i.test(incomingText) ||
-        // Hindi / Hinglish action patterns
-        /\b(e-?mail|mail|gmail)\b[^.?!\n]{0,30}\b(kar\s*do|kardo|kar\s*dena|kar\s*de|karo|bhej\s*do|bhejo|bhej\s*dena|bhej\s*de|send\s*kar|draft\s*kar)\b/i.test(incomingText) ||
-        /\b(isko|ise|ye|yeh|is)\s+(e-?mail|mail|gmail)\b/i.test(incomingText) ||
-        // Email address explicitly present + any transmission verb
-        (hasEmailAddress && /\b(send|bhej|bhejo|bhejna|forward|share|deliver|dispatch|drop|shoot)\b/i.test(incomingText))
-    );
-
-    if (hasEmailAction) {
-        console.log(`[EMAIL INTENT DETECTED from ${sender}]: "${incomingText}"`);
-
-        const emailMatch = incomingText.match(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/i);
-        // No address in this message -> look back through recent conversation before asking
-        const recentEmail = emailMatch ? null : findRecentEmail(chatHistory.get(sender), { exclude: ['sgarmy200@gmail.com'] });
-        const recipientEmail = emailMatch ? emailMatch[1] : recentEmail;
-        const recipientFromHistory = Boolean(recentEmail);
-        if (recipientFromHistory) console.log(`[EMAIL RECIPIENT] Resolved ${recentEmail} from recent chat with ${sender}`);
-
-        let emailSubject = 'Message from Roshan';
-        let emailBody = incomingText;
-        const lastReply = getLastAssistantReply(sender);
-        const hasSubstantiveQuoted = quotedBody && !/^\[.+ attachment\]$/i.test(quotedBody);
-        let refSource = '';
-        if (hasSubstantiveQuoted && lastReply) {
-            refSource = `Quoted Message Reference (user specifically replied to this):\n"""\n${quotedBody.substring(0, 1500)}\n"""\n\nRecent Assistant Reply Context:\n"""\n${lastReply.substring(0, 1000)}\n"""`;
-        } else if (hasSubstantiveQuoted) {
-            refSource = `Quoted Message Reference (user specifically replied to this):\n"""\n${quotedBody.substring(0, 1500)}\n"""`;
-        } else if (lastReply) {
-            refSource = `Recent Context / Conversation Reference (what "it" or "this" refers to):\n"""\n${lastReply.substring(0, 1500)}\n"""`;
-        }
-        const recentContext = refSource ? `\n${refSource}` : '';
-
-        try {
-            const chat = await msg.getChat().catch(() => null);
-            if (chat && chat.sendStateTyping) await chat.sendStateTyping().catch(() => {});
-
-            // AI Polishing Prompt: Turn rough notes/instructions into an articulate, executive email
-            const polishPrompt = `You are an expert executive email writer. The user sent this raw WhatsApp request to compose an email:
-"${incomingText}"
-${recentContext}
-
-Task:
-1. Polish the message into a professional, articulate, polite, and well-structured email body.
-   - If written in Hindi, Hinglish, or shorthand notes, translate and polish into clear, fluent business English (unless the user explicitly instructed to write in Hindi).
-   - Include a courteous greeting (e.g., "Hi," or "Dear Team,"), a clear and concise body with proper formatting, and a professional closing ("Best regards,\\nRoshan").
-   - Strip out voice-to-text artifacts, WhatsApp meta-commands (like "mail kar do", "tell him that", "send email to..."), and informal conversational filler.
-2. Formulate a crisp, professional subject line (maximum 6-8 words).
-
-Return ONLY a valid JSON object with keys "subject" and "body". Do not use markdown backticks:
-{"subject": "...", "body": "..."}`;
-
-            const aiResponse = await generateAIReply(sender, polishPrompt, 'You are an email polishing assistant. Return ONLY valid JSON.', 700);
-            const cleanJson = aiResponse.replace(/```json/gi, '').replace(/```/g, '').trim();
-            const parsed = JSON.parse(cleanJson);
-            if (parsed.subject) emailSubject = parsed.subject;
-            if (parsed.body) emailBody = parsed.body;
-        } catch (parseErr) {
-            console.warn('[EMAIL POLISH AI WARNING]: Using fallback extraction:', parseErr.message);
-            const rawBody = incomingText
-                .replace(emailMatch ? emailMatch[0] : '', '')
-                .replace(/\b(send|email|mail|gmail|bhej|kar do|kar dena|to|ko|ki|please|isko|ise|it|this|that)\b/gi, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-            emailBody = rawBody.length >= 15 ? rawBody : (lastReply || rawBody || incomingText);
-            emailSubject = `Message from Roshan via Hermes Assistant`;
-        }
-
-        // Append all Cloud Vault links (current media, or cached media from the last 10 minutes)
-        if (effectiveUrls.length === 0 && (effectiveStorageInfo?.driveUrl || effectiveStorageInfo?.gcsUrl)) {
-            effectiveUrls = [effectiveStorageInfo.driveUrl || effectiveStorageInfo.gcsUrl];
-        }
-        if (effectiveUrls.length === 1) {
-            emailBody += `\n\n---\n📎 Shared Cloud File / Document:\n${effectiveUrls[0]}`;
-        } else if (effectiveUrls.length > 1) {
-            emailBody += `\n\n---\n📎 Shared Cloud Files / Documents (${effectiveUrls.length}):\n` +
-                effectiveUrls.map((u, i) => `${i + 1}. ${u}`).join('\n');
-        }
-
-        // Case 1: Recipient email is missing -> Save draft & ask user!
-        if (!recipientEmail) {
-            pendingEmailDrafts.set(sender, {
-                subject: emailSubject,
-                body: emailBody,
-                effectiveStorageInfo,
-                timestamp: Date.now()
-            });
-
-            const askEmailReply = `✍️ *Draft ready*\n\n📌 *Subject:* ${emailSubject}\n\n📝 ${emailBody}\n\n👉 *Send to whom?* Reply with the email address to send instantly, or *Cancel* to discard.`;
-            try {
-                await msg.reply(askEmailReply);
-            } catch (err) {
-                console.error('[EMAIL ASK REPLY ERROR]:', err);
-            }
-            await goOffline(await msg.getChat().catch(() => null));
-            return;
-        }
-
-        // Case 2: Recipient known -> never send immediately; save draft & ask for confirmation
-        pendingEmailDrafts.set(sender, {
-            to: recipientEmail,
-            fromHistory: recipientFromHistory,
-            subject: emailSubject,
-            body: emailBody,
-            effectiveStorageInfo,
-            timestamp: Date.now()
-        });
-        try {
-            await msg.reply(buildEmailPreviewCard({ to: recipientEmail, subject: emailSubject, body: emailBody, fromHistory: recipientFromHistory }));
-        } catch (err) {
-            console.error('[EMAIL PREVIEW REPLY ERROR]:', err);
-        }
-        await goOffline(await msg.getChat().catch(() => null));
+    // ─── MAIL (mailAssistant.js): drafts, edits, CC/BCC, attachments; sends only on an explicit "Yes" ───
+    if (isAllowed && await mailAssistant.handle(msg, { sender, text: incomingText, quotedBody, newFileKey: hasMedia && storageInfo ? storageInfo.fileName : null })) {
+        await goOffline(null);
         return;
     }
 
@@ -2531,7 +2350,9 @@ Return ONLY a valid JSON object with keys "subject" and "body". Do not use markd
             : fullQuotedReply ? finalPrompt + QUOTED_FULL_INSTRUCTION
             : finalPrompt;
         const replyTokens = fullQuotedReply ? REPLY_MAX_TOKENS_FULL : (isDocExtraction ? REPLY_MAX_TOKENS_DOC : REPLY_MAX_TOKENS);
-        const reply = sanitizeWhatsAppReply(await generateAIReply(sender, promptToSend, fullPrompt, replyTokens));
+        let reply = sanitizeWhatsAppReply(await generateAIReply(sender, promptToSend, fullPrompt, replyTokens));
+        // A chat answer must never claim a mail went out (only mailAssistant sends mail)
+        reply = mailAssistant.guardChatReply(sender, reply);
         console.log(`[REPLY to ${isDilip ? 'Dilip Singh (Formal)' : sender}]: ${reply}`);
         await msg.reply(reply);
 
@@ -2595,6 +2416,7 @@ const server = http.createServer(async (req, res) => {
         const send = (code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
         try {
             if (pathname === '/admin/reload-report') { reloadReportBot(); return send(200, { ok: true, members: reportBot.memberCount() }); }
+            if (pathname === '/admin/reload-mail') { reloadMailAssistant(); return send(200, { ok: true }); }
             if (pathname === '/admin/chats') {
                 const q = String(parsedUrl.query.q || '').toLowerCase();
                 const chats = await client.getChats();

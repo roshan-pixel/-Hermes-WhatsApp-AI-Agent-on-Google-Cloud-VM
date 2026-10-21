@@ -73,7 +73,8 @@ function findRecentEmail(history, { maxTurns = 10, exclude = [] } = {}) {
     const skip = new Set(exclude.map(e => String(e).toLowerCase()));
     const recent = history.slice(-maxTurns);
     for (let i = recent.length - 1; i >= 0; i--) {
-        const matches = String((recent[i] && recent[i].content) || '').match(EMAIL_PATTERN);
+        // a literal backslash-n before an address ("\nname@x.com") must not become part of it ("nname@x.com")
+        const matches = String((recent[i] && recent[i].content) || '').replace(/\\[nrt]/g, ' ').match(EMAIL_PATTERN);
         if (!matches) continue;
         for (let j = matches.length - 1; j >= 0; j--) {
             if (!skip.has(matches[j].toLowerCase())) return matches[j];
