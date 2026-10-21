@@ -1,16 +1,16 @@
 # Graph Report - Hermes-WhatsApp-Agent-on-Google-Cloud-VM  (2026-10-21)
 
 ## Corpus Check
-- 54 files · ~87,119 words
+- 55 files · ~88,214 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 567 nodes · 642 edges · 79 communities (70 shown, 9 thin omitted)
+- 570 nodes · 644 edges · 79 communities (70 shown, 9 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a3a1a7f6`
+- Built from commit: `025823c2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -77,7 +77,6 @@
 - [[_COMMUNITY_Community 70|Community 70]]
 - [[_COMMUNITY_Community 71|Community 71]]
 - [[_COMMUNITY_Community 72|Community 72]]
-- [[_COMMUNITY_Community 73|Community 73]]
 - [[_COMMUNITY_Community 74|Community 74]]
 - [[_COMMUNITY_Community 75|Community 75]]
 - [[_COMMUNITY_Community 76|Community 76]]
@@ -115,7 +114,7 @@
 
 ### Community 0 - "WhatsApp Client Core Runtime"
 Cohesion: 0.03
-Nodes (71): activePage, ADMIN_TOKEN_PATH, AI_PROVIDER, allowedLIDs, allowedNumbers, broadcaster, burst, cached (+63 more)
+Nodes (72): activePage, ADMIN_TOKEN_PATH, AI_PROVIDER, allowedLIDs, allowedNumbers, broadcaster, burst, cached (+64 more)
 
 ### Community 1 - "Project Manifest & Dependencies"
 Cohesion: 0.12
@@ -126,12 +125,12 @@ Cohesion: 0.20
 Nodes (11): client, server, Connection Watchdog Monitor, Postinstall Patch Hook, CDP Evaluation Loop Guards, Frame Navigation Crash Guard, Client Inject Retry Mechanism, wwebjs Monkey Patch Script (+3 more)
 
 ### Community 3 - "Semantic Memory & Model Dispatch"
-Cohesion: 0.29
-Nodes (10): Memory Graph Loader, queryChatMemory Function, chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply(), Inbound Message Handler (+2 more)
+Cohesion: 0.80
+Nodes (5): chatHistory, generateAIReply(), getDeepSeekReply(), getGeminiReply(), getHermesReply()
 
 ### Community 4 - "Chat Memory Graph & Retrieval"
-Cohesion: 0.14
-Nodes (11): assert, burstResults, driveInputs, { findRecentEmail }, foundEmail, helpInputs, mediaBursts, path (+3 more)
+Cohesion: 0.10
+Nodes (17): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory(), assert, burstResults (+9 more)
 
 ### Community 5 - "wwebjs Monkey Patch Engine"
 Cohesion: 0.15
@@ -182,8 +181,8 @@ Cohesion: 0.40
 Nodes (3): crypto, fs, path
 
 ### Community 21 - "Message Formatting & Preview Cards"
-Cohesion: 0.20
-Nodes (12): buildEmailConfirmation(), buildEmailPreviewCard(), describeDocument(), formatUptime(), getCurrentISTContext(), getLastAssistantReply(), goOffline(), handleIncomingMessage() (+4 more)
+Cohesion: 0.13
+Nodes (22): analyzeImageWithGemini(), analyzeImageWithTencentOCR(), analyzeImageWithTesseract(), buildEmailConfirmation(), buildEmailPreviewCard(), cleanOcrText(), describeDocument(), execFileAsync (+14 more)
 
 ### Community 22 - "X Thread Publishing Pipeline"
 Cohesion: 0.38
@@ -306,8 +305,8 @@ Cohesion: 0.50
 Nodes (4): fs, path, run(), sendKimi()
 
 ### Community 67 - "Community 67"
-Cohesion: 0.31
-Nodes (10): analyzeImageWithGemini(), analyzeImageWithTencentOCR(), analyzeImageWithTesseract(), cleanOcrText(), execFileAsync, extractDocumentText(), extractPdfText(), extractReportText() (+2 more)
+Cohesion: 0.40
+Nodes (5): Memory Graph Loader, queryChatMemory Function, Inbound Message Handler, 100% Reactive Architecture Principle, Contact Whitelist & Isolation Matrix
 
 ### Community 68 - "Community 68"
 Cohesion: 0.33
@@ -329,10 +328,6 @@ Nodes (9): bestCombination(), fs, guide, guideContext(), LAB_RULES, norm(), path
 Cohesion: 0.17
 Nodes (11): dependencies, pino, @whiskeysockets/baileys, description, name, private, scripts, start (+3 more)
 
-### Community 73 - "Community 73"
-Cohesion: 0.29
-Nodes (6): createSequentialQueue(), findRecentEmail(), fs, graphPath, path, queryChatMemory()
-
 ### Community 74 - "Community 74"
 Cohesion: 0.33
 Nodes (4): crypto, fs, path, SENT_PATH
@@ -342,7 +337,7 @@ Cohesion: 0.33
 Nodes (4): fs, MEMBERS_CACHE, MSG, path
 
 ## Knowledge Gaps
-- **296 isolated node(s):** `fs`, `path`, `crypto`, `SENT_PATH`, `fs` (+291 more)
+- **297 isolated node(s):** `fs`, `path`, `crypto`, `SENT_PATH`, `fs` (+292 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -351,15 +346,15 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `client` connect `Chromium Resilience & Watchdog` to `WhatsApp Client Core Runtime`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **Why does `findRecentEmail()` connect `Community 73` to `WhatsApp Client Core Runtime`, `Chat Memory Graph & Retrieval`, `Message Formatting & Preview Cards`?**
+- **Why does `findRecentEmail()` connect `Chat Memory Graph & Retrieval` to `WhatsApp Client Core Runtime`, `Message Formatting & Preview Cards`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **What connects `fs`, `path`, `crypto` to the rest of the system?**
-  _304 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _305 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `WhatsApp Client Core Runtime` be split into smaller, more focused modules?**
-  _Cohesion score 0.02702702702702703 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02631578947368421 - nodes in this community are weakly interconnected._
 - **Should `Project Manifest & Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `Chat Memory Graph & Retrieval` be split into smaller, more focused modules?**
-  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Should `System Design & Operations Matrix` be split into smaller, more focused modules?**
   _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
